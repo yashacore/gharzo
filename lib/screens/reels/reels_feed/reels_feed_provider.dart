@@ -1,0 +1,219 @@
+import 'package:flutter/material.dart';
+import 'package:gharzo_project/data/db_service/db_service.dart';
+import 'package:gharzo_project/data/reels_api_service/reels_api_service.dart';
+import 'package:gharzo_project/model/reels/comment_model.dart';
+import 'package:gharzo_project/model/reels/reels_model.dart';
+
+class ReelsFeedProvider extends ChangeNotifier {
+  final List<Reel> _reels = [];
+  List<Reel> get reels => _reels;
+
+  bool isLoading = false;
+  bool hasMore = true;
+  int currentPage = 1;
+
+  final Set<String> likeProcessing = {};
+
+  List<CommentModel> comments = [];
+
+  String? replyingToCommentId;
+  String? replyingToUser;
+
+  bool isCommentsLoading = false;
+
+  // ================= FETCH REELS =================
+  Future<void> fetchReels({bool refresh = false}) async {
+    if (isLoading) return;
+
+    if (refresh) {
+      _reels.clear();
+      currentPage = 1;
+      hasMore = true;
+    }
+
+    if (!hasMore) return;
+
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final response =
+      await ReelsApiService.getReelsFeed(page: currentPage);
+
+      debugPrint("Response Feed Reel :: $response");
+
+      for (final reel in response!.data) {
+        debugPrint("🎬 Reel ID: ${reel.id}");
+      }
+
+      if (response != null) {
+        reels.addAll(response.data);
+        hasMore = response.currentPage < response.totalPages;
+        currentPage++;
+      }
+    } catch (e) {
+      debugPrint("Fetch reels error: $e");
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> toggleLike(Reel reel) async {
+    if (likeProcessing.contains(reel.id)) return;
+
+    likeProcessing.add(reel.id);
+
+    final index = _reels.indexWhere((r) => r.id == reel.id);
+    if (index == -1) {
+      likeProcessing.remove(reel.id);
+      return;
+    }
+
+    final oldReel = _reels[index];
+
+    debugPrint("Old likesCount: ${oldReel.likesCount}");
+
+    final bool newLikeState = !oldReel.isLiked;
+    final int newLikesCount =
+    newLikeState ? oldReel.likesCount + 1 : oldReel.likesCount - 1;
+
+    _reels[index] = oldReel.copyWith(
+      isLiked: newLikeState,
+      likesCount: newLikesCount,
+    );
+    notifyListeners();
+
+
+    debugPrint("New likesCount: $newLikesCount");
+
+    try {
+      debugPrint("CALLING LIKE API...");
+
+      final int serverLikes =
+      await ReelsApiService.likeReel(reel.id);
+
+      /// 🟣 API RESPONSE
+      debugPrint("🟣 API RESPONSE");
+      debugPrint("Server likesCount: $serverLikes");
+
+      /// 🔥 sync count from backend
+      _reels[index] =
+          _reels[index].copyWith(likesCount: serverLikes);
+      notifyListeners();
+    } catch (e) {
+      /// ❌ rollback on error
+      debugPrint("❌ LIKE API ERROR: $e");
+
+      _reels[index] = oldReel;
+      notifyListeners();
+    }
+
+    likeProcessing.remove(reel.id);
+  }
+
+
+  Future<void> toggleSave(Reel reel) async {
+    if (reel.id == null) return;
+
+    final token = await PrefService.getToken();
+    if (token == null) return;
+
+    final index = _reels.indexWhere((r) => r.id == reel.id);
+
+    debugPrint("Save Id :: $index");
+    if (index == -1) return;
+
+    final oldReel = _reels[index];
+    final bool newSavedState = !oldReel.isSaved;
+
+    _reels[index] = oldReel.copyWith(
+      isSaved: newSavedState,
+    );
+    notifyListeners();
+
+    try {
+      final response =
+      await ReelsApiService.saveReel(reel.id!, token);
+
+      if (response == null || !response.success) {
+        _reels[index] = oldReel;
+        notifyListeners();
+      } else {
+        _reels[index] = _reels[index].copyWith(
+          isSaved: response.data?.isSaved ?? newSavedState,
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      /// ❌ exception → rollback
+      _reels[index] = oldReel;
+      notifyListeners();
+    }
+  }
+
+
+  Future<void> fetchComments(String reelId) async {
+    isCommentsLoading = true;
+    notifyListeners();
+
+    try {
+      comments = await ReelsApiService.fetchComments(reelId);
+    } catch (e) {
+      debugPrint("❌ Fetch comments error: $e");
+    }
+
+    isCommentsLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> postComment({
+    required String reelId,
+    required String text,
+  }) async {
+
+    final success = await ReelsApiService.addComment(
+      reelId: reelId,
+      text: text,
+      parentId: replyingToCommentId,
+    );
+
+    if (!success) return;
+
+    comments.add(
+      CommentModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        text: text,
+        userName: "You",
+        parentId: replyingToCommentId,
+      ),
+    );
+
+    final reelIndex = _reels.indexWhere((r) => r.id == reelId);
+    if (reelIndex != -1) {
+      _reels[reelIndex] = _reels[reelIndex].copyWith(
+        commentsCount: _reels[reelIndex].commentsCount + 1,
+      );
+    }
+
+    replyingToCommentId = null;
+    replyingToUser = null;
+
+    notifyListeners();
+  }
+
+  void setReply(CommentModel comment) {
+    replyingToCommentId = comment.id;
+    replyingToUser = comment.userName;
+    notifyListeners();
+  }
+
+  void cancelReply() {
+    replyingToCommentId = null;
+    replyingToUser = null;
+    notifyListeners();
+  }
+
+
+
+}

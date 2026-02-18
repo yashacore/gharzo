@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "4398272942",
+    "project_id": "gharzo-d5832",
+    "storage_bucket": "gharzo-d5832.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4398272942:android:e9aeb263d2748401b4783f",
+        "android_client_info": {
+          "package_name": "com.example.gharzo_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjYeEG9aT2yW_doR8F9aSzOKX0aN8LBD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
