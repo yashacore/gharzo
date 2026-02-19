@@ -72,44 +72,42 @@ class ReelsFeedProvider extends ChangeNotifier {
 
     final oldReel = _reels[index];
 
-    debugPrint("Old likesCount: ${oldReel.likesCount}");
-
-    final bool newLikeState = !oldReel.isLiked;
-    final int newLikesCount =
-    newLikeState ? oldReel.likesCount + 1 : oldReel.likesCount - 1;
+    // 🔥 Optimistic update
+    final bool optimisticLike = !oldReel.isLiked;
+    final int optimisticLikes = optimisticLike
+        ? oldReel.likesCount + 1
+        : (oldReel.likesCount > 0 ? oldReel.likesCount - 1 : 0);
 
     _reels[index] = oldReel.copyWith(
-      isLiked: newLikeState,
-      likesCount: newLikesCount,
+      isLiked: optimisticLike,
+      likesCount: optimisticLikes,
     );
     notifyListeners();
 
-
-    debugPrint("New likesCount: $newLikesCount");
-
     try {
-      debugPrint("CALLING LIKE API...");
+      debugPrint("📡 CALLING LIKE API...");
 
-      final int serverLikes =
-      await ReelsApiService.likeReel(reel.id);
+      // final result = await ReelsApiService.likeReel(reel.id);
 
-      /// 🟣 API RESPONSE
-      debugPrint("🟣 API RESPONSE");
-      debugPrint("Server likesCount: $serverLikes");
 
-      /// 🔥 sync count from backend
-      _reels[index] =
-          _reels[index].copyWith(likesCount: serverLikes);
+      final result = await ReelsApiService.likeReel(reel.id);
+      debugPrint("🟣 API RESPONSE: $result");
+
+      _reels[index] = _reels[index].copyWith(
+        isLiked: result["isLiked"] as bool,
+        likesCount: result["likes"] as int,
+      );
+
       notifyListeners();
     } catch (e) {
-      /// ❌ rollback on error
       debugPrint("❌ LIKE API ERROR: $e");
 
+      // 🔄 Rollback
       _reels[index] = oldReel;
       notifyListeners();
+    } finally {
+      likeProcessing.remove(reel.id);
     }
-
-    likeProcessing.remove(reel.id);
   }
 
 
@@ -117,6 +115,8 @@ class ReelsFeedProvider extends ChangeNotifier {
     if (reel.id == null) return;
 
     final token = await PrefService.getToken();
+    print("token");
+    print(token);
     if (token == null) return;
 
     final index = _reels.indexWhere((r) => r.id == reel.id);

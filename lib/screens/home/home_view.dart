@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gharzo_project/common/common_widget/common_home_widget/common_home_widget.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/model/property_model/property_model.dart';
 import 'package:gharzo_project/providers/search_provider.dart';
+import 'package:gharzo_project/screens/bottom_bar/bottom_bar_provider.dart';
 import 'package:gharzo_project/screens/home/home_provider.dart';
 import 'package:gharzo_project/screens/home/search_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -18,19 +21,48 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
 
-    // Force WHITE status bar text/icons
+    debugPrint("🟢 HomeView initState");
+
+    _scrollController.addListener(() {
+      debugPrint("📜 Scroll listener fired");
+
+      if (!_scrollController.hasClients) {
+        debugPrint("❌ No scroll clients attached");
+        return;
+      }
+
+      final position = _scrollController.position;
+      debugPrint(
+        "📏 pixels=${position.pixels}, "
+            "max=${position.maxScrollExtent}, "
+            "direction=${position.userScrollDirection}",
+      );
+
+      final bottomBar = context.read<BottomBarProvider>();
+
+      if (position.userScrollDirection == ScrollDirection.reverse) {
+        debugPrint("🔽 SCROLLING DOWN → HIDE BOTTOM BAR");
+        bottomBar.setBottomBarVisibility(false);
+      } else if (position.userScrollDirection == ScrollDirection.forward) {
+        debugPrint("🔼 SCROLLING UP → SHOW BOTTOM BAR");
+        bottomBar.setBottomBarVisibility(true);
+      }
+    });
+
+    SmsAutoFill().getAppSignature.then((signature) {
+      debugPrint("🔑 OTP HASH: $signature");
+    });
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-
-        // ANDROID → white icons
         statusBarIconBrightness: Brightness.light,
-
-        // iOS → white text
         statusBarBrightness: Brightness.dark,
       ),
     );
@@ -45,59 +77,56 @@ class _HomeViewState extends State<HomeView> {
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         return CommonWidget.commonGradientScaffold(
-
+          scrollController: _scrollController, // 🔥 THIS WAS MISSING
 
           isScrollable: false,
           body: SafeArea(
+            child: SingleChildScrollView(
+              // controller: _scrollController, // 🔥 ATTACHED HERE
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 16),
-             Padding(
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: CommonHomeWidgets.headerView(
-                    onMenuTap: widget.action,
-                    context: context,
-                  ),
-                ),
-                SizedBox(height: 6),
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CommonHomeWidgets.searchBarView(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ChangeNotifierProvider(
-                                create: (_) => PropertySearchProvider(),
-                                child: const PropertySearchScreen(
-
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-
+                    child: CommonHomeWidgets.headerView(
+                      onMenuTap: widget.action,
+                      context: context,
                     ),
+                  ),
 
-                    SizedBox(height: 16),
-                    buildAdSlider(provider),
-                    SizedBox(height: 16),
-                    listOfCategory(provider),
-                    SizedBox(height: 24),
-                    buildFeaturedProperties(provider),
-                    SizedBox(height: 24),
+                  const SizedBox(height: 6),
+                  const SizedBox(height: 10),
 
-                    buildTrendingProperties(provider),
-                    SizedBox(height: 24),
-                  ],
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: CommonHomeWidgets.searchBarView(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ChangeNotifierProvider(
+                              create: (_) => PropertySearchProvider(),
+                              child: const PropertySearchScreen(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+                  buildAdSlider(provider),
+                  const SizedBox(height: 16),
+                  listOfCategory(provider),
+                  const SizedBox(height: 24),
+                  buildFeaturedProperties(provider),
+                  const SizedBox(height: 24),
+                  buildTrendingProperties(provider),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         );
@@ -431,7 +460,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        property.price ?? '',
+                        property.formattedPrice ?? '',
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 11,

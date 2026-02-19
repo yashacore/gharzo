@@ -45,42 +45,54 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     return SizedBox(
       width: double.infinity,
       height: widget.height,
-      child: ElevatedButton(
-        onPressed: widget.enabled ? _handleTap : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colors.buttonColor,
-          foregroundColor: colors.buttonTextColor,
-          disabledBackgroundColor:
-          colors.buttonColor.withOpacity(.4),
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: widget.borderRadius,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color(0xFF3B82F6), // light blue
+              Color(0xFF2563EB), // dark blue
+            ],
           ),
+          borderRadius: widget.borderRadius,
         ),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: _loading
-              ? SizedBox(
-            key: const ValueKey("loader"),
-            height: 22,
-            width: 22,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.4,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                colors.textWhite,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: widget.borderRadius,
+            onTap: widget.enabled ? _handleTap : null,
+            child: Center(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: _loading
+                    ? SizedBox(
+                  key: const ValueKey("loader"),
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.4,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      colors.textWhite,
+                    ),
+                  ),
+                )
+                    : Text(
+                  widget.title,
+                  key: const ValueKey("text"),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
-          )
-              : Text(
-            widget.title,
-            key: const ValueKey("text"),
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
             ),
           ),
         ),
       ),
     );
   }
+
+
 }

@@ -11,6 +11,7 @@ import 'package:gharzo_project/model/property_model/property_model.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/providers/home_loan_enquiry_provider.dart';
 import 'package:gharzo_project/providers/services_provider.dart';
+import 'package:gharzo_project/screens/banquet/banquet_list_screen.dart';
 import 'package:gharzo_project/screens/category/category_provider.dart';
 import 'package:gharzo_project/screens/hotels/hotel_list_screen.dart';
 import 'package:gharzo_project/screens/loan_screen/home_loan_enquiry_screen.dart';
@@ -44,7 +45,7 @@ class HomeProvider extends ChangeNotifier {
     CategoryModel(icon: Icons.design_services, label: "Services", color: Colors.purple, type: "villa"),
     CategoryModel(icon: Icons.home, label: "Home Loan", color: Colors.teal, type: "farm"),
     CategoryModel(icon: Icons.hotel, label: "Hotels", color: Colors.brown, type: "hotel"),
-    CategoryModel(icon: Icons.add_to_photos_outlined, label: "Add Project", color: Colors.cyan, type: "shops"),
+    CategoryModel(icon: Icons.add_to_photos_outlined, label: "Project", color: Colors.cyan, type: "shops"),
   ];
 
   Timer? _timer;
@@ -190,6 +191,15 @@ class HomeProvider extends ChangeNotifier {
         context,
         MaterialPageRoute(
           builder: (_) => const LoanScreen(),
+          ),
+
+      );
+    }
+    else if (type == "Banquets") {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const BanquetListScreen(),
           ),
 
       );

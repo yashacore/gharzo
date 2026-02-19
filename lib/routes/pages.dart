@@ -1,3 +1,4 @@
+import 'package:gharzo_project/providers/banquet_provider.dart';
 import 'package:gharzo_project/providers/contac_us_provider.dart';
 import 'package:gharzo_project/providers/home_loan_enquiry_provider.dart';
 import 'package:gharzo_project/providers/hotel_provider.dart';
@@ -50,6 +51,7 @@ List<SingleChildWidget> appProviders = [
   ChangeNotifierProvider(create: (_) => HomeLoanEnquiryProvider()),
   ChangeNotifierProvider(create: (_) => HotelProvider()),
   ChangeNotifierProvider(create: (_) => ContactInquiryProvider()),
+  ChangeNotifierProvider(create: (_) => BanquetProvider()),
 
 
 

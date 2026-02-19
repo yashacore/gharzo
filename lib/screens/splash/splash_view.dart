@@ -24,145 +24,47 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     super.initState();
 
-    Future.microtask(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SplashProvider>().start();
     });
-
-    // Start navigation logic from provider
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Provider.of<SplashProvider>(context, listen: false).start(context);
-    // });
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-        body: Consumer<SplashProvider>(
-            builder: (_, provider, __) {
-              if (!provider.isInitialized) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+      body: Consumer<SplashProvider>(
+        builder: (_, provider, __) {
+          // 🛑 stop drawing splash after navigation
+          if (provider.navigationDone) {
+            return const SizedBox.shrink();
+          }
 
-              /// 🎥 VIDEO SPLASH (Safe devices)
-              if (provider.useVideo && provider.controller != null) {
-                return Center(
-                  child: AspectRatio(
-                    aspectRatio:
-                    provider.controller!.value.aspectRatio,
-                    child: VideoPlayer(provider.controller!),
-                  ),
-                );
-              }
+          if (!provider.isInitialized) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-              /// 🖼 IMAGE SPLASH (MediaTek fallback)
-              return Center(
-                child: Image.asset(
-                  'assets/logo/splash.jpeg',
-                  width: 220,
-                ));
+          if (provider.useVideo && provider.controller != null) {
+            return Center(
+              child: AspectRatio(
+                aspectRatio:
+                provider.controller!.value.aspectRatio,
+                child: VideoPlayer(provider.controller!),
+              ),
+            );
+          }
 
-            }
-            ));
-
-    // body: Stack(
-      //   children: [
-      //     // Background subtle decoration
-      //     Positioned(
-      //       top: -100,
-      //       right: -100,
-      //       child: CircleAvatar(
-      //         radius: 150,
-      //         backgroundColor: kBrandOrange.withOpacity(0.05),
-      //       ),
-      //     ),
-      //
-      //     Center(
-      //       child: Column(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           // Animated Logo
-      //           Container(
-      //             padding: const EdgeInsets.all(25),
-      //             decoration: BoxDecoration(
-      //               color: Colors.white,
-      //               shape: BoxShape.circle,
-      //               boxShadow: [
-      //                 BoxShadow(
-      //                   color: kBrandBlue.withOpacity(0.08),
-      //                   blurRadius: 40,
-      //                   offset: const Offset(0, 10),
-      //                 ),
-      //               ],
-      //             ),
-      //             child: Image.asset(
-      //               logoPath,
-      //               width: 200,
-      //               height: 200,
-      //               fit: BoxFit.contain,
-      //             ),
-      //           )
-      //               .animate()
-      //               .fadeIn(duration: 800.ms)
-      //               .scale(begin: const Offset(0.8, 0.8), curve: Curves.easeOutBack),
-      //
-      //           const SizedBox(height: 30),
-      //
-      //           // Tagline
-      //           Text(
-      //             "ELEVATING YOUR REALTY EXPERIENCE",
-      //             style: TextStyle(
-      //               color: kBrandBlue.withOpacity(0.7),
-      //               fontSize: 11,
-      //               fontWeight: FontWeight.w600,
-      //               letterSpacing: 3,
-      //             ),
-      //           )
-      //         ],
-      //       ),
-      //     ),
-      //
-      //     // Bottom Navigation Keywords
-      //     Positioned(
-      //       bottom: 80,
-      //       left: 0,
-      //       right: 0,
-      //       child: Column(
-      //         children: [
-      //           Row(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             children: [
-      //               _buildKeyword("SELL"),
-      //               _buildDot(),
-      //               _buildKeyword("RENT"),
-      //               _buildDot(),
-      //               _buildKeyword("BUY"),
-      //               _buildDot(),
-      //               _buildKeyword("PG"),
-      //             ],
-      //           ),
-      //           const SizedBox(height: 40),
-      //
-      //           // Elegant Minimal Loader
-      //           SizedBox(
-      //             width: 140,
-      //             child: ClipRRect(
-      //               borderRadius: BorderRadius.circular(10),
-      //               child: LinearProgressIndicator(
-      //                 backgroundColor: kBrandBlue.withOpacity(0.05),
-      //                 color: kBrandOrange,
-      //                 minHeight: 2,
-      //               ),
-      //             ),
-      //           ).animate().fadeIn(delay: 1.2.seconds),
-      //         ],
-      //       ),
-      //     ),
-      //   ],
-      // ),
-
+          // fallback image
+          return Center(
+            child: Image.asset(
+              'assets/logo/splash.jpeg',
+              width: 220,
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildKeyword(String text) {

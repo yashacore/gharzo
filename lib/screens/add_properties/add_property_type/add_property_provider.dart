@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_service_method.dart';
 import 'package:gharzo_project/model/add_property_type/add_property_type_model.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
-import 'package:gharzo_project/screens/home/home_view.dart';
-import 'package:path/path.dart';
 
 class PropertyDraftProvider extends ChangeNotifier {
   bool loading = false;

@@ -13,6 +13,7 @@ import 'package:gharzo_project/screens/edit_profile/edit_profile_view.dart';
 import 'package:gharzo_project/screens/franchise_req_form.dart';
 import 'package:gharzo_project/screens/mortgage_form.dart';
 import 'package:gharzo_project/screens/profile/profile_provider.dart';
+import 'package:gharzo_project/screens/wishlist_screen.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -188,7 +189,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
                             buildSectionCard([
                               listTileView(Icons.favorite_outline,
-                                  "Saved properties",null),
+                                  "Saved properties", () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => SavedPropertiesScreen(
+                                        ),
+                                      ),
+                                    );
+
+                                  }
+                              ),
                               listTileView(
                                   Icons.history, "Recent searches",null),
                               listTileView(Icons.visibility_outlined,

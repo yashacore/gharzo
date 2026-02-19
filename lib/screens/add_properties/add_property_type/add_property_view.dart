@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
-import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/screens/add_properties/add_property_type/add_property_provider.dart';
 import 'package:gharzo_project/screens/add_properties/property_details/property_details_view.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';

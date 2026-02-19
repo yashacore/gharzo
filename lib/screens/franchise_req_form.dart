@@ -146,7 +146,7 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
               ),
 
               const SizedBox(height: 30),
-              PrimaryButton(title: "Submit", onPressed: ()=>_submitForm())
+                PrimaryButton(title: "Submit", onPressed: ()=>_submitForm())
 
 
             ],

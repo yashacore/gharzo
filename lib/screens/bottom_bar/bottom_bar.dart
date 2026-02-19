@@ -52,8 +52,21 @@ class _BottomBarState extends State<BottomBarView>
             Scaffold(
               extendBody: true,
               body: provider.currentPage(openDrawer),
-              bottomNavigationBar: _bottomBar(provider),
+
+              bottomNavigationBar: AnimatedSlide(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOut,
+                offset: provider.isBottomBarVisible
+                    ? Offset.zero
+                    : const Offset(0, 1), // slide down
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: provider.isBottomBarVisible ? 1 : 0,
+                  child: _bottomBar(provider),
+                ),
+              ),
             ),
+
 
             // 🔥 DARK OVERLAY
             if (_controller.value > 0)

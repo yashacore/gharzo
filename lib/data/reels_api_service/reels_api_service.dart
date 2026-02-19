@@ -77,19 +77,26 @@ class ReelsApiService {
     }
   }
 
-  static Future<int> likeReel(String reelId) async {
+  static Future<Map<String, dynamic>> likeReel(String reelId) async {
+    final token = await PrefService.getToken();
+
     final response = await http.post(
-      Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/like"),
+      Uri.parse(
+        "https://api.gharzoreality.com/api/reels/$reelId/like",
+      ),
       headers: {
-        "Authorization": "Bearer YOUR_TOKEN",
+        "Authorization": "Bearer $token",
         "Content-Type": "application/json",
       },
     );
 
     final json = jsonDecode(response.body);
 
-    if (json["success"] == true) {
-      return json["likes"];
+    if (response.statusCode == 200 && json["success"] == true) {
+      return {
+        "likes": json["likes"],
+        "isLiked": json["isLiked"],
+      };
     } else {
       throw Exception("Like failed");
     }

@@ -6,6 +6,7 @@ import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:gharzo_project/utils/validation/validation.dart';
 import 'package:provider/provider.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpVerificationView extends StatelessWidget {
   const OtpVerificationView({super.key});
@@ -33,6 +34,23 @@ class OtpVerificationView extends StatelessWidget {
                       .bodyMedium,
                 ),
                 SizedBox(height: 8,),
+                // PinFieldAutoFill(
+                //   controller: value.otpController,
+                //   codeLength: 6,
+                //   onCodeChanged: (code) {
+                //     debugPrint("⌨ UI onCodeChanged: $code");
+                //
+                //     if (code != null && code.length == 6 && !value.isLoading) {
+                //       debugPrint("⏱ Waiting before auto verify");
+                //
+                //       Future.delayed(const Duration(milliseconds: 900), () {
+                //         debugPrint("🚀 Auto calling verifyOtp()");
+                //         value.verifyOtp(context);
+                //       });
+                //     }
+                //   },
+                // ),
+
 
                 CommonWidget.commonOtpTextField(
                   context: context,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_service_method.dart';
-import 'package:gharzo_project/screens/add_properties/upload_photo/upload_photo_view.dart';
 
 class ContactProvider extends ChangeNotifier {
   bool loading = false;

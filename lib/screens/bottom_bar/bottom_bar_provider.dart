@@ -50,4 +50,11 @@ class BottomBarProvider with ChangeNotifier {
         return HomeView(action: openDrawer);
     }
   }
+  bool isBottomBarVisible = true;
+  void setBottomBarVisibility(bool visible) {
+    if (isBottomBarVisible != visible) {
+      isBottomBarVisible = visible;
+      notifyListeners();
+    }
+  }
 }

@@ -6,40 +6,52 @@ import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
 import 'package:gharzo_project/screens/login/login_view.dart';
 import 'package:gharzo_project/screens/onboardring/onboarding_one.dart';
+import 'package:gharzo_project/screens/welcome_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashProvider extends ChangeNotifier {
   VideoPlayerController? controller;
   bool isInitialized = false;
   bool useVideo = false;
+  bool navigationDone = false;
+
 
   Future<void> start() async {
-    useVideo = await _canPlayVideoSplash();
+    try {
+      controller = VideoPlayerController.networkUrl(
+        Uri.parse(
+          "https://gharzo-bucket.s3.ap-south-1.amazonaws.com/splace+screen/GHARZO+1.0.mp4"
+        ),
+      );
 
-    if (useVideo) {
-      try {
-        controller = VideoPlayerController.asset(
-          'assets/gharzo_splash_video.mp4',
-        );
+      await controller!.initialize();
+      controller!.setLooping(false);
+      controller!.play();
 
-        await controller!.initialize();
-        controller!.setLooping(false);
-        controller!.play();
-      } catch (e) {
-        debugPrint("❌ Video splash failed: $e");
-        useVideo = false;
-      }
+      // 🔥 Navigate when video finishes
+      controller!.addListener(() {
+        if (controller!.value.isInitialized &&
+            controller!.value.position >=
+                controller!.value.duration &&
+            !navigationDone) {
+          navigationDone = true;
+          handleNavigation();
+        }
+      });
+
+      isInitialized = true;
+      notifyListeners();
+    } catch (e) {
+      debugPrint("❌ Video load failed: $e");
+      useVideo = false;
+      isInitialized = true;
+      notifyListeners();
+
+      // fallback navigation
+      await Future.delayed(const Duration(seconds: 2));
+      handleNavigation();
     }
-
-    isInitialized = true;
-    notifyListeners();
-
-    /// Splash duration
-    await Future.delayed(const Duration(seconds: 3));
-
-    _handleNavigation();
   }
-
   /// 🔍 Detect MediaTek & unsupported devices
   Future<bool> _canPlayVideoSplash() async {
     if (!Platform.isAndroid) return true;
@@ -56,28 +68,50 @@ class SplashProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<void> _handleNavigation() async {
-    final getOnboardingPageViews =
-    await PrefService.getOnboardingPageViews();
+  Future<void> handleNavigation() async {
+    print("🚀 handleNavigation() STARTED");
 
-    if (getOnboardingPageViews) {
-      final token = await PrefService.getToken();
-      print("Token-------");
-      print(token);
-      if (token != null && token.isNotEmpty) {
-        navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const BottomBarView()),
-        );
-      } else {
-        navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginView()),
-        );
-      }
-    } else {
+    await Future.delayed(const Duration(seconds: 3));
+
+    final onboardingViewed =
+    await PrefService.getOnboardingPageViews();
+    print("📘 Onboarding Viewed: $onboardingViewed");
+
+    // 1️⃣ Onboarding NOT completed
+    if (onboardingViewed == false) {
+      print("➡️ Navigating to OnboardingView");
+
       navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (_) => const OnboardingView()),
+        MaterialPageRoute(
+          builder: (_) => const OnboardingView(),
+        ),
+      );
+      return;
+    }
+
+    // 2️⃣ Onboarding completed → check auth
+    final token = await PrefService.getToken();
+    print("🔑 Token: $token");
+
+    if (token != null && token.isNotEmpty) {
+      print("➡️ Navigating to BottomBarView");
+
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const BottomBarView(),
+        ),
+      );
+    } else {
+      print("➡️ Navigating to WelcomeScreen");
+
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const WelcomeScreen(),
+        ),
       );
     }
+
+    print("🏁 handleNavigation() FINISHED");
   }
 
   @override

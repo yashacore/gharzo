@@ -180,7 +180,9 @@ class _ReelItemState extends State<_ReelItem> {
                   color: widget.reel.isLiked ? Colors.red : Colors.white,
                   size: 32,
                 ),
-                onPressed: () => provider.toggleLike(widget.reel),
+                onPressed: () {}
+                // => provider.
+                // toggleLike(widget.reel),
               ),
               Text(
                 widget.reel.likesCount.toString(),

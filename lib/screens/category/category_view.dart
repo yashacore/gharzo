@@ -8,6 +8,99 @@ import 'package:provider/provider.dart';
 
 import '../../utils/theme/colors.dart';
 
+
+// child: Container(
+//   decoration: BoxDecoration(
+//     borderRadius: BorderRadius.circular(12),
+//     border: Border.all(
+//         color: Colors.grey.shade200),
+//   ),
+//   child: Column(
+//     crossAxisAlignment:
+//     CrossAxisAlignment.start,
+//     children: [
+//       Expanded(
+//         child: ClipRRect(
+//           borderRadius: const BorderRadius
+//               .vertical(
+//               top: Radius.circular(12)),
+//           child: Image.network(
+//             property.imageUrl,
+//             width: double.infinity,
+//             fit: BoxFit.cover,
+//             errorBuilder:
+//                 (_, __, ___) => SizedBox(
+//               width: double.infinity,
+//               child: const Icon(
+//                 Icons
+//                     .image_not_supported,
+//                 color: Colors.red,
+//                 size: 30,
+//               ),
+//             ),
+//             loadingBuilder:
+//                 (BuildContext context,
+//                 Widget child,
+//                 ImageChunkEvent?
+//                 loadingProgress) {
+//               if (loadingProgress == null)
+//                 return child;
+//               return Center(
+//                 child:
+//                 CircularProgressIndicator(
+//                   value: loadingProgress
+//                       .expectedTotalBytes !=
+//                       null
+//                       ? loadingProgress
+//                       .cumulativeBytesLoaded /
+//                       loadingProgress
+//                           .expectedTotalBytes!
+//                       : null,
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//       ),
+//       Padding(
+//         padding: const EdgeInsets.all(8),
+//         child: Column(
+//           crossAxisAlignment:
+//           CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               property.title,
+//               maxLines: 1,
+//               overflow:
+//               TextOverflow.ellipsis,
+//               style: const TextStyle(
+//                 fontWeight: FontWeight.bold,
+//               ),
+//             ),
+//             const SizedBox(height: 4),
+//             Text(
+//               property.location,
+//               style: const TextStyle(
+//                   fontSize: 12),
+//             ),
+//             const SizedBox(height: 4),
+//             Text(
+//               property.price,
+//               style: const TextStyle(
+//                 color: Colors.blue,
+//                 fontWeight: FontWeight.bold,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ],
+//   ),
+// ),
+
+
+
+
 class CategoryView extends StatefulWidget {
   final String category;
   const CategoryView({super.key, required this.category});
@@ -34,6 +127,7 @@ class _CategoryViewState extends State<CategoryView> {
     return Consumer<CategoryProvider>(
       builder: (context, provider, child) {
         return Scaffold(
+          backgroundColor: Colors.white,
           body:
           Column(
             children: [
@@ -125,13 +219,14 @@ class _CategoryViewState extends State<CategoryView> {
                               }
 
                               return GridView.builder(
+
+
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: provider.properties.length,
-                                gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  childAspectRatio: 0.75,
+                                  childAspectRatio: 0.60,
                                   crossAxisSpacing: 12,
                                   mainAxisSpacing: 12,
                                 ),
@@ -139,108 +234,39 @@ class _CategoryViewState extends State<CategoryView> {
                                   final property = provider.properties[index];
 
                                   return GestureDetector(
-                                    onTap: () {
+                                    onTap: (){
                                       Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) =>
-                                              ChangeNotifierProvider(
-                                                create: (_) =>
-                                                    PropertyDetailProvider(),
-                                                child: PropertyDetailScreen(
-                                                  propertyId: property.id,
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                ChangeNotifierProvider(
+                                                  create: (_) =>
+                                                      PropertyDetailProvider(),
+                                                  child: PropertyDetailScreen(
+                                                    propertyId: property.id,
+                                                  ),
                                                 ),
-                                              ),
-                                        ),
-                                      );
+                                          ));
                                     },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: Colors.grey.shade200),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: ClipRRect(
-                                              borderRadius: const BorderRadius
-                                                  .vertical(
-                                                  top: Radius.circular(12)),
-                                              child: Image.network(
-                                                property.imageUrl,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                                errorBuilder:
-                                                    (_, __, ___) => SizedBox(
-                                                  width: double.infinity,
-                                                  child: const Icon(
-                                                    Icons
-                                                        .image_not_supported,
-                                                    color: Colors.red,
-                                                    size: 30,
-                                                  ),
-                                                ),
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                    Widget child,
-                                                    ImageChunkEvent?
-                                                    loadingProgress) {
-                                                  if (loadingProgress == null)
-                                                    return child;
-                                                  return Center(
-                                                    child:
-                                                    CircularProgressIndicator(
-                                                      value: loadingProgress
-                                                          .expectedTotalBytes !=
-                                                          null
-                                                          ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                          loadingProgress
-                                                              .expectedTotalBytes!
-                                                          : null,
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  property.title,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                  TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  property.location,
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  property.price,
-                                                  style: const TextStyle(
-                                                    color: Colors.blue,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                    child: PropertyCard(
+                                      // IMAGE
+                                      imgUrl: property.imageUrl,
+
+                                      // BASIC
+                                      price: property.formattedPrice, // "₹120"
+                                      title: property.title,
+                                      location: property.fullLocation,
+                                      postedText: "POSTED",
+
+                                      // PROPERTY INFO
+                                      bhk: property.bhk,
+                                      bathrooms: property.bathrooms,
+                                      area: property.areaText, // "850 sqft"
+                                      furnishing: property.furnishing,
+
+                                      // FLAGS
+                                      isVerified: property.isVerified,
+                                      isFeatured: property.isFeatured,
                                     ),
                                   );
                                 },
@@ -385,4 +411,233 @@ class _CategoryViewState extends State<CategoryView> {
       ),
     );
   }
+}
+
+
+
+
+
+class PropertyCard extends StatelessWidget {
+  final String price;
+  final String title;
+  final String location;
+  final String postedText;
+  final String imgUrl;
+
+  final int bhk;
+  final int bathrooms;
+  final String area;
+  final String furnishing;
+  final bool isVerified;
+  final bool isFeatured;
+
+  const PropertyCard({
+    super.key,
+    required this.price,
+    required this.title,
+    required this.location,
+    required this.postedText,
+    required this.imgUrl,
+    required this.bhk,
+    required this.bathrooms,
+    required this.area,
+    required this.furnishing,
+    required this.isVerified,
+    required this.isFeatured,
+  });
+
+  bool get hasImage =>
+      imgUrl.isNotEmpty && imgUrl.startsWith('http');
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.10),
+        //     blurRadius: 24,
+        //     offset: const Offset(0, 12),
+        //   ),
+        // ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max, // IMPORTANT
+        children: [
+          // ================= IMAGE =================
+          ClipRRect(
+            borderRadius:
+            const BorderRadius.vertical(top: Radius.circular(20)),
+            child: Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 1.15,
+                  child: hasImage
+                      ? Image.network(imgUrl, fit: BoxFit.cover)
+                      : Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(
+                      Icons.home_work_rounded,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+
+                // Gradient
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.75),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Badge
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: Container(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isFeatured
+                          ? Colors.amber
+                          : isVerified
+                          ? Colors.green
+                          : Colors.white.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      isFeatured
+                          ? "FEATURED"
+                          : isVerified
+                          ? "VERIFIED"
+                          : postedText,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Price
+                Positioned(
+                  left: 10,
+                  bottom: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2563EB),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      price,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ================= CONTENT =================
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 2),
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              location,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          // ================= PROPERTY INFO (WRAP FIX) =================
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                _chip(Icons.bed_outlined, "$bhk BHK"),
+                _chip(Icons.bathtub_outlined, "$bathrooms Bath"),
+                _chip(Icons.square_foot_outlined, area),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 4),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              furnishing,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+
+          const Spacer(), // PUSH CTA TO BOTTOM
+
+          // ================= CTA =================
+        ],
+      ),
+    );
+  }
+
+  Widget _chip(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 13, color: Colors.grey),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
 }

@@ -5,7 +5,6 @@ import 'package:gharzo_project/routes/pages.dart';
 import 'package:gharzo_project/screens/splash/splash_view.dart';
 import 'package:gharzo_project/utils/theme/text_style.dart';
 import 'package:provider/provider.dart';
-
 import 'notification_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

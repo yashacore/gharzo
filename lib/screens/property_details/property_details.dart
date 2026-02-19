@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:provider/provider.dart';
@@ -161,10 +163,42 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                   color: themeColor.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: const Text("FOR SALE",
-                                    style: TextStyle(color: themeColor, fontSize: 10, fontWeight: FontWeight.bold)),
+                                child: const Text(
+                                  "FOR SALE",
+                                  style: TextStyle(
+                                    color: themeColor,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                              const Icon(Icons.share_outlined, color: Colors.grey, size: 20),
+
+                              Row(
+                                children: [
+                                  const Icon(Icons.share_outlined,
+                                      color: Colors.grey, size: 20),
+                                  const SizedBox(width: 12),
+
+                                  /// ❤️ SAVE TOGGLE
+                                  Consumer<PropertyDetailProvider>(
+                                    builder: (context, provider, _) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          provider.toggleSave();
+                                        },
+                                        child: Icon(
+                                          provider.isSaved
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color:
+                                          provider.isSaved ? Colors.red : Colors.grey,
+                                          size: 22,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -323,3 +357,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     );
   }
 }
+
+
+

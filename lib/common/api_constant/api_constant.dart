@@ -26,8 +26,8 @@ class ApiConstant{
     'Buy': 'listingType=Sale',
     'Commercial': 'category=Commercial',
     'PG': 'listingType=PG',
-    'Hostels': 'propertyType=Hostel',
-    'Banquets': 'propertyType=Banquet',
+    'Hostels': 'listingType=Hostel',
+    'Banquets': 'listingType=Banquet',
   };
 
   static String propertyDetails(String id) {

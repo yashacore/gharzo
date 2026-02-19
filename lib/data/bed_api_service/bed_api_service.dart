@@ -12,7 +12,6 @@ import 'package:gharzo_project/model/bed/update_bed/update_bed_model.dart';
 import 'package:gharzo_project/model/bed/update_bed_image/update_bed_image_model.dart';
 import 'package:gharzo_project/model/bed/update_bed_status/update_bed_status_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:gharzo_project/common/api_constant/api_constant.dart';
 
 class BedApiService {
 

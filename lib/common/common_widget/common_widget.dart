@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:pinput/pinput.dart';
@@ -402,31 +401,34 @@ class CommonWidget {
       ),
     );
   }
-
   static Widget commonGradientScaffold({
     required Widget body,
-
     Gradient? gradient,
     bool isScrollable = true,
     double headerHeight = 260,
     ScrollPhysics? physics,
-    EdgeInsets safeAreaPadding = const EdgeInsets.symmetric(horizontal: 16),
+    ScrollController? scrollController,
   }) {
+    debugPrint(
+      "🧱 commonGradientScaffold → isScrollable=$isScrollable "
+          "controller=${scrollController != null}",
+    );
+
     Widget content = SingleChildScrollView(
+      controller: scrollController,
       child: Stack(
         children: [
           Container(
             height: headerHeight,
             width: double.infinity,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppThemeColors().backgroundLeft,
-                  AppThemeColors().backgroundRight,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: gradient ??
+                  LinearGradient(
+                    colors: [
+                      AppThemeColors().backgroundLeft,
+                      AppThemeColors().backgroundRight,
+                    ],
+                  ),
             ),
           ),
           body,
@@ -437,10 +439,11 @@ class CommonWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: isScrollable
-          ? SingleChildScrollView(physics: physics, child: content)
+          ? SingleChildScrollView(child: content)
           : content,
     );
   }
+
 
   static Widget categoryListView(dynamic provider) {
     return SingleChildScrollView(
