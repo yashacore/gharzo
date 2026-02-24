@@ -2,10 +2,7 @@ class BulkCreateRoomRequestModel {
   final String propertyId;
   final List<RoomRequest> rooms;
 
-  BulkCreateRoomRequestModel({
-    required this.propertyId,
-    required this.rooms,
-  });
+  BulkCreateRoomRequestModel({required this.propertyId, required this.rooms});
 
   Map<String, dynamic> toJson() => {
     "propertyId": propertyId,
@@ -74,10 +71,7 @@ class MaintenanceCharges {
   final int amount;
   final bool includedInRent;
 
-  MaintenanceCharges({
-    required this.amount,
-    required this.includedInRent,
-  });
+  MaintenanceCharges({required this.amount, required this.includedInRent});
 
   Map<String, dynamic> toJson() => {
     "amount": amount,
@@ -90,9 +84,7 @@ class Capacity {
 
   Capacity({required this.totalBeds});
 
-  Map<String, dynamic> toJson() => {
-    "totalBeds": totalBeds,
-  };
+  Map<String, dynamic> toJson() => {"totalBeds": totalBeds};
 }
 
 class Features {
@@ -159,13 +151,8 @@ class Area {
 
   Area({required this.carpet, required this.unit});
 
-  Map<String, dynamic> toJson() => {
-    "carpet": carpet,
-    "unit": unit,
-  };
+  Map<String, dynamic> toJson() => {"carpet": carpet, "unit": unit};
 }
-
-
 
 class BulkCreateRoomResponse {
   final bool success;
@@ -182,9 +169,7 @@ class BulkCreateRoomResponse {
     return BulkCreateRoomResponse(
       success: json['success'],
       count: json['count'],
-      data: List<RoomData>.from(
-        json['data'].map((x) => RoomData.fromJson(x)),
-      ),
+      data: List<RoomData>.from(json['data'].map((x) => RoomData.fromJson(x))),
     );
   }
 }

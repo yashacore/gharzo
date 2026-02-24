@@ -6,10 +6,8 @@ import 'package:gharzo_project/model/advertisement/advertisment_model.dart';
 import 'package:gharzo_project/model/property_model/property_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class CategoryProvider with ChangeNotifier {
   String selectedCategory = 'Rent';
-
 
   List<AdvertisementModel> ads = [];
 
@@ -19,7 +17,7 @@ class CategoryProvider with ChangeNotifier {
     'Hostels',
     'PG',
     'Commercial',
-    'Banquets'
+    'Banquets',
   ];
   bool isLoading = false;
   List<PropertyModel> properties = [];
@@ -39,8 +37,6 @@ class CategoryProvider with ChangeNotifier {
     setCategory(selectedCategory);
   }
 
-
-
   /// ================= FETCH ADS =================
   Future<void> fetchAds() async {
     isLoading = true;
@@ -49,11 +45,12 @@ class CategoryProvider with ChangeNotifier {
     try {
       final response = await AdvertisementApi.fetchHomepageAds();
 
-      ads = (response ?? [])
-          .map((e) => AdvertisementModel.fromJson(e))
-          .where((ad) => ad.hasImage) // ✅ Only keep ads with images
-          .toList()
-        ..sort((a, b) => b.priority.compareTo(a.priority));
+      ads =
+          (response)
+              .map((e) => AdvertisementModel.fromJson(e))
+              .where((ad) => ad.hasImage) // ✅ Only keep ads with images
+              .toList()
+            ..sort((a, b) => b.priority.compareTo(a.priority));
 
       // Debug: print all ad image URLs
       for (var ad in ads) {
@@ -95,7 +92,6 @@ class CategoryProvider with ChangeNotifier {
     AdvertisementApi.trackConversion(ad.id);
   }
 
-
   Future<void> setCategory(String category) async {
     selectedCategory = category;
     await fetchProperties();
@@ -106,7 +102,9 @@ class CategoryProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      properties = (await AuthService.getPropertiesByCategory(selectedCategory)).cast<PropertyModel>();
+      properties = (await AuthService.getPropertiesByCategory(
+        selectedCategory,
+      )).cast<PropertyModel>();
     } catch (e) {
       properties = [];
     }

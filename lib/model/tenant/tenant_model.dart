@@ -21,35 +21,22 @@ class TenantUserModel {
   }
 }
 
-
-
-
 class TenantLoginRequest {
   final String phone;
 
   TenantLoginRequest({required this.phone});
 
-  Map<String, dynamic> toJson() => {
-    "phone": phone,
-  };
+  Map<String, dynamic> toJson() => {"phone": phone};
 }
-
 
 class TenantOtpRequest {
   final String phone;
   final String otp;
 
-  TenantOtpRequest({
-    required this.phone,
-    required this.otp,
-  });
+  TenantOtpRequest({required this.phone, required this.otp});
 
-  Map<String, dynamic> toJson() => {
-    "phone": phone,
-    "otp": otp,
-  };
+  Map<String, dynamic> toJson() => {"phone": phone, "otp": otp};
 }
-
 
 class TenantLoginResponse {
   final bool success;
@@ -68,8 +55,9 @@ class TenantLoginResponse {
     return TenantLoginResponse(
       success: json["success"] ?? false,
       message: json["message"] ?? "",
-      user:
-      json["data"] != null ? TenantUserModel.fromJson(json["data"]) : null,
+      user: json["data"] != null
+          ? TenantUserModel.fromJson(json["data"])
+          : null,
       token: json["token"],
     );
   }

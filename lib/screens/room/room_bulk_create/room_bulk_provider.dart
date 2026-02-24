@@ -12,15 +12,14 @@ class RoomsProvider with ChangeNotifier {
   BulkCreateRoomResponse? get response => _response;
 
   Future<void> bulkCreateRooms(
-      BulkCreateRoomRequestModel request,
-      String token,
-      ) async {
+    BulkCreateRoomRequestModel request,
+    String token,
+  ) async {
     try {
       _isLoading = true;
       notifyListeners();
 
       _response = await _apiService.bulkCreateRooms(request, token);
-
     } catch (e) {
       debugPrint("Bulk Create Error: $e");
       rethrow;

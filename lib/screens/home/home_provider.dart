@@ -24,7 +24,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeProvider extends ChangeNotifier {
-
   // ================= UI STATE =================
   bool isLoading = false;
   bool isViewAll = false;
@@ -36,16 +35,66 @@ class HomeProvider extends ChangeNotifier {
 
   // ================= CATEGORY DATA =================
   final List<CategoryModel> categories = [
-    CategoryModel(icon: Icons.apartment, label: "Rent", color: Colors.orange, type: "category"),
-    CategoryModel(icon: Icons.home, label: "Hostels", color: Colors.red, type: "hostels"),
-    CategoryModel(icon: Icons.shopping_bag, label: "Buy", color: Colors.blue, type: "buy"),
-    CategoryModel(icon: Icons.people, label: "PG", color: Colors.indigo, type: "pg"),
-    CategoryModel(icon: Icons.business, label: "Commercial", color: Colors.blueGrey, type: "commercial"),
-    CategoryModel(icon: Icons.celebration, label: "Banquets", color: Colors.green, type: "banquets"),
-    CategoryModel(icon: Icons.design_services, label: "Services", color: Colors.purple, type: "villa"),
-    CategoryModel(icon: Icons.home, label: "Home Loan", color: Colors.teal, type: "farm"),
-    CategoryModel(icon: Icons.hotel, label: "Hotels", color: Colors.brown, type: "hotel"),
-    CategoryModel(icon: Icons.add_to_photos_outlined, label: "Project", color: Colors.cyan, type: "shops"),
+    CategoryModel(
+      icon: Icons.apartment,
+      label: "Rent",
+      color: Colors.orange,
+      type: "category",
+    ),
+    CategoryModel(
+      icon: Icons.home,
+      label: "Hostels",
+      color: Colors.red,
+      type: "hostels",
+    ),
+    CategoryModel(
+      icon: Icons.shopping_bag,
+      label: "Buy",
+      color: Colors.blue,
+      type: "buy",
+    ),
+    CategoryModel(
+      icon: Icons.people,
+      label: "PG",
+      color: Colors.indigo,
+      type: "pg",
+    ),
+    CategoryModel(
+      icon: Icons.business,
+      label: "Commercial",
+      color: Colors.blueGrey,
+      type: "commercial",
+    ),
+    CategoryModel(
+      icon: Icons.celebration,
+      label: "Banquets",
+      color: Colors.green,
+      type: "banquets",
+    ),
+    CategoryModel(
+      icon: Icons.design_services,
+      label: "Services",
+      color: Colors.purple,
+      type: "villa",
+    ),
+    CategoryModel(
+      icon: Icons.home,
+      label: "Home Loan",
+      color: Colors.teal,
+      type: "farm",
+    ),
+    CategoryModel(
+      icon: Icons.hotel,
+      label: "Hotels",
+      color: Colors.brown,
+      type: "hotel",
+    ),
+    CategoryModel(
+      icon: Icons.add_to_photos_outlined,
+      label: "Project",
+      color: Colors.cyan,
+      type: "shops",
+    ),
   ];
 
   Timer? _timer;
@@ -71,7 +120,10 @@ class HomeProvider extends ChangeNotifier {
     List<List<T>> chunks = [];
     for (int i = 0; i < list.length; i += chunkSize) {
       chunks.add(
-        list.sublist(i, (i + chunkSize > list.length) ? list.length : i + chunkSize),
+        list.sublist(
+          i,
+          (i + chunkSize > list.length) ? list.length : i + chunkSize,
+        ),
       );
     }
     return chunks;
@@ -84,11 +136,12 @@ class HomeProvider extends ChangeNotifier {
       notifyListeners();
 
       final response = await AdvertisementApi.fetchHomepageAds();
-      ads = (response ?? [])
-          .map((e) => AdvertisementModel.fromJson(e))
-          .where((ad) => ad.hasImage)
-          .toList()
-        ..sort((a, b) => b.priority.compareTo(a.priority));
+      ads =
+          (response)
+              .map((e) => AdvertisementModel.fromJson(e))
+              .where((ad) => ad.hasImage)
+              .toList()
+            ..sort((a, b) => b.priority.compareTo(a.priority));
     } catch (e) {
       print("Error fetching ads: $e");
       ads = [];
@@ -110,7 +163,10 @@ class HomeProvider extends ChangeNotifier {
 
       final featuredResp = await http.get(
         Uri.parse(ApiConstant.featuredProperties),
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
       );
 
       featuredProperties = (jsonDecode(featuredResp.body)['data'] as List)
@@ -119,7 +175,10 @@ class HomeProvider extends ChangeNotifier {
 
       final trendingResp = await http.get(
         Uri.parse(ApiConstant.trendingProperties),
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
       );
 
       trendingProperties = (jsonDecode(trendingResp.body)['data'] as List)
@@ -128,13 +187,15 @@ class HomeProvider extends ChangeNotifier {
 
       final recentResp = await http.get(
         Uri.parse(ApiConstant.recentProperties),
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
       );
 
       recentProperties = (jsonDecode(recentResp.body)['data'] as List)
           .map((e) => PropertyModel.fromJson(e))
           .toList();
-
     } catch (e) {
       print("Error fetching properties: $e");
       featuredProperties = [];
@@ -184,37 +245,24 @@ class HomeProvider extends ChangeNotifier {
           ),
         ),
       );
-    }
-    else if (type == "Home Loan") {
+    } else if (type == "Home Loan") {
       // 👉 Open Home Loan Enquiry Screen
       await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (_) => const LoanScreen(),
-          ),
-
+        MaterialPageRoute(builder: (_) => const LoanScreen()),
       );
-    }
-    else if (type == "Banquets") {
+    } else if (type == "Banquets") {
       await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (_) => const BanquetListScreen(),
-          ),
-
+        MaterialPageRoute(builder: (_) => const BanquetListScreen()),
       );
-    }
-    else if (type == "Hotels") {
+    } else if (type == "Hotels") {
       // 👉 Open Home Loan Enquiry Screen
       await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (_) => const HotelListScreen(),
-          ),
-
+        MaterialPageRoute(builder: (_) => const HotelListScreen()),
       );
-    }
-    else {
+    } else {
       // 👉 Open Category Screen
       await Navigator.push(
         context,
@@ -234,7 +282,7 @@ class HomeProvider extends ChangeNotifier {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const LoginView()),
-            (route) => false,
+        (route) => false,
       );
       return false;
     }
@@ -281,7 +329,8 @@ class HomeProvider extends ChangeNotifier {
       final token = await PrefService.getToken();
 
       final url = Uri.parse(
-          'https://api.gharzoreality.com/api/auth/save-token');
+        'https://api.gharzoreality.com/api/auth/save-token',
+      );
 
       final response = await http.post(
         url,
@@ -289,17 +338,13 @@ class HomeProvider extends ChangeNotifier {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
-          "token": fcmToken,
-          "device": "android",
-        }),
+        body: jsonEncode({"token": fcmToken, "device": "android"}),
       );
 
       if (response.statusCode == 200) {
-        print("Token saved successfully");
+        print("FCM Token saved successfully");
       } else {
-        print(
-            "Failed to save token: ${response.statusCode} ${response.body}");
+        print("Failed to save token: ${response.statusCode} ${response.body}");
       }
     } catch (e) {
       print("Error saving token: $e");

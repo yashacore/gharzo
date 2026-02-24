@@ -45,12 +45,12 @@ class _LoginViewState extends State<LoginView> {
                   ],
                 ),
                 SizedBox(height: 16),
-                PrimaryButton(title: "Send Otp",
-                    onPressed: value.isButtonLoading
-                        ? null
-                        : () async => await value.sendOtp(context),
-                    )
-
+                PrimaryButton(
+                  title: "Send Otp",
+                  onPressed: value.isButtonLoading
+                      ? null
+                      : () async => await value.sendOtp(context),
+                ),
               ],
             ),
           ),

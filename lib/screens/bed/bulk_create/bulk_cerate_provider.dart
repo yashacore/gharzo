@@ -3,7 +3,6 @@ import 'package:gharzo_project/data/bed_api_service/bed_api_service.dart';
 import 'package:gharzo_project/model/bed/bulk_create_beds/bulk_create_bed_response.dart';
 import 'package:gharzo_project/model/bed/bulk_create_beds/bulk_create_beds_model.dart';
 
-
 class BulkCreateBedsProvider with ChangeNotifier {
   final BedApiService _apiService = BedApiService();
 

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
-import 'package:gharzo_project/main.dart';
-import 'package:gharzo_project/model/add_property_type/amenity_model.dart';
-import 'package:gharzo_project/screens/add_properties/add_property_type/add_property_provider.dart';
+import 'package:gharzo_project/common/common_widget/primary_button.dart';
+import 'package:gharzo_project/common/common_widget/progress_bar.dart';
 import 'package:gharzo_project/screens/add_properties/location/location_view.dart';
 import 'package:gharzo_project/screens/add_properties/property_feature/property_feature_provider.dart';
 import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
@@ -16,148 +15,203 @@ class PropertyFeatureView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => FeaturesProvider()..fetchAmenities(),
+      create: (_) {
+        final provider = FeaturesProvider();
+        provider.load(propertyId); // ✅ ONLY SOURCE OF TRUTH
+        return provider;
+      },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         appBar: CommonWidget.gradientAppBar(
           title: PageConstVar.propertyFeature,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         body: Consumer<FeaturesProvider>(
           builder: (context, provider, _) {
+            if (provider.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ---------- Furnishing ----------
-                  cardWrapper(
-                    title: "Furnishing Details",
-                    icon: Icons.chair_outlined,
+                  PropertyProgressBar(
+                    progress: 3 / 8, // 0.125
+                    label: "Step 3 of 8 • Property Features",
+                  ),
+                  // ================= ESSENTIAL SERVICES =================
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        dropdownBtn(
-                          "Furnishing Type",
-                          provider.furnishingType,
-                          ["Unfurnished", "Semi-Furnished", "Fully-Furnished"],
-                              (v) {
-                            provider.furnishingType = v ?? "Unfurnished";
-                            provider.notifyListeners();
-                          },
+                        _chipSection(
+                          icon: Icons.flash_on,
+                          title: "Essential Services",
+                          items: provider.essentialMaster,
+                          selected: provider.essentialSelected,
+                          onTap: provider.toggleEssential,
                         ),
-                        SizedBox(height: 8),
-                      ],
-                    ),
-                  ),
-                  cardWrapper(
-                      title: "Other Details",
-                      icon: Icons.info_outline,
-                      child: Column(
-                        children: [
-                          dropdownBtn(
-                            "Facing Direction",
-                            provider.facing,
-                            [
-                              "North",
-                              "South",
-                              "East",
-                              "West",
-                              "North-East",
-                              "North-West",
-                              "South-East",
-                              "South-West"
-                            ],
-                                (v) {
-                              provider.facing = v;
-                              provider.notifyListeners();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  cardWrapper(
-                    title: "Amenities",
-                    icon: Icons.pool_outlined,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        sectionTitle("Basic Amenities"),
-                        amenitiesGrid(provider.basicAmenities, provider),
-                         SizedBox(height: 14),
-                        sectionTitle("Society Amenities"),
-                        amenitiesGrid(provider.societyAmenities, provider),
-                         SizedBox(height: 14),
-                        sectionTitle("Nearby Places"),
-                        amenitiesGrid(provider.nearbyAmenities, provider),
-                      ],
-                    ),
-                  ),
 
-                  // ---------- Property Rules ----------
-                  cardWrapper(
-                    title: "Property Rules & Facilities",
-                    icon: Icons.settings_outlined,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        dropdownBtn("Power Backup", provider.powerBackup, ["None","Partial","Full"],
-                            provider.setPowerBackup),
-                        dropdownBtn("Water Supply", provider.waterSupply, ["Borewell","Corporation","Both"],
-                            provider.setWaterSupply),
-                        _switch("Lift Available", provider.liftAvailable, provider.setLiftAvailable),
-                      ],
-                    ),
-                  ),
+                        const SizedBox(height: 24),
 
-                  if (provider.error != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red[50],
-                          borderRadius: BorderRadius.circular(8),
+                        // ================= NEARBY PLACES =================
+                        _chipSection(
+                          icon: Icons.location_on_outlined,
+                          title: "Nearby Places",
+                          items: provider.nearbyMaster,
+                          selected: provider.nearbySelected,
+                          onTap: provider.toggleNearby,
                         ),
-                        child: Row(
+
+                        const SizedBox(height: 28),
+
+                        // ================= PROPERTY FEATURES =================
+                        _sectionTitle("Property Features"),
+                        const SizedBox(height: 16),
+
+                        Row(
                           children: [
-                             Icon(Icons.error_outline, color: Colors.red, size: 20),
-                             SizedBox(width: 8),
                             Expanded(
-                              child: Text(provider.error!,
-                                  style:  TextStyle(color: Colors.red)),
+                              child: _dropdown(
+                                "Power Backup",
+                                provider.powerBackup,
+                                ["None", "Partial", "Full"],
+                                provider.setPowerBackup,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _dropdown(
+                                "Water Supply",
+                                provider.waterSupply,
+                                ["Corporation", "Borewell", "Both"],
+                                provider.setWaterSupply,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
 
-                  SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 54,
-                    child: CommonWidget.commonElevatedBtn(
-                      btnText: "Save Features",
-                      isLoading: provider.loading,
-                      onPressed: provider.loading
-                          ? null
-                          : () async {
-                        final success = await provider.submit(propertyId);
-                        if (success && context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  LocationView(propertyId: propertyId),
+                        const SizedBox(height: 16),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _dropdown("Flooring", provider.flooring, [
+                                "Marble",
+                                "Vitrified Tiles",
+                                "Wooden",
+                                "Granite",
+                                "Ceramic",
+                                "Cement",
+                                "Other",
+                              ], provider.setFlooring),
                             ),
-                          );
-                        }
-                      },
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _dropdown(
+                                "Construction Quality",
+                                provider.constructionQuality,
+                                [
+                                  "Standard",
+                                  "Above Standard",
+                                  "Premium",
+                                  "Luxury",
+                                ],
+                                provider.setConstructionQuality,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _numberField(
+                                "Ceiling Height (ft)",
+                                provider.ceilingHeight?.toString(),
+                                (v) => provider.ceilingHeight = int.tryParse(v),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _numberField(
+                                "Road Width (ft)",
+                                provider.widthOfFacingRoad?.toString(),
+                                (v) => provider.widthOfFacingRoad =
+                                    int.tryParse(v),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        _dropdown(
+                          "Waste Disposal",
+                          provider.wasteDisposal,
+                          ["Municipal", "Private", "Biogas Plant", "None"],
+                          provider.setWasteDisposal,
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // ================= SWITCHES =================
+                        _switchRow(
+                          "Gated Security",
+                          provider.gatedSecurity,
+                          provider.setGatedSecurity,
+                          "Lift Available",
+                          provider.liftAvailable,
+                          provider.setLiftAvailable,
+                        ),
+
+                        _switchRow(
+                          "Pet Friendly",
+                          provider.petFriendly,
+                          provider.setPetFriendly,
+                          "Bachelors Allowed",
+                          provider.bachelorsAllowed,
+                          provider.setBachelorsAllowed,
+                        ),
+
+                        _switchRow(
+                          "Non-Veg Allowed",
+                          provider.nonVegAllowed,
+                          provider.setNonVegAllowed,
+                          "Boundary Wall",
+                          provider.boundaryWall,
+                          provider.setBoundaryWall,
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        // ================= SAVE =================
+                        PrimaryButton(
+                          title: "Save & Continue",
+                          onPressed: provider.loading
+                              ? null
+                              : () async {
+                                  final success = await provider.submit(
+                                    propertyId,
+                                  );
+                                  if (success && context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => LocationView(
+                                          propertyId: propertyId,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 20),
                 ],
               ),
             );
@@ -167,90 +221,143 @@ class PropertyFeatureView extends StatelessWidget {
     );
   }
 
-  // ================= HELPERS =================
-  int responsiveCount(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    if (w > 900) return 4;
-    if (w > 600) return 3;
-    return 2;
-  }
+  // ================= UI HELPERS =================
 
-  Widget sectionTitle(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87),
-      ),
-    );
-  }
+  Widget _sectionTitle(String text) => Text(
+    text,
+    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+  );
 
-  Widget amenitiesGrid(List<AmenityModel> amenities, FeaturesProvider provider) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: amenities.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: responsiveCount(navigatorKey.currentContext!),
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: 2.6,
-      ),
-      itemBuilder: (_, i) {
-        final amenity = amenities[i];
-        final isSelected = provider.amenitiesList.contains(amenity.name);
-
-        return customToggleChip(
-          label: amenity.name,
-          emoji: amenity.icon,
-          isSelected: isSelected,
-          onTap: () => provider.toggleAmenity(amenity.name),
-        );
-      },
-    );
-  }
-
-  Widget chipLabel(String text) {
-    return Text(text, style: TextStyle(fontSize: 13, color: Colors.grey[600], fontWeight: FontWeight.w500));
-  }
-
-  Widget numberField(String label, Function(int) onChanged) {
-    return TextField(
-      keyboardType: TextInputType.number,
-      style: const TextStyle(fontSize: 14),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: "Enter $label",
-        labelStyle: const TextStyle(fontSize: 13),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey[200]!)),
-      ),
-      onChanged: (v) => onChanged(int.tryParse(v) ?? 0),
-    );
-  }
-
-  Widget dropdownBtn(String label, String? value, List<String> items, Function(String) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: DropdownButtonFormField<String>(
-        value: value,
-        isExpanded: true,
-        hint: Text("Select $label"),
-        style: const TextStyle(color: Colors.black87, fontSize: 14),
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: "Select $label",
-          labelStyle: const TextStyle(fontSize: 13),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey[200]!)),
+  Widget _chipSection({
+    required IconData icon,
+    required String title,
+    required List<String> items,
+    required List<String> selected,
+    required Function(String) onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 18, color: Colors.deepPurple),
+            const SizedBox(width: 6),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            ),
+          ],
         ),
-        items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-        onChanged: (v) {
-          if (v != null) onChanged(v);
-        },
-      ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: items.map((e) {
+            final isSelected = selected.contains(e);
+            return InkWell(
+              onTap: () => onTap(e),
+              borderRadius: BorderRadius.circular(22),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  color: isSelected ? Colors.deepPurple : Colors.transparent,
+                  border: Border.all(
+                    color: isSelected
+                        ? Colors.deepPurple
+                        : Colors.grey.shade300,
+                  ),
+                ),
+                child: Text(
+                  e,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: isSelected ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _dropdown(
+    String label,
+    String value,
+    List<String> items,
+    Function(String) onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 6),
+        DropdownButtonFormField<String>(
+          value: value,
+          isExpanded: true,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 14,
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+          items: items
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+          onChanged: (v) => onChanged(v!),
+        ),
+      ],
+    );
+  }
+
+  Widget _numberField(String label, String? value, Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 6),
+        TextFormField(
+          initialValue: value,
+          keyboardType: TextInputType.number,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 14,
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _switchRow(
+    String t1,
+    bool v1,
+    Function(bool) c1,
+    String t2,
+    bool v2,
+    Function(bool) c2,
+  ) {
+    return Row(
+      children: [
+        Expanded(child: _switch(t1, v1, c1)),
+        Expanded(child: _switch(t2, v2, c2)),
+      ],
     );
   }
 
@@ -258,63 +365,12 @@ class PropertyFeatureView extends StatelessWidget {
     return SwitchListTile(
       dense: true,
       contentPadding: EdgeInsets.zero,
-      title: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
       value: value,
       onChanged: onChanged,
-    );
-  }
-
-  Widget customToggleChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-    String? emoji,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue[50] : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isSelected ? Colors.blue[600]! : Colors.grey[300]!,
-            width: 1.4,
-          ),
-        ),
-        child: Center(child: Text(label)),
-      ),
-    );
-  }
-
-  Widget cardWrapper({required String title, required IconData icon, required Widget child}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
-              children: [
-                Icon(icon, size: 20, color: Colors.blueGrey),
-                const SizedBox(width: 8),
-                Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.black87)),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-          Padding(padding: const EdgeInsets.all(16), child: child),
-        ],
-      ),
     );
   }
 }

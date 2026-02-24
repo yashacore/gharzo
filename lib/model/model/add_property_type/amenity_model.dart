@@ -5,10 +5,7 @@ class AmenityModel {
   AmenityModel({required this.name, this.icon = ""});
 
   factory AmenityModel.fromJson(Map<String, dynamic> json) {
-    return AmenityModel(
-      name: json['name'],
-      icon: json['icon'] ?? "",
-    );
+    return AmenityModel(name: json['name'], icon: json['icon'] ?? "");
   }
 
   factory AmenityModel.fromString(String value) {
@@ -29,9 +26,15 @@ class AmenitiesMasterResponse {
 
   factory AmenitiesMasterResponse.fromJson(Map<String, dynamic> json) {
     return AmenitiesMasterResponse(
-      basic: (json['basic'] as List).map((e) => AmenityModel.fromJson(e)).toList(),
-      society: (json['society'] as List).map((e) => AmenityModel.fromJson(e)).toList(),
-      nearby: (json['nearby'] as List).map((e) => AmenityModel.fromJson(e)).toList(),
+      basic: (json['basic'] as List)
+          .map((e) => AmenityModel.fromJson(e))
+          .toList(),
+      society: (json['society'] as List)
+          .map((e) => AmenityModel.fromJson(e))
+          .toList(),
+      nearby: (json['nearby'] as List)
+          .map((e) => AmenityModel.fromJson(e))
+          .toList(),
     );
   }
 }

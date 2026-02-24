@@ -105,8 +105,6 @@
 //   }
 // }
 
-
-
 class PropertyDetailModel {
   final String id;
   final String title;
@@ -251,4 +249,3 @@ class PropertyDetailModel {
     );
   }
 }
-

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/bed_api_service/bed_api_service.dart';
 import 'package:gharzo_project/model/bed/create_bed/create_bed_model.dart';
 
-
 class CreateBedProvider extends ChangeNotifier {
   bool isLoading = false;
   CreateBedResponseModel? responseModel;

@@ -27,7 +27,6 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
       backgroundColor: const Color(0xffF2F4F8),
       body: Stack(
         children: [
-
           /// 🔥 FULL IMAGE CAROUSEL
           PageView.builder(
             itemCount: h.images.isEmpty ? 1 : h.images.length,
@@ -104,7 +103,6 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                   controller: controller,
                   padding: const EdgeInsets.all(20),
                   children: [
-
                     /// DRAG HANDLE
                     Center(
                       child: Container(
@@ -193,9 +191,9 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                         child: Wrap(
                           spacing: 10,
                           runSpacing: 10,
-                          children: _allAmenities(h)
-                              .map((e) => _AmenityLuxuryChip(e))
-                              .toList(),
+                          children: _allAmenities(
+                            h,
+                          ).map((e) => _AmenityLuxuryChip(e)).toList(),
                         ),
                       ),
 
@@ -222,7 +220,6 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                             label: "WhatsApp",
                             color: const Color(0xFF25D366),
                             onTap: () async {
-
                               final uri = Uri.parse(
                                 "https://wa.me/91$phone", // ✅ country code
                               );
@@ -236,7 +233,6 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                                 debugPrint("WhatsApp launch failed: $e");
                               }
                             },
-
                           ),
                         ),
                       ],
@@ -250,13 +246,10 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                       height: 52,
                       child: ElevatedButton(
                         onPressed: () {
-
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => HotelEnquiryScreen(
-                                hotelId: h.id,
-                              ),
+                              builder: (_) => HotelEnquiryScreen(hotelId: h.id),
                             ),
                           );
                         },
@@ -291,11 +284,11 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
 
   static bool _hasAmenities(HotelModel h) =>
       h.amenities.basic.isNotEmpty ||
-          h.amenities.dining.isNotEmpty ||
-          h.amenities.recreation.isNotEmpty ||
-          h.amenities.business.isNotEmpty ||
-          h.amenities.safety.isNotEmpty ||
-          h.amenities.services.isNotEmpty;
+      h.amenities.dining.isNotEmpty ||
+      h.amenities.recreation.isNotEmpty ||
+      h.amenities.business.isNotEmpty ||
+      h.amenities.safety.isNotEmpty ||
+      h.amenities.services.isNotEmpty;
 
   static List<String> _allAmenities(HotelModel h) => [
     ...h.amenities.basic,
@@ -328,16 +321,14 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(color: color, fontWeight: FontWeight.w600),
             ),
           ],
         ),
       ),
     );
   }
+
   Widget _actionButtonWithImage({
     required String imagePath,
     required String label,
@@ -356,26 +347,17 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              height: 20,
-              width: 20,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(imagePath, height: 20, width: 20, fit: BoxFit.contain),
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(color: color, fontWeight: FontWeight.w600),
             ),
           ],
         ),
       ),
     );
   }
-
 }
 
 /// ================= LUXURY UI WIDGETS =================
@@ -421,10 +403,7 @@ class _LuxuryPriceCard extends StatelessWidget {
         // ),
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.4),
-            blurRadius: 18,
-          )
+          BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 18),
         ],
       ),
       child: Row(
@@ -439,10 +418,7 @@ class _LuxuryPriceCard extends StatelessWidget {
               ),
             ),
           ),
-          const Text(
-            "/ night",
-            style: TextStyle(color: Colors.black),
-          )
+          const Text("/ night", style: TextStyle(color: Colors.black)),
         ],
       ),
     );
@@ -463,10 +439,7 @@ class _LuxurySection extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           child,
@@ -488,9 +461,7 @@ class _RoomLuxuryTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 10)
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: Row(
         children: [
@@ -500,7 +471,10 @@ class _RoomLuxuryTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(r.type, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  r.type,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text("Max ${r.maxOccupancy} • ${r.bedType}"),
               ],
             ),
@@ -528,9 +502,7 @@ class _AmenityLuxuryChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       backgroundColor: Colors.white,
       elevation: 4,
-      label: Text(text,style: TextStyle(fontSize: 12),),
+      label: Text(text, style: TextStyle(fontSize: 12)),
     );
   }
 }
-
-

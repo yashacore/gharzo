@@ -5,7 +5,6 @@ import '../../../main.dart';
 import '../../../screens/notification/notification_view.dart';
 
 class CommonHomeWidgets {
-
   // ================= HEADER =================
   static Widget headerView({
     required VoidCallback onMenuTap,
@@ -33,23 +32,32 @@ class CommonHomeWidgets {
             children: [
               Text(
                 "Welcome",
-                style: Theme.of(context!).textTheme.titleMedium!.copyWith(color: Colors.white),
+                style: Theme.of(
+                  context!,
+                ).textTheme.titleMedium!.copyWith(color: Colors.white),
               ),
               Row(
-
                 children: [
                   Text(
-                      "Vijay Nagar, Indore",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white)),
-                  Icon(Icons.location_on_outlined, color: Colors.white70, size: 14),
-
+                    "Vijay Nagar, Indore",
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium!.copyWith(color: Colors.white),
+                  ),
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: Colors.white70,
+                    size: 14,
+                  ),
                 ],
               ),
             ],
           ),
-           Spacer(),
+          Spacer(),
           GestureDetector(
-            onTap: () => navigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => NotificationView(),)),
+            onTap: () => navigatorKey.currentState?.push(
+              MaterialPageRoute(builder: (context) => NotificationScreen()),
+            ),
             child: Container(
               height: 30,
               width: 30,
@@ -57,7 +65,11 @@ class CommonHomeWidgets {
                 shape: BoxShape.circle,
                 color: Colors.white30,
               ),
-              child: const Icon(Icons.notifications_none, color: Colors.white, size: 20),
+              child: const Icon(
+                Icons.notifications_none,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -111,18 +123,11 @@ class CommonHomeWidgets {
                 height: 44,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF1E3A5F),
-                      Color(0xFF6A8DFF),
-                    ],
+                    colors: [Color(0xFF1E3A5F), Color(0xFF6A8DFF)],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.tune,
-                  color: Colors.white,
-                  size: 22,
-                ),
+                child: const Icon(Icons.tune, color: Colors.white, size: 22),
               ),
             ],
           ),
@@ -130,7 +135,6 @@ class CommonHomeWidgets {
       ),
     );
   }
-
 
   // ================= AD SLIDER =================
   static Widget commonAddSlider({
@@ -184,10 +188,7 @@ class CommonHomeWidgets {
   }
 
   // ================= COMMON SECTION =================
-  static Widget section({
-    required String title,
-    required Widget child,
-  }) {
+  static Widget section({required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -216,7 +217,9 @@ class CommonHomeWidgets {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(50), blurRadius:3)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 3),
+        ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -238,7 +241,7 @@ class CommonHomeWidgets {
     );
   }
 
-  static   Widget commonColumn({required String title, required Widget child}) {
+  static Widget commonColumn({required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -258,5 +261,4 @@ class CommonHomeWidgets {
       ],
     );
   }
-
 }

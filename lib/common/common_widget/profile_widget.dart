@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ProfileWidget {
-
   /// Circular Icon Button
- static Widget circularIconButton(IconData icon, {Color iconColor = Colors.black, VoidCallback? onTap}) {
+  static Widget circularIconButton(
+    IconData icon, {
+    Color iconColor = Colors.black,
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -42,7 +45,7 @@ class ProfileWidget {
   }
 
   /// Agent Info Card
- static Widget agentInfoCard() {
+  static Widget agentInfoCard() {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -50,22 +53,34 @@ class ProfileWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: Offset(0, 5)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
         ],
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 25,
-            backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=agent_esther'),
+            backgroundImage: NetworkImage(
+              'https://i.pravatar.cc/150?u=agent_esther',
+            ),
           ),
           SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Esther Howard', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text('Real Estate Agent', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Text(
+                  'Esther Howard',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  'Real Estate Agent',
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -88,5 +103,4 @@ class ProfileWidget {
       child: Icon(icon, color: color, size: 20),
     );
   }
-
 }

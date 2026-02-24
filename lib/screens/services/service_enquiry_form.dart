@@ -6,7 +6,6 @@ import 'package:gharzo_project/providers/services_provider.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
 import 'package:provider/provider.dart';
 
-
 class ServiceEnquiryScreen extends StatefulWidget {
   final String serviceId;
 
@@ -36,8 +35,7 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
   Future<void> submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider =
-    Provider.of<ServicesProvider>(context, listen: false);
+    final provider = Provider.of<ServicesProvider>(context, listen: false);
 
     final request = ServiceEnquiryRequest(
       name: nameCtrl.text.trim(),
@@ -71,11 +69,10 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
       );
 
       provider.reset();
-    }
-    else if (provider.error.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(provider.error)),
-      );
+    } else if (provider.error.isNotEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(provider.error)));
     }
   }
 
@@ -112,25 +109,19 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
                   "Contact Method",
                   contactMethod,
                   ["WhatsApp", "Call", "Email"],
-                      (v) => setState(() => contactMethod = v!),
+                  (v) => setState(() => contactMethod = v!),
                 ),
-                _dropdown(
-                  "Preferred Time",
-                  timeSlot,
-                  [
-                    "Morning (9AM-12PM)",
-                    "Afternoon (12PM-4PM)",
-                    "Evening (4PM-8PM)"
-                  ],
-                      (v) => setState(() => timeSlot = v!),
-                ),
+                _dropdown("Preferred Time", timeSlot, [
+                  "Morning (9AM-12PM)",
+                  "Afternoon (12PM-4PM)",
+                  "Evening (4PM-8PM)",
+                ], (v) => setState(() => timeSlot = v!)),
               ]),
               const SizedBox(height: 20),
               PrimaryButton(
                 title: "Submit Enquiry",
                 onPressed: isLoading ? null : submit,
               ),
-
             ],
           ),
         ),
@@ -148,9 +139,10 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style:
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 12),
             ...children,
           ],
@@ -159,11 +151,14 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
     );
   }
 
-  Widget _input(String label, TextEditingController ctrl,
-      {bool isPhone = false,
-        bool isEmail = false,
-        bool isNumber = false,
-        int maxLines = 1}) {
+  Widget _input(
+    String label,
+    TextEditingController ctrl, {
+    bool isPhone = false,
+    bool isEmail = false,
+    bool isNumber = false,
+    int maxLines = 1,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
@@ -181,16 +176,18 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
         },
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );
   }
 
-  Widget _dropdown(String label, String value, List<String> items,
-      ValueChanged<String?> onChanged) {
+  Widget _dropdown(
+    String label,
+    String value,
+    List<String> items,
+    ValueChanged<String?> onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField<String>(
@@ -201,8 +198,7 @@ class _ServiceEnquiryScreenState extends State<ServiceEnquiryScreen> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: label,
-          border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/screens/reels/reels_feed/real_search/search_reel_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class SearchReelsScreen extends StatelessWidget {
   const SearchReelsScreen({super.key});
 
@@ -27,9 +26,16 @@ class SearchReelsScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final reel = provider.reels[index];
                 return ListTile(
-                  leading: Image.network(reel.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                  leading: Image.network(
+                    reel.imageUrl,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
                   title: Text(reel.title),
-                  subtitle: Text("${reel.city} | Tags: ${reel.tags.join(', ')}"),
+                  subtitle: Text(
+                    "${reel.city} | Tags: ${reel.tags.join(', ')}",
+                  ),
                 );
               },
             );
@@ -37,7 +43,10 @@ class SearchReelsScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Provider.of<ReelsSearchProvider>(context, listen: false).searchReels(
+            Provider.of<ReelsSearchProvider>(
+              context,
+              listen: false,
+            ).searchReels(
               query: 'beautiful',
               city: 'Indore',
               tags: ['luxury', '2bhk'],

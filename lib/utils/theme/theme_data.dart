@@ -7,8 +7,9 @@ class AppThemeData {
 
     return ThemeData(
       fontFamily: fontFamily,
-      useMaterial3: false, // 🔥 IMPORTANT (explained below)
+      useMaterial3: false,
 
+      // 🔥 IMPORTANT (explained below)
       primaryColor: colors.primary,
       scaffoldBackgroundColor: colors.containerWhite,
 
@@ -59,14 +60,8 @@ class AppThemeData {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colors.containerWhite,
-        hintStyle: TextStyle(
-          color: colors.textHint,
-          fontSize: 14,
-        ),
-        labelStyle: TextStyle(
-          color: colors.secondary,
-          fontSize: 13,
-        ),
+        hintStyle: TextStyle(color: colors.textHint, fontSize: 14),
+        labelStyle: TextStyle(color: colors.secondary, fontSize: 13),
       ),
     );
   }

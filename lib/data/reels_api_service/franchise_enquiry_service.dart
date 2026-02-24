@@ -7,13 +7,12 @@ class FranchiseEnquiryService {
       "https://api.gharzoreality.com/api/v2/enquiries/franchise";
 
   static Future<bool> submitFranchiseEnquiry(
-      Map<String, dynamic> payload) async {
+    Map<String, dynamic> payload,
+  ) async {
     try {
       final response = await http.post(
         Uri.parse(_url),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(payload),
       );
 

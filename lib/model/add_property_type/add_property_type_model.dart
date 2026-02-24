@@ -29,7 +29,6 @@ class PropertyTypeModel {
   }
 }
 
-
 class PropertyDraftModel {
   final String propertyId;
   final int completionPercentage;

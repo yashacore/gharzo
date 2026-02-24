@@ -8,19 +8,18 @@ import 'package:provider/provider.dart';
 
 import '../../model/search_property_model.dart';
 
-
 class PropertySearchScreen extends StatefulWidget {
   const PropertySearchScreen({super.key});
 
   @override
-  State<PropertySearchScreen> createState() =>
-      _PropertySearchScreenState();
+  State<PropertySearchScreen> createState() => _PropertySearchScreenState();
 }
 
 class _PropertySearchScreenState extends State<PropertySearchScreen> {
   double _appBarHeight(BuildContext context) {
     return kToolbarHeight + MediaQuery.of(context).padding.top;
   }
+
   @override
   void initState() {
     super.initState();
@@ -31,13 +30,14 @@ class _PropertySearchScreenState extends State<PropertySearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: const Color(0xffF5F6FA),
-      appBar: CommonWidget.gradientAppBar(title: "Search Property",onPressed: () {
-        Navigator.pop(context);
-      },),
+      appBar: CommonWidget.gradientAppBar(
+        title: "Search Property",
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       body: Consumer<PropertySearchProvider>(
         builder: (_, provider, __) {
           return Column(
@@ -52,11 +52,11 @@ class _PropertySearchScreenState extends State<PropertySearchScreen> {
               Expanded(
                 child: provider.isInitial
                     ? const Center(
-                  child: Text(
-                    'Start typing to search properties',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                )
+                        child: Text(
+                          'Start typing to search properties',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      )
                     : _buildBody(provider),
               ),
             ],
@@ -97,10 +97,7 @@ class _PropertySearchScreenState extends State<PropertySearchScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-          ),
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
         ],
       ),
       child: Row(
@@ -120,53 +117,8 @@ class _PropertySearchScreenState extends State<PropertySearchScreen> {
       ),
     );
   }
-  Widget _centeredSearch(PropertySearchProvider provider) {
-    final appBarHeight = _appBarHeight(context);
-
-    return Transform.translate(
-      offset: Offset(0, appBarHeight / 2),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.home_work_outlined,
-                size: 64,
-                color: AppThemeColors().primary.withOpacity(0.7),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Find your perfect property',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Search by city, locality, BHK or amenities',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppThemeColors().textGrey,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              SizedBox(
-                width: double.infinity,
-                child: _searchBar(provider),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
 }
-
 
 class PropertyCard extends StatelessWidget {
   final PropertyModel property;
@@ -184,26 +136,23 @@ class PropertyCard extends StatelessWidget {
             color: Colors.black.withOpacity(0.06),
             blurRadius: 12,
             offset: const Offset(0, 6),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           /// IMAGE
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: property.image.isNotEmpty
                 ? Image.network(
-              property.image,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _imagePlaceholder(),
-            )
+                    property.image,
+                    height: 180,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _imagePlaceholder(),
+                  )
                 : _imagePlaceholder(),
           ),
 
@@ -212,7 +161,6 @@ class PropertyCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 /// TITLE
                 Text(
                   property.title,
@@ -229,10 +177,7 @@ class PropertyCard extends StatelessWidget {
                 /// LOCATION
                 Text(
                   '${property.locality}, ${property.city}',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 ),
 
                 const SizedBox(height: 10),
@@ -267,18 +212,15 @@ class PropertyCard extends StatelessWidget {
                     // 👉 View Details Button (right)
                     ElevatedButton(
                       onPressed: () {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                ChangeNotifierProvider(
-                                  create: (_) =>
-                                      PropertyDetailProvider(),
-                                  child: PropertyDetailScreen(
-                                    propertyId: property.id,
-                                  ),
-                                ),
+                            builder: (_) => ChangeNotifierProvider(
+                              create: (_) => PropertyDetailProvider(),
+                              child: PropertyDetailScreen(
+                                propertyId: property.id,
+                              ),
+                            ),
                           ),
                         );
                       },
@@ -317,12 +259,10 @@ class PropertyCard extends StatelessWidget {
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 12),
-      ),
+      child: Text(text, style: const TextStyle(fontSize: 12)),
     );
   }
+
   Widget _imagePlaceholder() {
     return Container(
       height: 180,
@@ -335,5 +275,4 @@ class PropertyCard extends StatelessWidget {
       ),
     );
   }
-
 }

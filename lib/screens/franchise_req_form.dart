@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/common/common_widget/primary_button.dart';
 import 'package:gharzo_project/data/reels_api_service/franchise_enquiry_service.dart';
-import 'package:gharzo_project/utils/theme/colors.dart';
 
 class FranchiseEnquiryView extends StatefulWidget {
   const FranchiseEnquiryView({super.key});
 
   @override
-  State<FranchiseEnquiryView> createState() =>
-      _FranchiseEnquiryViewState();
+  State<FranchiseEnquiryView> createState() => _FranchiseEnquiryViewState();
 }
 
 class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
@@ -54,8 +52,9 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
       builder: (_) => const Center(child: CircularProgressIndicator()),
     );
 
-    final success =
-    await FranchiseEnquiryService.submitFranchiseEnquiry(payload);
+    final success = await FranchiseEnquiryService.submitFranchiseEnquiry(
+      payload,
+    );
 
     Navigator.pop(context);
 
@@ -89,13 +88,12 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-        appBar: CommonWidget.gradientAppBar(
-          title: "Franchise Enquiry",
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-
+      appBar: CommonWidget.gradientAppBar(
+        title: "Franchise Enquiry",
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -104,15 +102,22 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
           key: _formKey,
           child: Column(
             children: [
-
               _formCard(
                 title: "Contact Information",
                 children: [
                   _field("name", "Full Name", Icons.person_outline),
-                  _field("email", "Email Address", Icons.email_outlined,
-                      keyboardType: TextInputType.emailAddress),
-                  _field("phone", "Phone Number", Icons.phone_outlined,
-                      keyboardType: TextInputType.phone),
+                  _field(
+                    "email",
+                    "Email Address",
+                    Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  _field(
+                    "phone",
+                    "Phone Number",
+                    Icons.phone_outlined,
+                    keyboardType: TextInputType.phone,
+                  ),
                 ],
               ),
 
@@ -124,16 +129,13 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
                   DropdownButtonFormField<String>(
                     value: priority,
                     items: ["High", "Medium", "Low"]
-                        .map(
-                          (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      ),
-                    )
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                     onChanged: (v) => setState(() => priority = v!),
                     decoration: _inputDecoration(
-                        "Priority", Icons.priority_high),
+                      "Priority",
+                      Icons.priority_high,
+                    ),
                   ),
                   const SizedBox(height: 14),
                   _field(
@@ -146,9 +148,7 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
               ),
 
               const SizedBox(height: 30),
-                PrimaryButton(title: "Submit", onPressed: ()=>_submitForm())
-
-
+              PrimaryButton(title: "Submit", onPressed: () => _submitForm()),
             ],
           ),
         ),
@@ -158,10 +158,7 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
 
   // ---------------- UI HELPERS ----------------
 
-  Widget _formCard({
-    required String title,
-    required List<Widget> children,
-  }) {
+  Widget _formCard({required String title, required List<Widget> children}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -178,9 +175,10 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style:
-              const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+          ),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -189,20 +187,19 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
   }
 
   Widget _field(
-      String keyName,
-      String label,
-      IconData icon, {
-        TextInputType keyboardType = TextInputType.text,
-        int maxLines = 1,
-      }) {
+    String keyName,
+    String label,
+    IconData icon, {
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: TextFormField(
         controller: controllers[keyName],
         keyboardType: keyboardType,
         maxLines: maxLines,
-        validator: (v) =>
-        v == null || v.isEmpty ? "$label is required" : null,
+        validator: (v) => v == null || v.isEmpty ? "$label is required" : null,
         decoration: _inputDecoration(label, icon),
       ),
     );
@@ -212,9 +209,7 @@ class _FranchiseEnquiryViewState extends State<FranchiseEnquiryView> {
     return InputDecoration(
       labelText: label,
       prefixIcon: Icon(icon),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     );
   }
 }

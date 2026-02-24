@@ -15,7 +15,7 @@ class HotelProvider extends ChangeNotifier {
   int _searchRequestId = 0;
 
   List<HotelModel> _allHotels = []; // MASTER LIST
-  List<HotelModel> hotels = [];     // UI LIST
+  List<HotelModel> hotels = []; // UI LIST
 
   void _log(String msg) {
     debugPrint('🏨 [HotelProvider] $msg');
@@ -82,10 +82,7 @@ class HotelProvider extends ChangeNotifier {
       try {
         final uri = Uri.parse(
           'https://api.gharzoreality.com/api/public/properties',
-        ).replace(queryParameters: {
-          'search': value,
-          'limit': '20',
-        });
+        ).replace(queryParameters: {'search': value, 'limit': '20'});
 
         final response = await http.get(uri);
 
@@ -125,26 +122,20 @@ class HotelProvider extends ChangeNotifier {
         break;
 
       case 1: // 5 Star
-        hotels = baseList
-            .where((h) => h.category.contains('5'))
-            .toList();
+        hotels = baseList.where((h) => h.category.contains('5')).toList();
         break;
 
       case 2: // Featured
         hotels = baseList.where((h) => h.isFeatured).toList();
         break;
       case 3: // Budget
-        hotels = baseList
-            .where((h) => h.priceRange.min < 5000)
-            .toList();
+        hotels = baseList.where((h) => h.priceRange.min < 5000).toList();
         break;
-
     }
 
     _log('Filtered count: ${hotels.length}');
     notifyListeners();
   }
-
 
   Future<bool> submitEnquiry({
     required String hotelId,

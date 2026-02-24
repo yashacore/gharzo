@@ -14,7 +14,6 @@ import 'package:gharzo_project/model/bed/update_bed_status/update_bed_status_mod
 import 'package:http/http.dart' as http;
 
 class BedApiService {
-
   static Future<CreateBedResponseModel> createBed({
     required String token,
     required String roomId,
@@ -32,9 +31,7 @@ class BedApiService {
     final uri = Uri.parse("https://api.gharzoreality.com/api/beds/create");
     final request = http.MultipartRequest("POST", uri);
 
-    request.headers.addAll({
-      "Authorization": "Bearer $token",
-    });
+    request.headers.addAll({"Authorization": "Bearer $token"});
 
     request.fields['roomId'] = roomId;
     request.fields['bedNumber'] = bedNumber;
@@ -160,7 +157,9 @@ class BedApiService {
     required String bedId,
     required List<File> images,
   }) async {
-    final uri = Uri.parse("https://api.gharzoreality.com/api/beds/$bedId/images");
+    final uri = Uri.parse(
+      "https://api.gharzoreality.com/api/beds/$bedId/images",
+    );
     final request = http.MultipartRequest("PUT", uri);
 
     request.headers['Authorization'] = "Bearer $token";
@@ -195,10 +194,7 @@ class BedApiService {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({
-        "status": status,
-        "notes": notes,
-      }),
+      body: jsonEncode({"status": status, "notes": notes}),
     );
 
     final body = jsonDecode(response.body);
@@ -223,10 +219,7 @@ class BedApiService {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({
-        "status": status,
-        "notes": notes,
-      }),
+      body: jsonEncode({"status": status, "notes": notes}),
     );
 
     final body = jsonDecode(response.body);
@@ -256,7 +249,9 @@ class BedApiService {
       "limit": limit.toString(),
     };
 
-    final uri = Uri.parse("https://api.gharzoreality.com/api/beds/search").replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      "https://api.gharzoreality.com/api/beds/search",
+    ).replace(queryParameters: queryParams);
 
     final response = await http.get(uri);
     final body = jsonDecode(response.body);
@@ -270,7 +265,8 @@ class BedApiService {
 
   //---------------------bulk create
   Future<BulkCreateBedsResponse> bulkCreateBeds(
-      BulkCreateBedsRequest request) async {
+    BulkCreateBedsRequest request,
+  ) async {
     final response = await http.post(
       Uri.parse("https://api.gharzoreality.com/api/beds/bulk-create"),
       headers: {"Content-Type": "application/json"},
@@ -281,5 +277,4 @@ class BedApiService {
 
     return BulkCreateBedsResponse.fromJson(body);
   }
-
 }

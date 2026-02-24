@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/common/common_widget/primary_button.dart';
 import 'package:gharzo_project/data/reels_api_service/mortgage_enquiry_service.dart';
-import 'package:gharzo_project/utils/theme/colors.dart';
 
 class MortgageEnquiryView extends StatefulWidget {
   const MortgageEnquiryView({super.key});
 
   @override
-  State<MortgageEnquiryView> createState() =>
-      _MortgageEnquiryViewState();
+  State<MortgageEnquiryView> createState() => _MortgageEnquiryViewState();
 }
 
 class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
@@ -49,8 +47,7 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
       builder: (_) => const Center(child: CircularProgressIndicator()),
     );
 
-    final success =
-    await MortgageEnquiryService.submitMortgageEnquiry(payload);
+    final success = await MortgageEnquiryService.submitMortgageEnquiry(payload);
 
     Navigator.pop(context);
 
@@ -97,15 +94,22 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
           key: _formKey,
           child: Column(
             children: [
-
               _formCard(
                 title: "Contact Details",
                 children: [
                   _field("fullName", "Full Name", Icons.person_outline),
-                  _field("email", "Email Address", Icons.email_outlined,
-                      keyboardType: TextInputType.emailAddress),
-                  _field("phone", "Phone Number", Icons.phone_outlined,
-                      keyboardType: TextInputType.phone),
+                  _field(
+                    "email",
+                    "Email Address",
+                    Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  _field(
+                    "phone",
+                    "Phone Number",
+                    Icons.phone_outlined,
+                    keyboardType: TextInputType.phone,
+                  ),
                 ],
               ),
 
@@ -116,22 +120,22 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
                 children: [
                   DropdownButtonFormField<String>(
                     value: inquiryType,
-                    items: const [
-                      "Property Registration",
-                      "Home Loan",
-                      "Balance Transfer",
-                      "Loan Against Property",
-                    ]
-                        .map(
-                          (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      ),
-                    )
-                        .toList(),
+                    items:
+                        const [
+                              "Property Registration",
+                              "Home Loan",
+                              "Balance Transfer",
+                              "Loan Against Property",
+                            ]
+                            .map(
+                              (e) => DropdownMenuItem(value: e, child: Text(e)),
+                            )
+                            .toList(),
                     onChanged: (v) => setState(() => inquiryType = v!),
                     decoration: _inputDecoration(
-                        "Inquiry Type", Icons.assignment_outlined),
+                      "Inquiry Type",
+                      Icons.assignment_outlined,
+                    ),
                   ),
                   const SizedBox(height: 14),
                   _field(
@@ -144,7 +148,7 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
               ),
 
               const SizedBox(height: 30),
-              PrimaryButton(title: "Submit Enquiry", onPressed: _submitForm)
+              PrimaryButton(title: "Submit Enquiry", onPressed: _submitForm),
             ],
           ),
         ),
@@ -154,10 +158,7 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
 
   // ---------------- UI HELPERS ----------------
 
-  Widget _formCard({
-    required String title,
-    required List<Widget> children,
-  }) {
+  Widget _formCard({required String title, required List<Widget> children}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -176,8 +177,7 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
         children: [
           Text(
             title,
-            style:
-            const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
           ),
           const SizedBox(height: 12),
           ...children,
@@ -187,20 +187,19 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
   }
 
   Widget _field(
-      String keyName,
-      String label,
-      IconData icon, {
-        TextInputType keyboardType = TextInputType.text,
-        int maxLines = 1,
-      }) {
+    String keyName,
+    String label,
+    IconData icon, {
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: TextFormField(
         controller: controllers[keyName],
         keyboardType: keyboardType,
         maxLines: maxLines,
-        validator: (v) =>
-        v == null || v.isEmpty ? "$label is required" : null,
+        validator: (v) => v == null || v.isEmpty ? "$label is required" : null,
         decoration: _inputDecoration(label, icon),
       ),
     );
@@ -210,9 +209,7 @@ class _MortgageEnquiryViewState extends State<MortgageEnquiryView> {
     return InputDecoration(
       labelText: label,
       prefixIcon: Icon(icon),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     );
   }
 }

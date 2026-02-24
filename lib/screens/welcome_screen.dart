@@ -76,10 +76,7 @@ class WelcomeScreen extends StatelessWidget {
                     const SizedBox(height: 6),
                     const Text(
                       "Dream House",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.white70),
                     ),
                   ],
                 ),

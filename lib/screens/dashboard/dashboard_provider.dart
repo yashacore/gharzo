@@ -10,9 +10,6 @@ class DashboardProvider extends ChangeNotifier {
 
   List<LanloardPropertyModel> get properties => _properties;
 
-
-
-
   final LanloardApiService service = LanloardApiService();
 
   DashboardProvider() {
@@ -32,7 +29,9 @@ class DashboardProvider extends ChangeNotifier {
       print("Token: $token");
       print("User Role: $role");
 
-      if (token != null && token.isNotEmpty && role.toLowerCase() == 'landlord') {
+      if (token != null &&
+          token.isNotEmpty &&
+          role.toLowerCase() == 'landlord') {
         print("Fetching properties for landlord...");
 
         final fetchedProperties = await service.fetchMyProperties(token);
@@ -61,7 +60,7 @@ class DashboardProvider extends ChangeNotifier {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => ProfilePage()),
-          (route) => false,
+      (route) => false,
     );
   }
 }

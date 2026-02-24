@@ -28,6 +28,7 @@ class SavedPropertyResponse {
     );
   }
 }
+
 class SavedPropertyModel {
   final String id;
   final String savedId;

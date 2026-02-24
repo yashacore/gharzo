@@ -12,13 +12,14 @@ class SavedPropertiesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SavedPropertyProvider()..fetchSavedProperties(),
-      child: Builder( // 🔥 IMPORTANT
+      child: Builder(
+        // 🔥 IMPORTANT
         builder: (providerContext) {
           return Scaffold(
             backgroundColor: const Color(0xFFF5F6FA),
             appBar: AppBar(
               title: const Text("Saved Properties"),
-              backgroundColor:AppThemeColors().primary,
+              backgroundColor: AppThemeColors().primary,
               elevation: 0,
               actions: [
                 IconButton(
@@ -50,9 +51,7 @@ class SavedPropertiesScreen extends StatelessWidget {
                       // ✅ NOW THIS WORKS
                       providerContext
                           .read<SavedPropertyProvider>()
-                          .clearAllSaved(
-                        note: "Cleared from saved screen",
-                      );
+                          .clearAllSaved(note: "Cleared from saved screen");
                     }
                   },
                 ),
@@ -60,15 +59,12 @@ class SavedPropertiesScreen extends StatelessWidget {
             ),
             body: Consumer<SavedPropertyProvider>(
               builder: (context, provider, _) {
-                if (provider.isLoading &&
-                    provider.properties.isEmpty) {
-                  return const Center(
-                      child: CircularProgressIndicator());
+                if (provider.isLoading && provider.properties.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (provider.properties.isEmpty) {
-                  return const Center(
-                      child: Text("No saved properties"));
+                  return const Center(child: Text("No saved properties"));
                 }
 
                 return ListView.builder(
@@ -87,6 +83,7 @@ class SavedPropertiesScreen extends StatelessWidget {
     );
   }
 }
+
 class _SavedPropertyCard extends StatelessWidget {
   final SavedPropertyModel p;
   const _SavedPropertyCard(this.p);
@@ -150,11 +147,8 @@ class _SavedPropertyCard extends StatelessWidget {
                 ),
                 if (p.note != null && p.note!.isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  Text(
-                    "📝 ${p.note}",
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ]
+                  Text("📝 ${p.note}", style: const TextStyle(fontSize: 12)),
+                ],
               ],
             ),
           ),

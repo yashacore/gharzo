@@ -27,9 +27,7 @@ class PropertyModel {
       title: json['title'] ?? '',
       city: json['location']['city'] ?? '',
       locality: json['location']['locality'] ?? '',
-      image: json['images'].isNotEmpty
-          ? json['images'][0]['url']
-          : '',
+      image: json['images'].isNotEmpty ? json['images'][0]['url'] : '',
       price: json['price']['amount'] ?? 0,
       bhk: json['bhk'] ?? 0,
       area: json['area']['carpet'] ?? 0,

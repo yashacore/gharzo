@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 
@@ -9,11 +8,7 @@ class CommonMethod {
     return LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [
-        colors.backgroundLeft,
-        colors.backgroundRight,
-      ],
+      colors: [colors.backgroundLeft, colors.backgroundRight],
     );
   }
-
 }

@@ -13,6 +13,7 @@ import 'package:gharzo_project/screens/edit_profile/edit_profile_view.dart';
 import 'package:gharzo_project/screens/franchise_req_form.dart';
 import 'package:gharzo_project/screens/mortgage_form.dart';
 import 'package:gharzo_project/screens/profile/profile_provider.dart';
+import 'package:gharzo_project/screens/property_details/my_visit_screen.dart';
 import 'package:gharzo_project/screens/wishlist_screen.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,6 @@ class _ProfilePageState extends State<ProfilePage> {
           body: SingleChildScrollView(
             child: Stack(
               children: [
-            
                 /// 🔹 Background Gradient Header
                 Container(
                   height: 320,
@@ -62,21 +62,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-            
+
                 /// 🔹 Content
                 SafeArea(
                   child: Column(
                     children: [
-            
                       /// 🔹 App Bar Row
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                         child: SizedBox(
                           height: 48,
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-
                               /// 🔹 Center Title (always centered)
                               const Center(
                                 child: Text(
@@ -99,14 +100,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.white,
                                     ),
                                     onPressed: () {
-                                      navigatorKey.currentState?.pushReplacement(
-                                        MaterialPageRoute(
-                                          builder: (_) => ChangeNotifierProvider(
-                                            create: (_) => DashboardProvider(),
-                                            child: DashboardView(),
-                                          ),
-                                        ),
-                                      );
+                                      navigatorKey.currentState
+                                          ?.pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  ChangeNotifierProvider(
+                                                    create: (_) =>
+                                                        DashboardProvider(),
+                                                    child: DashboardView(),
+                                                  ),
+                                            ),
+                                          );
                                     },
                                   ),
                                 ),
@@ -114,31 +118,24 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-            
+
                       const SizedBox(height: 20),
-            
+
                       /// 🔹 Profile Avatar
                       CircleAvatar(
                         radius: 47,
-                        backgroundImage: value.profileImage.isNotEmpty &&
-                            value.profileImage.startsWith('http')
-                            ? NetworkImage(value.profileImage)
-                            : null,
-                        child: value.profileImage.isEmpty
-                            ? const Icon(Icons.person, size: 40)
-                            : null,
+
+                        child: const Icon(Icons.person, size: 40),
                       ),
-            
+
                       const SizedBox(height: 12),
-            
+
                       /// 🔹 Name + Edit
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            value.userName.isNotEmpty
-                                ? value.userName
-                                : "User",
+                            value.userName.isNotEmpty ? value.userName : "User",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -149,19 +146,25 @@ class _ProfilePageState extends State<ProfilePage> {
                           GestureDetector(
                             onTap: () => navigatorKey.currentState?.push(
                               MaterialPageRoute(
-                                  builder: (_) => EditProfileView()),
+                                builder: (_) => EditProfileView(),
+                              ),
                             ),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 4),
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Row(
                                 children: [
-                                  Icon(Icons.edit_outlined,
-                                      size: 14, color: Color(0xFF2563EB)),
+                                  Icon(
+                                    Icons.edit_outlined,
+                                    size: 14,
+                                    color: Color(0xFF2563EB),
+                                  ),
                                   SizedBox(width: 4),
                                   Text(
                                     "Edit",
@@ -177,120 +180,170 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
-            
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+
+                        children: [
+                          Text(
+                            "Role: ",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            value.role.isNotEmpty ? value.role : "User",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+
                       const SizedBox(height: 30),
-            
+
                       /// 🔹 Scrollable Body
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             buildSectionCard([
-                              listTileView(Icons.favorite_outline,
-                                  "Saved properties", () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => SavedPropertiesScreen(
-                                        ),
-                                      ),
-                                    );
-
-                                  }
+                              listTileView(
+                                Icons.favorite_outline,
+                                "Saved properties",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => SavedPropertiesScreen(),
+                                    ),
+                                  );
+                                },
                               ),
-                              listTileView(
-                                  Icons.history, "Recent searches",null),
-                              listTileView(Icons.visibility_outlined,
-                                  "Seen properties",null),
-                              listTileView(Icons.phone_outlined,
-                                  "Contacted properties",null),
-                             listTileView(Icons.handshake_outlined,
-                                  "Channel Partner",
-                                 (){
-                                   Navigator.push(
-                                     context,
-                                     MaterialPageRoute(
-                                       builder: (_) => ChannelPartnerScreen(
-                                       ),
-                                     ),
-                                   );
-
-                                 }
-                             ),
-                              listTileView(Icons.place_outlined,
-                                  "Franchise Request",
-                                 (){
-                                   Navigator.push(
-                                     context,
-                                     MaterialPageRoute(
-                                       builder: (_) => FranchiseEnquiryView(
-                                       ),
-                                     ),
-                                   );
-
-                                 }
-                             ),
-
-                              listTileView(Icons.landscape_sharp,
-                                  "Mortgage Request",
-                                 (){
-                                   Navigator.push(
-                                     context,
-                                     MaterialPageRoute(
-                                       builder: (_) => MortgageEnquiryView(
-                                       ),
-                                     ),
-                                   );
-
-                                 }
-                             ),
-                            ]),
-
-                            const SizedBox(height: 25),
-                            const Text("My Ads",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14)),
-                            const SizedBox(height: 10),
-
-                            buildSectionCard([
-                              listTileView(Icons.security_outlined,
-                                  "My posted properties",null),
-                              listTileView(Icons.laptop_chromebook,
-                                  "Current plan",null),
-                              listTileView(
-                                  Icons.upgrade, "Upgrade plan",null),
-                              listTileView(Icons.receipt_long_outlined,
-                                  "Billing history",null),
-                            ]),
-
-                            const SizedBox(height: 25),
-                            const Text("Help & About",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14)),
-                            const SizedBox(height: 10),
-
-                            buildSectionCard([
-                              listTileView(
-                                  Icons.call, "Contact Us",             (){
+                              listTileView(Icons.history, "My Visits", () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => ContactUsScreen(
-                                    ),
+                                    builder: (_) => MyVisitRequestsScreen(),
                                   ),
                                 );
-
                               }),
                               listTileView(
-                                  Icons.info_outline, "About gharzo",null),
-                              listTileView(Icons.privacy_tip_outlined,
-                                  "Privacy & policy",null),
+                                Icons.visibility_outlined,
+                                "Seen properties",
+                                null,
+                              ),
+                              listTileView(
+                                Icons.phone_outlined,
+                                "Contacted properties",
+                                null,
+                              ),
+                              listTileView(
+                                Icons.handshake_outlined,
+                                "Channel Partner",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ChannelPartnerScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              listTileView(
+                                Icons.place_outlined,
+                                "Franchise Request",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => FranchiseEnquiryView(),
+                                    ),
+                                  );
+                                },
+                              ),
+
+                              listTileView(
+                                Icons.landscape_sharp,
+                                "Mortgage Request",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MortgageEnquiryView(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ]),
+
+                            const SizedBox(height: 25),
+                            const Text(
+                              "My Ads",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+
+                            buildSectionCard([
+                              listTileView(
+                                Icons.security_outlined,
+                                "My posted properties",
+                                null,
+                              ),
+                              listTileView(
+                                Icons.laptop_chromebook,
+                                "Current plan",
+                                null,
+                              ),
+                              listTileView(Icons.upgrade, "Upgrade plan", null),
+                              listTileView(
+                                Icons.receipt_long_outlined,
+                                "Billing history",
+                                null,
+                              ),
+                            ]),
+
+                            const SizedBox(height: 25),
+                            const Text(
+                              "Help & About",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+
+                            buildSectionCard([
+                              listTileView(Icons.call, "Contact Us", () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ContactUsScreen(),
+                                  ),
+                                );
+                              }),
+                              listTileView(
+                                Icons.info_outline,
+                                "About gharzo",
+                                null,
+                              ),
+                              listTileView(
+                                Icons.privacy_tip_outlined,
+                                "Privacy & policy",
+                                null,
+                              ),
                             ]),
 
                             const SizedBox(height: 40),
-                            PrimaryButton(title: "Logout",
+                            PrimaryButton(
+                              title: "Logout",
                               onPressed: () => value.clickOnLogoutBtn(),
                             ),
                             const SizedBox(height: 40),
@@ -307,6 +360,7 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
   // Section card container
   Widget buildSectionCard(List<Widget> children) {
     return Container(
@@ -321,14 +375,12 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
   // Individual list tile
-  Widget listTileView(IconData icon, String title,VoidCallback? onTap) {
+  Widget listTileView(IconData icon, String title, VoidCallback? onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -342,11 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: const Color(0xFF2563EB).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                icon,
-                color: AppThemeColors().primary,
-                size: 22,
-              ),
+              child: Icon(icon, color: AppThemeColors().primary, size: 22),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -359,15 +407,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-            const Icon(
-              Icons.chevron_right,
-              color: Color(0xFF2563EB),
-              size: 20,
-            ),
+            const Icon(Icons.chevron_right, color: Color(0xFF2563EB), size: 20),
           ],
         ),
       ),
     );
   }
-
 }

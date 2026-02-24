@@ -40,9 +40,7 @@ class _ReelsFeedViewState extends State<ReelsFeedView> {
         if (provider.reels.isEmpty && provider.isLoading) {
           return const Scaffold(
             backgroundColor: Colors.black,
-            body: Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            ),
+            body: Center(child: CircularProgressIndicator(color: Colors.white)),
           );
         }
 
@@ -76,10 +74,7 @@ class _ReelItem extends StatefulWidget {
   final Reel reel;
   final bool isActive;
 
-  const _ReelItem({
-    required this.reel,
-    required this.isActive,
-  });
+  const _ReelItem({required this.reel, required this.isActive});
 
   @override
   State<_ReelItem> createState() => _ReelItemState();
@@ -93,16 +88,15 @@ class _ReelItemState extends State<_ReelItem> {
   void initState() {
     super.initState();
 
-    _videoController = VideoPlayerController.networkUrl(
-      Uri.parse(widget.reel.videoUrl),
-    )
-      ..setLooping(true)
-      ..initialize().then((_) {
-        if (widget.isActive) {
-          _videoController.play();
-        }
-        setState(() {});
-      });
+    _videoController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.reel.videoUrl))
+          ..setLooping(true)
+          ..initialize().then((_) {
+            if (widget.isActive) {
+              _videoController.play();
+            }
+            setState(() {});
+          });
   }
 
   @override
@@ -128,8 +122,6 @@ class _ReelItemState extends State<_ReelItem> {
     setState(() {});
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final provider = context.read<ReelsFeedProvider>();
@@ -139,33 +131,31 @@ class _ReelItemState extends State<_ReelItem> {
       children: [
         _videoController.value.isInitialized
             ? GestureDetector(
-          onTap: toggleMute,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: _videoController.value.size.width,
-              height: _videoController.value.size.height,
-              child: VideoPlayer(_videoController),
-            ),
-          ),
-        )
+                onTap: toggleMute,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _videoController.value.size.width,
+                    height: _videoController.value.size.height,
+                    child: VideoPlayer(_videoController),
+                  ),
+                ),
+              )
             : const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
 
         Positioned(
           top: 40,
           right: 16,
           child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SearchReelsScreen(),
-                  ),
-                );
-              } ,
-              icon: Icon(Icons.search)
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => SearchReelsScreen()),
+              );
+            },
+            icon: Icon(Icons.search),
           ),
         ),
 
@@ -180,7 +170,7 @@ class _ReelItemState extends State<_ReelItem> {
                   color: widget.reel.isLiked ? Colors.red : Colors.white,
                   size: 32,
                 ),
-                onPressed: () {}
+                onPressed: () {},
                 // => provider.
                 // toggleLike(widget.reel),
               ),
@@ -191,9 +181,7 @@ class _ReelItemState extends State<_ReelItem> {
               SizedBox(height: 12),
               IconButton(
                 icon: Icon(
-                  widget.reel.isSaved
-                      ? Icons.bookmark
-                      : Icons.bookmark_border,
+                  widget.reel.isSaved ? Icons.bookmark : Icons.bookmark_border,
                   color: Colors.white,
                   size: 30,
                 ),
@@ -201,11 +189,7 @@ class _ReelItemState extends State<_ReelItem> {
               ),
               SizedBox(height: 12),
               IconButton(
-                icon: const Icon(
-                  Icons.comment,
-                  color: Colors.white,
-                  size: 30,
-                ),
+                icon: const Icon(Icons.comment, color: Colors.white, size: 30),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -213,10 +197,8 @@ class _ReelItemState extends State<_ReelItem> {
                       builder: (_) => ReelCommentsSheet(reelId: widget.reel.id),
                     ),
                   );
-
                 },
               ),
-
             ],
           ),
         ),
@@ -237,7 +219,11 @@ class _ReelItemState extends State<_ReelItem> {
                         : null,
                     backgroundColor: Colors.grey.shade800,
                     child: widget.reel.userImage == null
-                        ? const Icon(Icons.person, size: 18, color: Colors.white)
+                        ? const Icon(
+                            Icons.person,
+                            size: 18,
+                            color: Colors.white,
+                          )
                         : null,
                   ),
                   const SizedBox(width: 10),
@@ -256,16 +242,17 @@ class _ReelItemState extends State<_ReelItem> {
                       if (widget.reel.city != null)
                         Row(
                           children: [
-                            const Icon(Icons.location_on,
-                                size: 12, color: Colors.white70),
+                            const Icon(
+                              Icons.location_on,
+                              size: 12,
+                              color: Colors.white70,
+                            ),
                             const SizedBox(width: 2),
                             Text(
-                              [
-                                widget.reel.locality,
-                                widget.reel.city,
-                              ]
-                                  .where((e) =>
-                              e != null && e!.trim().isNotEmpty)
+                              [widget.reel.locality, widget.reel.city]
+                                  .where(
+                                    (e) => e != null && e.trim().isNotEmpty,
+                                  )
                                   .join(", "),
                               style: const TextStyle(
                                 color: Colors.white70,
@@ -279,7 +266,7 @@ class _ReelItemState extends State<_ReelItem> {
                 ],
               ),
 
-               SizedBox(height: 8),
+              SizedBox(height: 8),
 
               if (widget.reel.caption != null)
                 Text(
@@ -291,11 +278,7 @@ class _ReelItemState extends State<_ReelItem> {
             ],
           ),
         ),
-
-
       ],
     );
   }
 }
-
-

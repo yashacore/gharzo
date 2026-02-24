@@ -34,13 +34,14 @@ class ContactProvider extends ChangeNotifier {
     notifyListeners();
 
     final body = {
-      "contactName": name,
-      "phone": phone,
-      "alternatePhone": alternatePhone,
-      "email": email,
-      "preferredCallTime": preferredCallTime,
+      "contactInfo": {
+        "name": name,
+        "phone": phone,
+        "alternatePhone": alternatePhone,
+        "email": email,
+        "preferredCallTime": preferredCallTime,
+      },
     };
-
     try {
       final response = await ApiServiceMethod.updateContactInfo(
         propertyId,
@@ -63,6 +64,4 @@ class ContactProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-
 }

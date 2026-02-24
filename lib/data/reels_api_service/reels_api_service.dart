@@ -7,14 +7,10 @@ import 'package:gharzo_project/model/reels/save_reel_model.dart';
 import 'package:http/http.dart' as http;
 
 class ReelsApiService {
-
-
   static const String baseUrl = "https://api.gharzoreality.com/api/reels/feed";
   static const String token = "YOUR_TOKEN";
 
-  static Map<String, String> headers() => {
-    "Authorization": "Bearer $token",
-  };
+  static Map<String, String> headers() => {"Authorization": "Bearer $token"};
 
   //fetch reels
   static Future<Map<String, String>> getToken() async {
@@ -22,8 +18,7 @@ class ReelsApiService {
 
     return {
       'Content-Type': 'application/json',
-      if (token != null && token.isNotEmpty)
-        'Authorization': 'Bearer $token',
+      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
     };
   }
 
@@ -38,10 +33,7 @@ class ReelsApiService {
     );
 
     try {
-      final response = await http.get(
-        url,
-        headers: await getToken(),
-      );
+      final response = await http.get(url, headers: await getToken());
 
       if (response.statusCode == 200) {
         final jsonBody = json.decode(response.body);
@@ -55,7 +47,6 @@ class ReelsApiService {
       return null;
     }
   }
-
 
   static Future<bool> toggleLike(String reelId, String token) async {
     try {
@@ -81,9 +72,7 @@ class ReelsApiService {
     final token = await PrefService.getToken();
 
     final response = await http.post(
-      Uri.parse(
-        "https://api.gharzoreality.com/api/reels/$reelId/like",
-      ),
+      Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/like"),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
@@ -93,19 +82,16 @@ class ReelsApiService {
     final json = jsonDecode(response.body);
 
     if (response.statusCode == 200 && json["success"] == true) {
-      return {
-        "likes": json["likes"],
-        "isLiked": json["isLiked"],
-      };
+      return {"likes": json["likes"], "isLiked": json["isLiked"]};
     } else {
       throw Exception("Like failed");
     }
   }
 
-
-
- static Future<ReelSaveResponse?> saveReel(String reelId, String token) async {
-    final url = Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/save");
+  static Future<ReelSaveResponse?> saveReel(String reelId, String token) async {
+    final url = Uri.parse(
+      "https://api.gharzoreality.com/api/reels/$reelId/save",
+    );
 
     final response = await http.post(
       url,
@@ -113,9 +99,7 @@ class ReelsApiService {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({
-        "save": true,
-      }),
+      body: jsonEncode({"save": true}),
     );
 
     if (response.statusCode == 200) {
@@ -149,7 +133,9 @@ class ReelsApiService {
         throw Exception("Token not found");
       }
 
-      final url = Uri.parse('https://api.gharzoreality.com/api/reels/$reelId/comments');
+      final url = Uri.parse(
+        'https://api.gharzoreality.com/api/reels/$reelId/comments',
+      );
 
       final response = await http.post(
         url,
@@ -157,9 +143,7 @@ class ReelsApiService {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode(
-          AddCommentRequest(text: text).toJson(),
-        ),
+        body: jsonEncode(AddCommentRequest(text: text).toJson()),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -169,13 +153,11 @@ class ReelsApiService {
         print("Failed: ${response.body}");
         return false;
       }
-
     } catch (e) {
       print("🔥 Error addComment: $e");
       return false;
     }
   }
-
 
   //--------------fetch Comment
   static Future<List<CommentModel>> fetchComments(String reelId) async {
@@ -187,7 +169,9 @@ class ReelsApiService {
         return [];
       }
 
-      final url = Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/comments");
+      final url = Uri.parse(
+        "https://api.gharzoreality.com/api/reels/$reelId/comments",
+      );
 
       debugPrint("📥 FETCH COMMENTS");
       debugPrint("🆔 ReelId: $reelId");
@@ -208,9 +192,7 @@ class ReelsApiService {
 
         final List list = decoded["data"] ?? [];
 
-        return list
-            .map((e) => CommentModel.fromJson(e))
-            .toList();
+        return list.map((e) => CommentModel.fromJson(e)).toList();
       } else {
         debugPrint("❌ Failed to fetch comments");
         return [];
@@ -221,4 +203,3 @@ class ReelsApiService {
     }
   }
 }
-

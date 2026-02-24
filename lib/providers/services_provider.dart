@@ -69,6 +69,7 @@ class ServicesProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void reset() {
     isSuccess = false;
     error = '';

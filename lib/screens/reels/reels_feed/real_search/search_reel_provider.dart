@@ -23,7 +23,8 @@ class ReelsSearchProvider extends ChangeNotifier {
     try {
       final tagString = tags != null ? tags.join(',') : '';
       final uri = Uri.parse(
-          'http://localhost:5000/api/reels/search?q=$query&city=$city&tags=$tagString&page=$page&limit=$limit');
+        'http://localhost:5000/api/reels/search?q=$query&city=$city&tags=$tagString&page=$page&limit=$limit',
+      );
 
       final response = await http.get(uri);
 

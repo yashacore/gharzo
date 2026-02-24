@@ -35,6 +35,10 @@ dependencies:
   circle_nav_bar: ^2.2.0
   sms_autofill: ^2.4.1
   google_fonts: ^8.0.1
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  google_maps_flutter: ^2.14.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

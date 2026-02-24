@@ -6,9 +6,9 @@ class ApiClient {
   static const String baseUrl = "https://api.yourdomain.com/api";
 
   static Future<Map<String, dynamic>> get(
-      String endpoint, {
-        Map<String, String>? headers,
-      }) async {
+    String endpoint, {
+    Map<String, String>? headers,
+  }) async {
     final token = await PrefService.getToken();
     final response = await http.get(
       Uri.parse(baseUrl + endpoint),
@@ -23,10 +23,10 @@ class ApiClient {
   }
 
   static Future<Map<String, dynamic>> post(
-      String endpoint, {
-        Map<String, dynamic>? body,
-        Map<String, String>? headers,
-      }) async {
+    String endpoint, {
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+  }) async {
     final token = await PrefService.getToken();
     final response = await http.post(
       Uri.parse(baseUrl + endpoint),
@@ -42,9 +42,9 @@ class ApiClient {
   }
 
   static Future<Map<String, dynamic>> put(
-      String endpoint, {
-        Map<String, dynamic>? body,
-      }) async {
+    String endpoint, {
+    Map<String, dynamic>? body,
+  }) async {
     final token = await PrefService.getToken();
     final response = await http.put(
       Uri.parse(baseUrl + endpoint),

@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../../utils/theme/colors.dart';
 
-
 // child: Container(
 //   decoration: BoxDecoration(
 //     borderRadius: BorderRadius.circular(12),
@@ -98,9 +97,6 @@ import '../../utils/theme/colors.dart';
 //   ),
 // ),
 
-
-
-
 class CategoryView extends StatefulWidget {
   final String category;
   const CategoryView({super.key, required this.category});
@@ -128,8 +124,7 @@ class _CategoryViewState extends State<CategoryView> {
       builder: (context, provider, child) {
         return Scaffold(
           backgroundColor: Colors.white,
-          body:
-          Column(
+          body: Column(
             children: [
               // Gradient Header
               Container(
@@ -158,9 +153,7 @@ class _CategoryViewState extends State<CategoryView> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    Expanded(
-                      child: CommonHomeWidgets.searchBarView(),
-                    ),
+                    Expanded(child: CommonHomeWidgets.searchBarView()),
                   ],
                 ),
               ),
@@ -190,9 +183,10 @@ class _CategoryViewState extends State<CategoryView> {
                         Text(
                           "Get Started",
                           style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16),
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
                         ),
                         SizedBox(height: 16),
                         buildAdSlider(provider),
@@ -214,39 +208,40 @@ class _CategoryViewState extends State<CategoryView> {
                                 return const Padding(
                                   padding: EdgeInsets.all(20),
                                   child: Center(
-                                      child: Text("No properties found")),
+                                    child: Text("No properties found"),
+                                  ),
                                 );
                               }
 
                               return GridView.builder(
-
-
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: provider.properties.length,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.60,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 0.60,
+                                      crossAxisSpacing: 12,
+                                      mainAxisSpacing: 12,
+                                    ),
                                 itemBuilder: (context, index) {
                                   final property = provider.properties[index];
 
                                   return GestureDetector(
-                                    onTap: (){
+                                    onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                ChangeNotifierProvider(
-                                                  create: (_) =>
-                                                      PropertyDetailProvider(),
-                                                  child: PropertyDetailScreen(
-                                                    propertyId: property.id,
-                                                  ),
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              ChangeNotifierProvider(
+                                                create: (_) =>
+                                                    PropertyDetailProvider(),
+                                                child: PropertyDetailScreen(
+                                                  propertyId: property.id,
                                                 ),
-                                          ));
+                                              ),
+                                        ),
+                                      );
                                     },
                                     child: PropertyCard(
                                       // IMAGE
@@ -324,7 +319,7 @@ class _CategoryViewState extends State<CategoryView> {
                           ad.imageUrl,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) =>
-                          const Center(child: Icon(Icons.broken_image)),
+                              const Center(child: Icon(Icons.broken_image)),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -361,7 +356,9 @@ class _CategoryViewState extends State<CategoryView> {
                                 onTap: () => provider.onAdTap(ad),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
+                                    horizontal: 20,
+                                    vertical: 10,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(25),
@@ -373,7 +370,9 @@ class _CategoryViewState extends State<CategoryView> {
                                       ),
                                     ],
                                     border: Border.all(
-                                        color: Colors.grey.shade300, width: 0.5),
+                                      color: Colors.grey.shade300,
+                                      width: 0.5,
+                                    ),
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -395,7 +394,7 @@ class _CategoryViewState extends State<CategoryView> {
                                     ],
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -412,10 +411,6 @@ class _CategoryViewState extends State<CategoryView> {
     );
   }
 }
-
-
-
-
 
 class PropertyCard extends StatelessWidget {
   final String price;
@@ -446,8 +441,7 @@ class PropertyCard extends StatelessWidget {
     required this.isFeatured,
   });
 
-  bool get hasImage =>
-      imgUrl.isNotEmpty && imgUrl.startsWith('http');
+  bool get hasImage => imgUrl.isNotEmpty && imgUrl.startsWith('http');
 
   @override
   Widget build(BuildContext context) {
@@ -469,8 +463,7 @@ class PropertyCard extends StatelessWidget {
         children: [
           // ================= IMAGE =================
           ClipRRect(
-            borderRadius:
-            const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             child: Stack(
               children: [
                 AspectRatio(
@@ -478,13 +471,13 @@ class PropertyCard extends StatelessWidget {
                   child: hasImage
                       ? Image.network(imgUrl, fit: BoxFit.cover)
                       : Container(
-                    color: Colors.grey.shade200,
-                    child: const Icon(
-                      Icons.home_work_rounded,
-                      size: 48,
-                      color: Colors.grey,
-                    ),
-                  ),
+                          color: Colors.grey.shade200,
+                          child: const Icon(
+                            Icons.home_work_rounded,
+                            size: 48,
+                            color: Colors.grey,
+                          ),
+                        ),
                 ),
 
                 // Gradient
@@ -508,8 +501,10 @@ class PropertyCard extends StatelessWidget {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: isFeatured
                           ? Colors.amber
@@ -538,7 +533,9 @@ class PropertyCard extends StatelessWidget {
                   bottom: 10,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF2563EB),
                       borderRadius: BorderRadius.circular(20),
@@ -564,10 +561,7 @@ class PropertyCard extends StatelessWidget {
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
 
@@ -577,10 +571,7 @@ class PropertyCard extends StatelessWidget {
               location,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black54,
-              ),
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
           ),
 
@@ -608,15 +599,11 @@ class PropertyCard extends StatelessWidget {
               furnishing,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
             ),
           ),
 
           const Spacer(), // PUSH CTA TO BOTTOM
-
           // ================= CTA =================
         ],
       ),
@@ -631,13 +618,9 @@ class PropertyCard extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
         ),
       ],
     );
   }
-
 }

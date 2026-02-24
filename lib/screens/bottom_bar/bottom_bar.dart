@@ -26,12 +26,10 @@ class _BottomBarState extends State<BottomBarView>
       reverseDuration: const Duration(milliseconds: 220),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(-1, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+        );
   }
 
   void openDrawer() => _controller.forward();
@@ -67,15 +65,12 @@ class _BottomBarState extends State<BottomBarView>
               ),
             ),
 
-
             // 🔥 DARK OVERLAY
             if (_controller.value > 0)
               Positioned.fill(
                 child: GestureDetector(
                   onTap: closeDrawer,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
-                  ),
+                  child: Container(color: Colors.black.withOpacity(0.3)),
                 ),
               ),
 
@@ -84,7 +79,7 @@ class _BottomBarState extends State<BottomBarView>
               onHorizontalDragUpdate: (details) {
                 _controller.value +=
                     details.primaryDelta! /
-                        (MediaQuery.of(context).size.width * 0.8);
+                    (MediaQuery.of(context).size.width * 0.8);
               },
               onHorizontalDragEnd: (details) {
                 if (_controller.value > 0.5) {
@@ -164,15 +159,13 @@ class _BottomBarState extends State<BottomBarView>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color:
-                          AppThemeColors().primary.withOpacity(0.45),
+                          color: AppThemeColors().primary.withOpacity(0.45),
                           blurRadius: 14,
                           offset: const Offset(0, 6),
                         ),
                       ],
                     ),
-                    child: const Icon(Icons.add,
-                        color: Colors.white, size: 32),
+                    child: const Icon(Icons.add, color: Colors.white, size: 32),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -189,11 +182,11 @@ class _BottomBarState extends State<BottomBarView>
   }
 
   Widget navItem(
-      int index,
-      IconData icon,
-      String label,
-      BottomBarProvider provider,
-      ) {
+    int index,
+    IconData icon,
+    String label,
+    BottomBarProvider provider,
+  ) {
     final isActive = provider.currentIndex == index;
 
     return GestureDetector(
@@ -204,15 +197,13 @@ class _BottomBarState extends State<BottomBarView>
           Icon(
             icon,
             size: 26,
-            color:
-            isActive ? AppThemeColors().primary : Colors.black45,
+            color: isActive ? AppThemeColors().primary : Colors.black45,
           ),
           Text(
             label,
             style: TextStyle(
               fontSize: 11,
-              color:
-              isActive ? AppThemeColors().primary : Colors.black45,
+              color: isActive ? AppThemeColors().primary : Colors.black45,
             ),
           ),
         ],

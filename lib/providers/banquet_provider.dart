@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/model/model/banquet_model.dart';
 import 'package:http/http.dart' as http;
 
-class   BanquetProvider extends ChangeNotifier {
+class BanquetProvider extends ChangeNotifier {
   bool isLoading = false;
   List<BanquetModel> banquets = [];
 
@@ -14,18 +14,14 @@ class   BanquetProvider extends ChangeNotifier {
     try {
       final response = await http.get(
         Uri.parse('https://api.gharzoreality.com/api/banquet-halls'),
-        headers: {
-          "Accept": "application/json",
-        },
+        headers: {"Accept": "application/json"},
       );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         final List list = decoded['data'];
 
-        banquets = list
-            .map((e) => BanquetModel.fromJson(e))
-            .toList();
+        banquets = list.map((e) => BanquetModel.fromJson(e)).toList();
       }
     } catch (e) {
       debugPrint("Banquet API Error: $e");
@@ -34,8 +30,6 @@ class   BanquetProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
-
-
 
   static Future<bool> submitEnquiry({
     required String banquetId,

@@ -25,15 +25,10 @@ class OtpVerificationView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 16,),
-                Text(
-                  "OTP",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyMedium,
-                ),
-                SizedBox(height: 8,),
+                SizedBox(height: 16),
+                Text("OTP", style: Theme.of(context).textTheme.bodyMedium),
+                SizedBox(height: 8),
+
                 // PinFieldAutoFill(
                 //   controller: value.otpController,
                 //   codeLength: 6,
@@ -50,8 +45,6 @@ class OtpVerificationView extends StatelessWidget {
                 //     }
                 //   },
                 // ),
-
-
                 CommonWidget.commonOtpTextField(
                   context: context,
                   controller: value.otpController,
@@ -61,19 +54,13 @@ class OtpVerificationView extends StatelessWidget {
                 if (value.showRegisterForm) ...[
                   Text(
                     PageConstVar.fullName,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   fullNameTextFormField(value),
-                  SizedBox(height: 8,),
+                  SizedBox(height: 8),
                   Text(
                     PageConstVar.role,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   roleSegmentedSelector(value),
                 ],
@@ -81,14 +68,15 @@ class OtpVerificationView extends StatelessWidget {
                 SizedBox(height: 32),
                 PrimaryButton(
                   title: value.isLoading
-                    ? "Verifying..."
-                    : value.showRegisterForm
-                    ? "Continue"
-                    : "Verify",
+                      ? "Verifying..."
+                      : value.showRegisterForm
+                      ? "Continue"
+                      : "Verify",
 
-                  onPressed:
-                  value.isLoading ? null : () => value.verifyOtp(context),),
-
+                  onPressed: value.isLoading
+                      ? null
+                      : () => value.verifyOtp(context),
+                ),
 
                 SizedBox(height: 24),
                 Center(
@@ -165,8 +153,9 @@ class OtpVerificationView extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppThemeColors().buttonColor : Colors
-                      .transparent,
+                  color: isSelected
+                      ? AppThemeColors().buttonColor
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -184,5 +173,4 @@ class OtpVerificationView extends StatelessWidget {
       ),
     );
   }
-
 }

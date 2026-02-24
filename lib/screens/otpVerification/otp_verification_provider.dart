@@ -114,12 +114,13 @@ class OtpVerificationProvider extends ChangeNotifier with CodeAutoFill {
       await PrefService.saveAuthData(
         token: response.data?.token ?? '',
         userJson: jsonEncode(response.data?.user),
+        role: jsonEncode(response.data?.user.role),
       );
 
       debugPrint("➡️ Navigating to BottomBar");
       navigatorKey.currentState?.pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => BottomBarView()),
-            (route) => false,
+        (route) => false,
       );
     } catch (e) {
       debugPrint("🔥 OTP ERROR: $e");
@@ -166,8 +167,7 @@ class OtpVerificationProvider extends ChangeNotifier with CodeAutoFill {
 
   void _snack(BuildContext c, String msg) {
     debugPrint("🍿 Snack: $msg");
-    ScaffoldMessenger.of(c)
-        .showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(c).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override

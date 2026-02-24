@@ -49,8 +49,16 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
 
               const SizedBox(height: 16),
               _section("Stay Details"),
-              _datePicker("Check-in Date", checkIn, (d) => setState(() => checkIn = d)),
-              _datePicker("Check-out Date", checkOut, (d) => setState(() => checkOut = d)),
+              _datePicker(
+                "Check-in Date",
+                checkIn,
+                (d) => setState(() => checkIn = d),
+              ),
+              _datePicker(
+                "Check-out Date",
+                checkOut,
+                (d) => setState(() => checkOut = d),
+              ),
 
               _field(roomsCtrl, "Rooms", keyboard: TextInputType.number),
               _field(adultsCtrl, "Adults", keyboard: TextInputType.number),
@@ -80,7 +88,6 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
             await _submit();
           },
         );
-
       },
     );
   }
@@ -110,9 +117,7 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
       "message": messageCtrl.text,
     };
 
-    final success = await context
-        .read<HotelProvider>()
-        .submitEnquiry(
+    final success = await context.read<HotelProvider>().submitEnquiry(
       hotelId: widget.hotelId,
       data: payload,
     );
@@ -131,7 +136,7 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => BottomBarView()),
-            (route) => false,
+        (route) => false,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -149,14 +154,18 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
     alignment: Alignment.centerLeft,
     child: Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(title,
-          style:
-          const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
     ),
   );
 
-  Widget _field(TextEditingController c, String label,
-      {TextInputType keyboard = TextInputType.text}) {
+  Widget _field(
+    TextEditingController c,
+    String label, {
+    TextInputType keyboard = TextInputType.text,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
@@ -181,9 +190,11 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField<String>(
         value: roomType,
-        items: ["Deluxe", "Super Deluxe", "Suite"]
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
+        items: [
+          "Deluxe",
+          "Super Deluxe",
+          "Suite",
+        ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
         onChanged: (v) => setState(() => roomType = v!),
         decoration: _inputDecoration("Room Preference"),
       ),
@@ -245,4 +256,3 @@ class _HotelEnquiryScreenState extends State<HotelEnquiryScreen> {
     ],
   );
 }
-

@@ -234,9 +234,6 @@
 //   }
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -286,12 +283,7 @@ class _BottomNavDemoState extends State<BottomNavDemo> {
                   topLeft: Radius.circular(22),
                   topRight: Radius.circular(22),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                  ),
-                ],
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -312,11 +304,7 @@ class _BottomNavDemoState extends State<BottomNavDemo> {
                     label: "Property\nValuation",
                     index: 3,
                   ),
-                  navItem(
-                    icon: Icons.person_outline,
-                    label: "You",
-                    index: 4,
-                  ),
+                  navItem(icon: Icons.person_outline, label: "You", index: 4),
                 ],
               ),
             ),
@@ -375,11 +363,7 @@ class _BottomNavDemoState extends State<BottomNavDemo> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 22,
-            color: isActive ? Colors.red : Colors.black54,
-          ),
+          Icon(icon, size: 22, color: isActive ? Colors.red : Colors.black54),
           const SizedBox(height: 4),
           Text(
             label,

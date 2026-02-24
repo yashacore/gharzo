@@ -12,10 +12,11 @@ class NotificationService {
   // Private constructor for singleton pattern
   NotificationService._internal();
   static final NotificationService _instance = NotificationService._internal();
-  factory   NotificationService() => _instance;
+  factory NotificationService() => _instance;
 
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   /// Initialize the notification service
   Future<void> initialize() async {
@@ -33,8 +34,9 @@ class NotificationService {
 
     // 2. Setup Local Notifications (Needed for Foreground display)
     const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings();
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings();
 
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
@@ -78,8 +80,8 @@ class NotificationService {
       // id, title, body, notificationDetails, {payload}
       await _localNotifications.show(
         id: notification.hashCode, // Unique ID
-        title: notification.title,    // Title
-        body: notification.body,     // Body
+        title: notification.title, // Title
+        body: notification.body, // Body
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'high_importance_channel', // id
@@ -126,6 +128,5 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you need to use Firebase services here, call Firebase.initializeApp() first.
   print("Handling a background message: ${message.messageId}");
 }
-
 
 ///TODO Home page provider => save-token Api

@@ -37,8 +37,7 @@ class ReelsFeedProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response =
-      await ReelsApiService.getReelsFeed(page: currentPage);
+      final response = await ReelsApiService.getReelsFeed(page: currentPage);
 
       debugPrint("Response Feed Reel :: $response");
 
@@ -89,7 +88,6 @@ class ReelsFeedProvider extends ChangeNotifier {
 
       // final result = await ReelsApiService.likeReel(reel.id);
 
-
       final result = await ReelsApiService.likeReel(reel.id);
       debugPrint("🟣 API RESPONSE: $result");
 
@@ -110,10 +108,7 @@ class ReelsFeedProvider extends ChangeNotifier {
     }
   }
 
-
   Future<void> toggleSave(Reel reel) async {
-    if (reel.id == null) return;
-
     final token = await PrefService.getToken();
     print("token");
     print(token);
@@ -127,14 +122,11 @@ class ReelsFeedProvider extends ChangeNotifier {
     final oldReel = _reels[index];
     final bool newSavedState = !oldReel.isSaved;
 
-    _reels[index] = oldReel.copyWith(
-      isSaved: newSavedState,
-    );
+    _reels[index] = oldReel.copyWith(isSaved: newSavedState);
     notifyListeners();
 
     try {
-      final response =
-      await ReelsApiService.saveReel(reel.id!, token);
+      final response = await ReelsApiService.saveReel(reel.id, token);
 
       if (response == null || !response.success) {
         _reels[index] = oldReel;
@@ -151,7 +143,6 @@ class ReelsFeedProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   Future<void> fetchComments(String reelId) async {
     isCommentsLoading = true;
@@ -171,7 +162,6 @@ class ReelsFeedProvider extends ChangeNotifier {
     required String reelId,
     required String text,
   }) async {
-
     final success = await ReelsApiService.addComment(
       reelId: reelId,
       text: text,
@@ -213,7 +203,4 @@ class ReelsFeedProvider extends ChangeNotifier {
     replyingToUser = null;
     notifyListeners();
   }
-
-
-
 }

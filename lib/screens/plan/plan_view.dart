@@ -33,7 +33,10 @@ class _PlanViewState extends State<PlanView> {
               children: [
                 // Custom App Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
                   child: Row(
                     children: [
                       IconButton(
@@ -52,7 +55,9 @@ class _PlanViewState extends State<PlanView> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 48), // Spacer to balance back button
+                      const SizedBox(
+                        width: 48,
+                      ), // Spacer to balance back button
                     ],
                   ),
                 ),
@@ -65,7 +70,10 @@ class _PlanViewState extends State<PlanView> {
                 // Scrollable List of Plans
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                     children: const [
                       PlanCard(
                         title: "Basic",
@@ -111,7 +119,6 @@ class _PlanViewState extends State<PlanView> {
   }
 }
 
-
 class PlanToggle extends StatelessWidget {
   const PlanToggle({super.key});
 
@@ -142,7 +149,9 @@ class PlanToggle extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: isMonthly ? const Color(0xFF2B57D5) : Colors.transparent,
+                  color: isMonthly
+                      ? const Color(0xFF2B57D5)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Center(
@@ -163,7 +172,9 @@ class PlanToggle extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: !isMonthly ? const Color(0xFF2B57D5) : Colors.transparent,
+                  color: !isMonthly
+                      ? const Color(0xFF2B57D5)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Center(
@@ -248,34 +259,33 @@ class PlanCard extends StatelessWidget {
                     ),
                     const Text(
                       " /month",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                ...features.map((feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.check_circle_outline,
-                        size: 20,
-                        color: Color(0xFF2B57D5),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        feature,
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14,
+                ...features.map(
+                  (feature) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.check_circle_outline,
+                          size: 20,
+                          color: Color(0xFF2B57D5),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 10),
+                        Text(
+                          feature,
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )),
+                ),
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
@@ -309,7 +319,10 @@ class PlanCard extends StatelessWidget {
               top: 0,
               right: 0,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: const BoxDecoration(
                   color: Color(0xFF2B57D5),
                   borderRadius: BorderRadius.only(

@@ -53,8 +53,7 @@ class PropertyDraftProvider extends ChangeNotifier {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => BottomBarView()),
-          (route) => false,
+      (route) => false,
     );
   }
-
 }

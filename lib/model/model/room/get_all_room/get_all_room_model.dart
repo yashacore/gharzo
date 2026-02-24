@@ -87,7 +87,7 @@ class Pricing {
       securityDeposit: json['securityDeposit'] ?? 0,
       maintenanceAmount: json['maintenanceCharges']?['amount'] ?? 0,
       maintenanceIncluded:
-      json['maintenanceCharges']?['includedInRent'] ?? false,
+          json['maintenanceCharges']?['includedInRent'] ?? false,
       electricityCharges: json['electricityCharges'] ?? '',
       waterCharges: json['waterCharges'] ?? '',
     );
@@ -98,10 +98,7 @@ class Capacity {
   final int totalBeds;
   final int occupiedBeds;
 
-  Capacity({
-    required this.totalBeds,
-    required this.occupiedBeds,
-  });
+  Capacity({required this.totalBeds, required this.occupiedBeds});
 
   factory Capacity.fromJson(Map<String, dynamic> json) {
     return Capacity(
@@ -174,9 +171,7 @@ class Availability {
   Availability({required this.status});
 
   factory Availability.fromJson(Map<String, dynamic> json) {
-    return Availability(
-      status: json['status'] ?? '',
-    );
+    return Availability(status: json['status'] ?? '');
   }
 }
 
@@ -184,15 +179,9 @@ class Area {
   final int carpet;
   final String unit;
 
-  Area({
-    required this.carpet,
-    required this.unit,
-  });
+  Area({required this.carpet, required this.unit});
 
   factory Area.fromJson(Map<String, dynamic> json) {
-    return Area(
-      carpet: json['carpet'] ?? 0,
-      unit: json['unit'] ?? '',
-    );
+    return Area(carpet: json['carpet'] ?? 0, unit: json['unit'] ?? '');
   }
 }

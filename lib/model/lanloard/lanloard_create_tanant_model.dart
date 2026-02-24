@@ -22,10 +22,7 @@ class TenancyData {
   final Tenancy tenancy;
   final Tenant tenant;
 
-  TenancyData({
-    required this.tenancy,
-    required this.tenant,
-  });
+  TenancyData({required this.tenancy, required this.tenant});
 
   factory TenancyData.fromJson(Map<String, dynamic> json) {
     return TenancyData(

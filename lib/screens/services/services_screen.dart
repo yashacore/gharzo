@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../providers/services_provider.dart';
 import '../../utils/theme/colors.dart';
 
-
 class ServicesScreen extends StatelessWidget {
   const ServicesScreen({super.key});
 
@@ -26,10 +25,10 @@ class ServicesScreen extends StatelessWidget {
           // 🔍 DEBUG PRINT
           debugPrint(
             '🖥 ServicesScreen → '
-                'loading=${provider.isLoading}, '
-                'services=${provider.services.length}, '
-                'categories=${provider.categories.length}, '
-                'error=${provider.error}',
+            'loading=${provider.isLoading}, '
+            'services=${provider.services.length}, '
+            'categories=${provider.categories.length}, '
+            'error=${provider.error}',
           );
 
           // 🔄 Loading
@@ -72,9 +71,7 @@ class ServicesScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.services.length,
                   itemBuilder: (_, index) {
-                    return ServiceCard(
-                      service: provider.services[index],
-                    );
+                    return ServiceCard(service: provider.services[index]);
                   },
                 ),
               ),
@@ -88,34 +85,6 @@ class ServicesScreen extends StatelessWidget {
 
 /* ===================== CATEGORIES ===================== */
 
-class _CategoriesBar extends StatelessWidget {
-  final List<ServiceCategory> categories;
-
-  const _CategoriesBar({required this.categories});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (_, index) {
-          final c = categories[index];
-          return Chip(
-            label: Text('${c.id} (${c.count})'),
-            backgroundColor: Colors.white,
-            shape: StadiumBorder(
-              side: BorderSide(color: Colors.grey.shade300),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 /* ===================== SERVICE CARD ===================== */
 
@@ -126,8 +95,9 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? image =
-    service.images.isNotEmpty ? service.images.first.url : null;
+    final String? image = service.images.isNotEmpty
+        ? service.images.first.url
+        : null;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -151,17 +121,17 @@ class ServiceCard extends StatelessWidget {
                     children: [
                       image != null
                           ? Image.network(
-                        image,
-                        height: 80,
-                        width: 100,
-                        fit: BoxFit.cover,
-                      )
+                              image,
+                              height: 80,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            )
                           : Container(
-                        height: 80,
-                        width: 100,
-                        color: Colors.grey.shade200,
-                        child: const Icon(Icons.image_not_supported),
-                      ),
+                              height: 80,
+                              width: 100,
+                              color: Colors.grey.shade200,
+                              child: const Icon(Icons.image_not_supported),
+                            ),
 
                       // IMAGE COUNT / STATUS
                       Positioned(
@@ -169,17 +139,16 @@ class ServiceCard extends StatelessWidget {
                         bottom: 4,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
                             "Updated",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 9),
                           ),
                         ),
                       ),
@@ -261,10 +230,7 @@ class ServiceCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 18,
-                  ),
+                  child: const Icon(Icons.favorite_border, size: 18),
                 ),
 
                 const SizedBox(width: 10),
@@ -274,12 +240,9 @@ class ServiceCard extends StatelessWidget {
                   child: SizedBox(
                     height: 36,
                     child: OutlinedButton(
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                       style: OutlinedButton.styleFrom(
-                        side:  BorderSide(color:           AppThemeColors().primary,
-                      ),
+                        side: BorderSide(color: AppThemeColors().primary),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -309,14 +272,13 @@ class ServiceCard extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (_) => ChangeNotifierProvider(
                               create: (_) => ServicesProvider(),
-                              child:
-                              ServiceDetailsScreen(service: service),
+                              child: ServiceDetailsScreen(service: service),
                             ),
                           ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:          AppThemeColors().primary,
+                        backgroundColor: AppThemeColors().primary,
 
                         elevation: 0,
                         shape: RoundedRectangleBorder(

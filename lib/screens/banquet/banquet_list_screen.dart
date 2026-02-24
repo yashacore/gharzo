@@ -15,8 +15,7 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        context.read<BanquetProvider>().fetchBanquets());
+    Future.microtask(() => context.read<BanquetProvider>().fetchBanquets());
   }
 
   @override
@@ -67,13 +66,13 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       /// IMAGE SECTION
                       Stack(
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(18)),
+                              top: Radius.circular(18),
+                            ),
                             child: Image.network(
                               banquet.imageUrl.isNotEmpty
                                   ? banquet.imageUrl
@@ -89,7 +88,8 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(18)),
+                                  top: Radius.circular(18),
+                                ),
                                 gradient: LinearGradient(
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
@@ -108,7 +108,9 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
                             right: 12,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -144,8 +146,11 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
 
                             Row(
                               children: [
-                                const Icon(Icons.location_on,
-                                    size: 16, color: Colors.grey),
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
@@ -165,14 +170,12 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
                               children: [
                                 _infoChip(
                                   icon: Icons.event_seat,
-                                  text:
-                                  "${banquet.seating} Seating",
+                                  text: "${banquet.seating} Seating",
                                 ),
                                 const SizedBox(width: 10),
                                 _infoChip(
                                   icon: Icons.people,
-                                  text:
-                                  "${banquet.floating} Floating",
+                                  text: "${banquet.floating} Floating",
                                 ),
                               ],
                             ),
@@ -201,10 +204,7 @@ class _BanquetListScreenState extends State<BanquetListScreen> {
         children: [
           Icon(icon, size: 14, color: Colors.black54),
           const SizedBox(width: 4),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(text, style: const TextStyle(fontSize: 12)),
         ],
       ),
     );

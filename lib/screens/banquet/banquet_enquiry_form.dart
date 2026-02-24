@@ -106,9 +106,16 @@ class _BanquetEnquiryFormState extends State<BanquetEnquiryForm> {
   InputDecoration _modernInput(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.black38, fontSize: 14, fontWeight: FontWeight.w500),
+      labelStyle: const TextStyle(
+        color: Colors.black38,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
       prefixIcon: Icon(icon, size: 20, color: Colors.black87),
-      floatingLabelStyle: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
+      floatingLabelStyle: const TextStyle(
+        color: Colors.blueAccent,
+        fontWeight: FontWeight.bold,
+      ),
       filled: true,
       fillColor: const Color(0xFFF8F9FA),
       enabledBorder: OutlineInputBorder(
@@ -167,13 +174,17 @@ class _BanquetEnquiryFormState extends State<BanquetEnquiryForm> {
             controller: messageCtrl,
             maxLines: 4,
             style: const TextStyle(fontWeight: FontWeight.w600),
-            decoration: _modernInput("Event Details / Message", Icons.chat_bubble_outline),
+            decoration: _modernInput(
+              "Event Details / Message",
+              Icons.chat_bubble_outline,
+            ),
             validator: (v) => v!.isEmpty ? "Tell us about your event" : null,
           ),
           const SizedBox(height: 40),
-          PrimaryButton(title: "CONFIRM ENQUIRY",
+          PrimaryButton(
+            title: "CONFIRM ENQUIRY",
             onPressed: isLoading ? null : submit,
-          )
+          ),
 
           // PREMIUM SUBMIT BUTTON
         ],

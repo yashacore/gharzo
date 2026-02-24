@@ -22,8 +22,6 @@ class EditProfileProvider extends ChangeNotifier {
   String profileImage = '';
   bool isBtnLoading = false;
 
-
-
   String userName = '';
   String phone = '';
   String email = '';
@@ -133,16 +131,14 @@ class EditProfileProvider extends ChangeNotifier {
       );
     } catch (e) {
       debugPrint("❌ UPDATE PROFILE ERROR: $e");
-      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      ScaffoldMessenger.of(
+        navigatorKey.currentContext!,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       isBtnLoading = false;
       notifyListeners();
     }
   }
-
-
 
   void removeProfileImage() {
     profileImage = '';

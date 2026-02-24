@@ -88,7 +88,11 @@ class CommonWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [colors.backgroundLeft, colors.backgroundRight, colors.backgroundRight],
+            colors: [
+              colors.backgroundLeft,
+              colors.backgroundRight,
+              colors.backgroundRight,
+            ],
             begin: Alignment.topLeft,
             end: Alignment.topRight,
           ),
@@ -125,7 +129,9 @@ class CommonWidget {
                   onTap: onSkipTap,
                   child: Text(
                     "Skip",
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.headlineMedium!.copyWith(color: Colors.white),
                   ),
                 ),
               ),
@@ -145,7 +151,9 @@ class CommonWidget {
                   Text(
                     subtitle,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium!.copyWith(color: Colors.white),
                   ),
                 ],
               ),
@@ -171,18 +179,20 @@ class CommonWidget {
     Widget? leading,
     bool showBack = true,
     VoidCallback? onPressed,
-
   }) {
     return AppBar(
       leading: showBack
           ? leading ??
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.arrow_back,
-                  color: Colors.white, size: 20),
-              onPressed: onPressed,
-            ),
-          )
+                Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    onPressed: onPressed,
+                  ),
+                )
           : null,
       title: Text(
         title,
@@ -337,12 +347,9 @@ class CommonWidget {
     ValueChanged<String>? onCompleted,
   }) {
     final defaultPinTheme = PinTheme(
-      width: 48,   // 👈 slightly wider
-      height: 52,  // 👈 slightly taller
-      textStyle: Theme.of(context)
-          .textTheme
-          .displaySmall
-          ?.copyWith(
+      width: 48, // 👈 slightly wider
+      height: 52, // 👈 slightly taller
+      textStyle: Theme.of(context).textTheme.displaySmall?.copyWith(
         color: Colors.black,
         fontSize: 18,
         fontWeight: FontWeight.w600,
@@ -350,10 +357,7 @@ class CommonWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF0F5FA), // 👈 light background
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.grey.shade300,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
       ),
     );
 
@@ -368,10 +372,7 @@ class CommonWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFF0F5FA),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Theme.of(context).primaryColor,
-            width: 1.5,
-          ),
+          border: Border.all(color: Theme.of(context).primaryColor, width: 1.5),
         ),
       ),
 
@@ -401,6 +402,7 @@ class CommonWidget {
       ),
     );
   }
+
   static Widget commonGradientScaffold({
     required Widget body,
     Gradient? gradient,
@@ -411,7 +413,7 @@ class CommonWidget {
   }) {
     debugPrint(
       "🧱 commonGradientScaffold → isScrollable=$isScrollable "
-          "controller=${scrollController != null}",
+      "controller=${scrollController != null}",
     );
 
     Widget content = SingleChildScrollView(
@@ -422,7 +424,8 @@ class CommonWidget {
             height: headerHeight,
             width: double.infinity,
             decoration: BoxDecoration(
-              gradient: gradient ??
+              gradient:
+                  gradient ??
                   LinearGradient(
                     colors: [
                       AppThemeColors().backgroundLeft,
@@ -438,12 +441,9 @@ class CommonWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isScrollable
-          ? SingleChildScrollView(child: content)
-          : content,
+      body: isScrollable ? SingleChildScrollView(child: content) : content,
     );
   }
-
 
   static Widget categoryListView(dynamic provider) {
     return SingleChildScrollView(

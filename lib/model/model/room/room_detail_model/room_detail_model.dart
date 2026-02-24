@@ -93,25 +93,34 @@ class RoomDetailModel {
     return RoomDetailModel(
       price: json['price'] != null ? Price.fromJson(json['price']) : null,
       area: json['area'] != null ? Area.fromJson(json['area']) : null,
-      pgDetails:
-      json['pgDetails'] != null ? PgDetails.fromJson(json['pgDetails']) : null,
+      pgDetails: json['pgDetails'] != null
+          ? PgDetails.fromJson(json['pgDetails'])
+          : null,
       landlordDetails: json['landlordDetails'] != null
           ? LandlordDetails.fromJson(json['landlordDetails'])
           : null,
-      roomStats:
-      json['roomStats'] != null ? RoomStats.fromJson(json['roomStats']) : null,
-      furnishing:
-      json['furnishing'] != null ? Furnishing.fromJson(json['furnishing']) : null,
-      parking: json['parking'] != null ? Parking.fromJson(json['parking']) : null,
+      roomStats: json['roomStats'] != null
+          ? RoomStats.fromJson(json['roomStats'])
+          : null,
+      furnishing: json['furnishing'] != null
+          ? Furnishing.fromJson(json['furnishing'])
+          : null,
+      parking: json['parking'] != null
+          ? Parking.fromJson(json['parking'])
+          : null,
       floor: json['floor'] != null ? Floor.fromJson(json['floor']) : null,
-      amenities:
-      json['amenities'] != null ? Amenities.fromJson(json['amenities']) : null,
-      location:
-      json['location'] != null ? Location.fromJson(json['location']) : null,
-      ownership:
-      json['ownership'] != null ? Ownership.fromJson(json['ownership']) : null,
-      contactInfo:
-      json['contactInfo'] != null ? ContactInfo.fromJson(json['contactInfo']) : null,
+      amenities: json['amenities'] != null
+          ? Amenities.fromJson(json['amenities'])
+          : null,
+      location: json['location'] != null
+          ? Location.fromJson(json['location'])
+          : null,
+      ownership: json['ownership'] != null
+          ? Ownership.fromJson(json['ownership'])
+          : null,
+      contactInfo: json['contactInfo'] != null
+          ? ContactInfo.fromJson(json['contactInfo'])
+          : null,
       stats: json['stats'] != null ? Stats.fromJson(json['stats']) : null,
       boost: json['boost'] != null ? Boost.fromJson(json['boost']) : null,
       id: json['_id'],
@@ -125,14 +134,18 @@ class RoomDetailModel {
       verificationStatus: json['verificationStatus'],
       isFeatured: json['isFeatured'],
       isPremium: json['isPremium'],
-      ownerId:
-      json['ownerId'] != null ? OwnerId.fromJson(json['ownerId']) : null,
+      ownerId: json['ownerId'] != null
+          ? OwnerId.fromJson(json['ownerId'])
+          : null,
       postedBy: json['postedBy'],
       completionPercentage: json['completionPercentage'],
-      completedSteps:
-      json['completedSteps'] != null ? List<String>.from(json['completedSteps']) : [],
+      completedSteps: json['completedSteps'] != null
+          ? List<String>.from(json['completedSteps'])
+          : [],
       images: json['images'] != null
-          ? (json['images'] as List).map((e) => PropertyImage.fromJson(e)).toList()
+          ? (json['images'] as List)
+                .map((e) => PropertyImage.fromJson(e))
+                .toList()
           : [],
       videos: json['videos'] ?? [],
       floorPlan: json['floorPlan'] ?? [],
@@ -244,10 +257,7 @@ class Furnishing {
   Furnishing({this.items, this.type});
 
   factory Furnishing.fromJson(Map<String, dynamic> json) {
-    return Furnishing(
-      items: json['items'] ?? [],
-      type: json['type'],
-    );
+    return Furnishing(items: json['items'] ?? [], type: json['type']);
   }
 }
 
@@ -258,10 +268,7 @@ class Parking {
   Parking({this.covered, this.open});
 
   factory Parking.fromJson(Map<String, dynamic> json) {
-    return Parking(
-      covered: json['covered'],
-      open: json['open'],
-    );
+    return Parking(covered: json['covered'], open: json['open']);
   }
 }
 
@@ -272,10 +279,7 @@ class Floor {
   Floor({this.current, this.total});
 
   factory Floor.fromJson(Map<String, dynamic> json) {
-    return Floor(
-      current: json['current'],
-      total: json['total'],
-    );
+    return Floor(current: json['current'], total: json['total']);
   }
 }
 
@@ -352,9 +356,7 @@ class Ownership {
   Ownership({this.verified});
 
   factory Ownership.fromJson(Map<String, dynamic> json) {
-    return Ownership(
-      verified: json['verified'],
-    );
+    return Ownership(verified: json['verified']);
   }
 }
 
@@ -419,9 +421,7 @@ class Boost {
   Boost({this.isActive});
 
   factory Boost.fromJson(Map<String, dynamic> json) {
-    return Boost(
-      isActive: json['isActive'],
-    );
+    return Boost(isActive: json['isActive']);
   }
 }
 
@@ -433,11 +433,7 @@ class OwnerId {
   OwnerId({this.id, this.name, this.phone});
 
   factory OwnerId.fromJson(Map<String, dynamic> json) {
-    return OwnerId(
-      id: json['_id'],
-      name: json['name'],
-      phone: json['phone'],
-    );
+    return OwnerId(id: json['_id'], name: json['name'], phone: json['phone']);
   }
 }
 
@@ -448,13 +444,7 @@ class PropertyImage {
   String? id;
   String? uploadedAt;
 
-  PropertyImage({
-    this.url,
-    this.key,
-    this.isPrimary,
-    this.id,
-    this.uploadedAt,
-  });
+  PropertyImage({this.url, this.key, this.isPrimary, this.id, this.uploadedAt});
 
   factory PropertyImage.fromJson(Map<String, dynamic> json) {
     return PropertyImage(

@@ -58,7 +58,6 @@ class PropertyDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   /// ================= SAVE / UNSAVE =================
   Future<void> toggleSave() async {
     if (property == null) {

@@ -25,9 +25,7 @@ class MyBedsResponse {
       page: json['page'],
       pages: json['pages'],
       stats: BedStats.fromJson(json['stats']),
-      data: List<BedData>.from(
-        json['data'].map((x) => BedData.fromJson(x)),
-      ),
+      data: List<BedData>.from(json['data'].map((x) => BedData.fromJson(x))),
     );
   }
 }
@@ -104,11 +102,7 @@ class Room {
   final String roomNumber;
   final String roomType;
 
-  Room({
-    required this.id,
-    required this.roomNumber,
-    required this.roomType,
-  });
+  Room({required this.id, required this.roomNumber, required this.roomType});
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(

@@ -45,7 +45,6 @@ class LanloardApiService {
     }
   }
 
-
   static Future<CreateTenancyResponse> createTenancy({
     required Map<String, dynamic> body,
   }) async {
@@ -64,11 +63,11 @@ class LanloardApiService {
     );
 
     if (response.statusCode == 201) {
-      return CreateTenancyResponse.fromJson(
-          jsonDecode(response.body));
+      return CreateTenancyResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception(
-          "Failed to create tenancy: ${response.statusCode} ${response.body}");
+        "Failed to create tenancy: ${response.statusCode} ${response.body}",
+      );
     }
   }
 
@@ -78,8 +77,7 @@ class LanloardApiService {
     final token = await PrefService.getToken();
     if (token == null) throw Exception("No token found");
 
-    final url =
-        "https://api.gharzoreality.com/api/v2/properties/$id/details";
+    final url = "https://api.gharzoreality.com/api/v2/properties/$id/details";
 
     final response = await http.get(
       Uri.parse(url),

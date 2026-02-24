@@ -11,15 +11,13 @@ class ChannelPartnerScreen extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: PrimaryButton(title: "Add Channel Partner", onPressed: () =>
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) =>
-                    ChannelPartnerFormView(
-                    ),
-              ),
-            )),
+        child: PrimaryButton(
+          title: "Add Channel Partner",
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => ChannelPartnerFormView()),
+          ),
+        ),
       ),
       backgroundColor: const Color(0xffF5F6FA),
       appBar: CommonWidget.gradientAppBar(
@@ -35,10 +33,7 @@ class ChannelPartnerScreen extends StatelessWidget {
           children: [
             const Text(
               "Advantages of Working Together",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
@@ -46,37 +41,35 @@ class ChannelPartnerScreen extends StatelessWidget {
               icon: Icons.shield_outlined,
               title: "Risk Sharing",
               subtitle:
-              "Operating individually in real estate is risky. Working together reduces responsibility and risk.",
+                  "Operating individually in real estate is risky. Working together reduces responsibility and risk.",
             ),
             _advantageCard(
               icon: Icons.lightbulb_outline,
               title: "Knowledge Sharing",
               subtitle:
-              "Share expertise, insights, and industry experience with our professional team.",
+                  "Share expertise, insights, and industry experience with our professional team.",
             ),
             _advantageCard(
               icon: Icons.groups_outlined,
               title: "Exclusive Working on Projects",
               subtitle:
-              "Dedicated focus and priority access to premium projects.",
+                  "Dedicated focus and priority access to premium projects.",
             ),
             _advantageCard(
               icon: Icons.campaign_outlined,
               title: "Media Buying Expertise",
               subtitle:
-              "Access to advanced marketing strategies and lead generation.",
+                  "Access to advanced marketing strategies and lead generation.",
             ),
             _advantageCard(
               icon: Icons.payments_outlined,
               title: "Prompt Payments",
-              subtitle:
-              "Timely commission payouts and transparent accounting.",
+              subtitle: "Timely commission payouts and transparent accounting.",
             ),
             _advantageCard(
               icon: Icons.support_agent_outlined,
               title: "Unparalleled Customer Service",
-              subtitle:
-              "Best-in-class support for partners and customers.",
+              subtitle: "Best-in-class support for partners and customers.",
             ),
 
             const SizedBox(height: 30),
@@ -87,7 +80,6 @@ class ChannelPartnerScreen extends StatelessWidget {
   }
 
   // ---------------- UI SECTIONS ----------------
-
 
   Widget _advantageCard({
     required IconData icon,
@@ -119,11 +111,7 @@ class ChannelPartnerScreen extends StatelessWidget {
               color: Colors.orange.withOpacity(.12),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: Colors.orange,
-              size: 24,
-            ),
+            child: Icon(icon, color: Colors.orange, size: 24),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -140,10 +128,7 @@ class ChannelPartnerScreen extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 ),
               ],
             ),

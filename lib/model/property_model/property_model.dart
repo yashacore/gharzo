@@ -50,7 +50,7 @@ class PropertyModel {
     String imageUrl = '';
     if (images.isNotEmpty) {
       final primary = images.firstWhere(
-            (img) => img['isPrimary'] == true,
+        (img) => img['isPrimary'] == true,
         orElse: () => images.first,
       );
       imageUrl = primary['url'] ?? '';
@@ -84,8 +84,7 @@ class PropertyModel {
 
   String get formattedPrice => "₹$priceAmount";
 
-  String get fullLocation =>
-      locality.isNotEmpty ? "$locality, $city" : city;
+  String get fullLocation => locality.isNotEmpty ? "$locality, $city" : city;
 
   String get areaText => "$carpetArea $areaUnit";
 }

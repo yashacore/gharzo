@@ -22,8 +22,9 @@ class SearchBedsResponse {
       total: json['total'],
       page: json['page'],
       pages: json['pages'],
-      data:
-      (json['data'] as List).map((e) => BedSearchItem.fromJson(e)).toList(),
+      data: (json['data'] as List)
+          .map((e) => BedSearchItem.fromJson(e))
+          .toList(),
     );
   }
 }
@@ -197,8 +198,9 @@ class PropertyInfo {
       id: json['_id'],
       title: json['title'],
       location: PropertyLocation.fromJson(json['location']),
-      amenitiesList:
-      (json['amenitiesList'] as List? ?? []).map((e) => e.toString()).toList(),
+      amenitiesList: (json['amenitiesList'] as List? ?? [])
+          .map((e) => e.toString())
+          .toList(),
       images: (json['images'] as List? ?? [])
           .map((e) => PropertyImage.fromJson(e))
           .toList(),
@@ -249,11 +251,7 @@ class LandlordInfo {
   final String name;
   final String phone;
 
-  LandlordInfo({
-    required this.id,
-    required this.name,
-    required this.phone,
-  });
+  LandlordInfo({required this.id, required this.name, required this.phone});
 
   factory LandlordInfo.fromJson(Map<String, dynamic> json) {
     return LandlordInfo(
@@ -269,11 +267,7 @@ class BedImage {
   final String url;
   final bool isPrimary;
 
-  BedImage({
-    required this.id,
-    required this.url,
-    required this.isPrimary,
-  });
+  BedImage({required this.id, required this.url, required this.isPrimary});
 
   factory BedImage.fromJson(Map<String, dynamic> json) {
     return BedImage(
@@ -289,11 +283,7 @@ class PropertyImage {
   final String url;
   final bool isPrimary;
 
-  PropertyImage({
-    required this.id,
-    required this.url,
-    required this.isPrimary,
-  });
+  PropertyImage({required this.id, required this.url, required this.isPrimary});
 
   factory PropertyImage.fromJson(Map<String, dynamic> json) {
     return PropertyImage(

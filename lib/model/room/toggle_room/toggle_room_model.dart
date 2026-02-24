@@ -2,10 +2,7 @@ class ToggleRoomStatusResponseModel {
   bool success;
   RoomStatusData data;
 
-  ToggleRoomStatusResponseModel({
-    required this.success,
-    required this.data,
-  });
+  ToggleRoomStatusResponseModel({required this.success, required this.data});
 
   factory ToggleRoomStatusResponseModel.fromJson(Map<String, dynamic> json) {
     return ToggleRoomStatusResponseModel(
@@ -96,8 +93,9 @@ class Pricing {
 
   factory Pricing.fromJson(Map<String, dynamic> json) {
     return Pricing(
-      maintenanceCharges:
-      MaintenanceCharges.fromJson(json['maintenanceCharges']),
+      maintenanceCharges: MaintenanceCharges.fromJson(
+        json['maintenanceCharges'],
+      ),
       rentPerBed: json['rentPerBed'],
       securityDeposit: json['securityDeposit'],
       electricityCharges: json['electricityCharges'],
@@ -110,10 +108,7 @@ class MaintenanceCharges {
   int amount;
   bool includedInRent;
 
-  MaintenanceCharges({
-    required this.amount,
-    required this.includedInRent,
-  });
+  MaintenanceCharges({required this.amount, required this.includedInRent});
 
   factory MaintenanceCharges.fromJson(Map<String, dynamic> json) {
     return MaintenanceCharges(
@@ -127,10 +122,7 @@ class Capacity {
   int totalBeds;
   int occupiedBeds;
 
-  Capacity({
-    required this.totalBeds,
-    required this.occupiedBeds,
-  });
+  Capacity({required this.totalBeds, required this.occupiedBeds});
 
   factory Capacity.fromJson(Map<String, dynamic> json) {
     return Capacity(
@@ -231,9 +223,6 @@ class Area {
   Area({required this.carpet, required this.unit});
 
   factory Area.fromJson(Map<String, dynamic> json) {
-    return Area(
-      carpet: json['carpet'],
-      unit: json['unit'],
-    );
+    return Area(carpet: json['carpet'], unit: json['unit']);
   }
 }

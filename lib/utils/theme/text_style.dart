@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 
 class AppTextStyle {
-
   //-------------------------------Login/register/verification
   static TextStyle displayLarge(Color color, {String? fontFamily}) {
     return TextStyle(
@@ -14,7 +13,7 @@ class AppTextStyle {
   }
 
   //-------------------------------Login/register/verification => small Text
-  static TextStyle displayMedium(Color color,{String? fontFamily}) {
+  static TextStyle displayMedium(Color color, {String? fontFamily}) {
     return TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
@@ -35,17 +34,17 @@ class AppTextStyle {
   }
 
   //------------------------Button Text
-  static TextStyle bodyLarge(Color color,{String? fontFamily}){
+  static TextStyle bodyLarge(Color color, {String? fontFamily}) {
     return TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: color,
-        fontFamily: fontFamily
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      color: color,
+      fontFamily: fontFamily,
     );
   }
 
   /* --------------------------Form Field Text--------------------------*/
-  static TextStyle bodyMedium(Color color,{String? fontFamily}) {
+  static TextStyle bodyMedium(Color color, {String? fontFamily}) {
     return TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w400,
@@ -55,7 +54,7 @@ class AppTextStyle {
   }
 
   /* --------------------------label Text--------------------------*/
-  static TextStyle labelLarge(Color color,{String? fontFamily}) {
+  static TextStyle labelLarge(Color color, {String? fontFamily}) {
     return TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
@@ -65,7 +64,7 @@ class AppTextStyle {
   }
 
   /* --------------------------Hint Text--------------------------*/
-  static TextStyle labelMedium(Color color,{String? fontFamily}) {
+  static TextStyle labelMedium(Color color, {String? fontFamily}) {
     return TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w600,
@@ -75,7 +74,7 @@ class AppTextStyle {
   }
 
   //--------------------------------Onboarding
-  static TextStyle headlineLarge(Color color,{String? fontFamily}) {
+  static TextStyle headlineLarge(Color color, {String? fontFamily}) {
     return TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.w800,
@@ -86,7 +85,7 @@ class AppTextStyle {
 
   //--------------------------------Onboarding Paragraph
 
-  static TextStyle headlineMedium(Color color,{String? fontFamily}) {
+  static TextStyle headlineMedium(Color color, {String? fontFamily}) {
     return TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
@@ -96,14 +95,11 @@ class AppTextStyle {
   }
 }
 
-
-
 class AppTextTheme {
   static TextTheme theme({String? fontFamily}) {
     final colors = AppThemeColors();
 
     return TextTheme(
-
       // 🔹 VERY LARGE (rarely used)
       displayLarge: AppTextStyle.headlineLarge(
         colors.textWhite,

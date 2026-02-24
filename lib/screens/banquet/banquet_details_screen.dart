@@ -291,13 +291,12 @@ class BanquetDetailsScreen extends StatelessWidget {
     return PrimaryButton(
       title: "Reserve this venue",
       onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => BanquetEnquiryScreen(
-              banquetId: banquet.id.toString(),
-            ),
-          ),
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+              BanquetEnquiryScreen(banquetId: banquet.id.toString()),
         ),
+      ),
     );
   }
 

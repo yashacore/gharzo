@@ -19,8 +19,9 @@ class PropertyFeaturesModel {
       // parking: ParkingModel.fromJson(json['parking'] ?? {}),
       // facing: json['facing'] ?? '',
       amenitiesList: List<String>.from(json['amenitiesList'] ?? []),
-      propertyFeatures:
-      PropertyRulesModel.fromJson(json['propertyFeatures'] ?? {}),
+      propertyFeatures: PropertyRulesModel.fromJson(
+        json['propertyFeatures'] ?? {},
+      ),
     );
   }
 
@@ -40,10 +41,7 @@ class FurnishingModel {
   final String type;
   final List<String> items;
 
-  FurnishingModel({
-    required this.type,
-    required this.items,
-  });
+  FurnishingModel({required this.type, required this.items});
 
   factory FurnishingModel.fromJson(Map<String, dynamic> json) {
     return FurnishingModel(
@@ -53,10 +51,7 @@ class FurnishingModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      "type": type,
-      "items": items,
-    };
+    return {"type": type, "items": items};
   }
 }
 
@@ -65,23 +60,14 @@ class ParkingModel {
   final int covered;
   final int open;
 
-  ParkingModel({
-    required this.covered,
-    required this.open,
-  });
+  ParkingModel({required this.covered, required this.open});
 
   factory ParkingModel.fromJson(Map<String, dynamic> json) {
-    return ParkingModel(
-      covered: json['covered'] ?? 0,
-      open: json['open'] ?? 0,
-    );
+    return ParkingModel(covered: json['covered'] ?? 0, open: json['open'] ?? 0);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      "covered": covered,
-      "open": open,
-    };
+    return {"covered": covered, "open": open};
   }
 }
 
@@ -138,8 +124,7 @@ class PropertyRulesModel {
       petFriendly: petFriendly ?? this.petFriendly,
       bachelorsAllowed: bachelorsAllowed ?? this.bachelorsAllowed,
       nonVegAllowed: nonVegAllowed ?? this.nonVegAllowed,
-      wheelchairAccessible:
-      wheelchairAccessible ?? this.wheelchairAccessible,
+      wheelchairAccessible: wheelchairAccessible ?? this.wheelchairAccessible,
     );
   }
 

@@ -64,5 +64,4 @@ class SavedPropertyProvider extends ChangeNotifier {
     isClearing = false;
     notifyListeners();
   }
-
 }

@@ -63,7 +63,8 @@ class PhotoUploadProvider extends ChangeNotifier {
       if (token == null || token.isEmpty) throw Exception("User not logged in");
 
       final uri = Uri.parse(
-          'https://api.gharzoreality.com/api/v2/properties/$propertyId/upload-photos');
+        'https://api.gharzoreality.com/api/v2/properties/$propertyId/upload-photos',
+      );
 
       var request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer $token';
@@ -91,12 +92,14 @@ class PhotoUploadProvider extends ChangeNotifier {
             return null;
           }
 
-          request.files.add(await http.MultipartFile.fromPath(
-            'images',
-            file.path,
-            filename: basename(file.path),
-            contentType: MediaType('image', ext),
-          ));
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'images',
+              file.path,
+              filename: basename(file.path),
+              contentType: MediaType('image', ext),
+            ),
+          );
         }
       }
 

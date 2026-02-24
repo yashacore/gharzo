@@ -1,4 +1,3 @@
-
 import 'package:gharzo_project/model/user_model/user_model.dart';
 
 class UpdateProfileResponse {
@@ -16,9 +15,7 @@ class UpdateProfileResponse {
     return UpdateProfileResponse(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
-      data: json['data'] != null
-          ? UserModel.fromJson(json['data'])
-          : null,
+      data: json['data'] != null ? UserModel.fromJson(json['data']) : null,
     );
   }
 }

@@ -74,21 +74,11 @@ class BasicDetailsProvider extends ChangeNotifier {
       "price": {
         "amount": price,
         "negotiable": negotiable,
-        "maintenanceCharges": {
-          "amount": maintenance,
-          "frequency": "Monthly",
-        },
+        "maintenanceCharges": {"amount": maintenance, "frequency": "Monthly"},
         "securityDeposit": securityDeposit,
       },
-      "area": {
-        "carpet": carpetArea,
-        "builtUp": builtUpArea,
-        "unit": areaUnit,
-      },
-      "floor": {
-        "current": currentFloor,
-        "total": totalFloors,
-      },
+      "area": {"carpet": carpetArea, "builtUp": builtUpArea, "unit": areaUnit},
+      "floor": {"current": currentFloor, "total": totalFloors},
       "propertyAge": propertyAge,
       "availableFrom": availableFrom?.toIso8601String(),
       "postedBy": postedBy,
@@ -97,14 +87,17 @@ class BasicDetailsProvider extends ChangeNotifier {
           "roomType": roomType,
           "totalBeds": totalBeds,
           "availableBeds": availableBeds,
-        }
+        },
     };
 
     try {
       final token = await PrefService.getToken();
       if (token == null || token.isEmpty) throw Exception("Token missing");
 
-      final response = await ApiServiceMethod.updateBasicDetails(propertyId, payload);
+      final response = await ApiServiceMethod.updateBasicDetails(
+        propertyId,
+        payload,
+      );
 
       debugPrint("Basic Details :: $response ");
 
@@ -117,5 +110,4 @@ class BasicDetailsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

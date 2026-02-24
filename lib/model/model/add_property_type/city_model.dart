@@ -21,12 +21,7 @@ class CityModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'name': name,
-      'state': state,
-      'priority': priority,
-    };
+    return {'_id': id, 'name': name, 'state': state, 'priority': priority};
   }
 }
 
@@ -46,9 +41,10 @@ class CitiesResponse {
     return CitiesResponse(
       success: json['success'] ?? false,
       count: json['count'] ?? 0,
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => CityModel.fromJson(e))
-          .toList() ??
+      data:
+          (json['data'] as List<dynamic>?)
+              ?.map((e) => CityModel.fromJson(e))
+              .toList() ??
           [],
     );
   }
@@ -61,7 +57,6 @@ class CitiesResponse {
     };
   }
 }
-
 
 class LocalityModel {
   final String name;

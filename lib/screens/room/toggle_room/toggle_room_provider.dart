@@ -3,7 +3,6 @@ import 'package:gharzo_project/data/room_api_service/room_api_service.dart';
 import 'package:gharzo_project/model/room/toggle_room/toggle_model.dart';
 import 'package:gharzo_project/model/room/toggle_room/toggle_room_model.dart';
 
-
 class ToggleRoomStatusProvider extends ChangeNotifier {
   bool isLoading = false;
   ToggleRoomStatusResponseModel? response;

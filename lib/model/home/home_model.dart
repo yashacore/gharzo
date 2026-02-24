@@ -3,11 +3,7 @@ class Home {
   final List data;
   final String message;
 
-  Home({
-    required this.success,
-    required this.data,
-    required this.message,
-  });
+  Home({required this.success, required this.data, required this.message});
 
   factory Home.fromJson(Map<String, dynamic> json) {
     return Home(

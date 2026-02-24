@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/common/common_widget/primary_button.dart';
+import 'package:gharzo_project/common/common_widget/progress_bar.dart';
 import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,10 @@ class UploadPhotoView extends StatelessWidget {
           builder: (context, provider, _) {
             return Column(
               children: [
+                PropertyProgressBar(
+                  progress: 6 / 8, // 0.125
+                  label: "Step 6 of 8 • Upload Image",
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -62,8 +67,7 @@ class UploadPhotoView extends StatelessWidget {
                         if (provider.totalImages > 0) ...[
                           Text(
                             "${provider.totalImages} Photos Selected",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
 
@@ -71,11 +75,11 @@ class UploadPhotoView extends StatelessWidget {
                             shrinkWrap: true,
                             itemCount: provider.totalImages,
                             gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
                             itemBuilder: (context, index) {
                               return Stack(
                                 children: [
@@ -83,29 +87,31 @@ class UploadPhotoView extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(8),
                                     child: kIsWeb
                                         ? Image.memory(
-                                      provider.webImages[index],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    )
+                                            provider.webImages[index],
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          )
                                         : Image.file(
-                                      provider.selectedImages[index],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
+                                            provider.selectedImages[index],
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
                                   ),
                                   Positioned(
                                     top: 4,
                                     right: 4,
                                     child: GestureDetector(
-                                      onTap: () =>
-                                          provider.removeImage(index),
+                                      onTap: () => provider.removeImage(index),
                                       child: const CircleAvatar(
                                         radius: 10,
                                         backgroundColor: Colors.black54,
-                                        child: Icon(Icons.close,
-                                            size: 12, color: Colors.white),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 12,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -120,28 +126,35 @@ class UploadPhotoView extends StatelessWidget {
                 ),
 
                 /// ⬇ BUTTON
-                PrimaryButton(title: "Upload",
-                  onPressed: provider.loading || provider.totalImages == 0
-                      ? null
-                      : () async {
-                    final response = await provider.upload(propertyId);
-                    if (response != null && context.mounted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ContactInfoView(
-                            propertyId: propertyId,
-                          ),
-                        ),
-                      );
-                    } else if (response == null) {
-                      // Optional: show error
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(provider.error ?? "Upload failed")),
-                      );
-                    }
-                  },                )
-
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PrimaryButton(
+                    title: "Upload",
+                    onPressed: provider.loading || provider.totalImages == 0
+                        ? null
+                        : () async {
+                            final response = await provider.upload(propertyId);
+                            if (response != null && context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ContactInfoView(propertyId: propertyId),
+                                ),
+                              );
+                            } else if (response == null) {
+                              // Optional: show error
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    provider.error ?? "Upload failed",
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                  ),
+                ),
               ],
             );
           },
@@ -160,12 +173,10 @@ class UploadPhotoView extends StatelessWidget {
     if (result == null) return;
 
     if (kIsWeb) {
-      List<Uint8List> images =
-      result.files.map((e) => e.bytes!).toList();
+      List<Uint8List> images = result.files.map((e) => e.bytes!).toList();
       provider.addWebImages(images);
     } else {
-      List<File> images =
-      result.files.map((e) => File(e.path!)).toList();
+      List<File> images = result.files.map((e) => File(e.path!)).toList();
       provider.addImagesFromPicker(images);
     }
   }
