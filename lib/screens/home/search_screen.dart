@@ -16,9 +16,7 @@ class PropertySearchScreen extends StatefulWidget {
 }
 
 class _PropertySearchScreenState extends State<PropertySearchScreen> {
-  double _appBarHeight(BuildContext context) {
-    return kToolbarHeight + MediaQuery.of(context).padding.top;
-  }
+
 
   @override
   void initState() {

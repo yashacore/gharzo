@@ -12,7 +12,6 @@ import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/model/user_model/user_model.dart';
 import 'package:gharzo_project/screens/profile/profile_provider.dart';
-import 'package:gharzo_project/screens/profile/profile_view.dart';
 
 class EditProfileProvider extends ChangeNotifier {
   // -------------------------------

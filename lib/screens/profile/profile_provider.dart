@@ -3,9 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/main.dart';
 import '../../model/model/profile_model.dart';
-import '../login/login_view.dart';
 
 class ProfileProvider extends ChangeNotifier {
   User? _user;

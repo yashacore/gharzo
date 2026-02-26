@@ -67,7 +67,6 @@ import 'package:gharzo_project/screens/home/home_provider.dart';
 import 'package:gharzo_project/screens/onboardring/onboarding_one.dart';
 import 'package:gharzo_project/screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:async';
 

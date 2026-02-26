@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/model/model/property_wishlist_model.dart';
 import 'package:gharzo_project/providers/saved_property_provider.dart';
-import 'package:gharzo_project/screens/property_details/property_details_provider.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:provider/provider.dart';
 

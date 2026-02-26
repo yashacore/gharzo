@@ -1,10 +1,7 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
-import 'package:gharzo_project/screens/login/login_view.dart';
 import 'package:gharzo_project/screens/onboardring/onboarding_one.dart';
 import 'package:gharzo_project/screens/welcome_screen.dart';
 import 'package:video_player/video_player.dart';

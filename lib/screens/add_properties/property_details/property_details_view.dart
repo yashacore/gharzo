@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/primary_button.dart';
 import 'package:gharzo_project/common/common_widget/progress_bar.dart';

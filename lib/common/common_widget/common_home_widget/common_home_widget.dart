@@ -305,6 +305,7 @@ class CommonHomeWidgets {
         ),
         const SizedBox(height: 8),
         child,
+
       ],
     );
   }

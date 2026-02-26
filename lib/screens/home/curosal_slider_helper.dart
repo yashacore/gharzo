@@ -31,23 +31,25 @@ class HomeAdSlider extends StatelessWidget {
               CarouselSlider.builder(
                 itemCount: provider.ads.length,
 
-                /// 🔥 REQUIRED FOR CUBE EFFECT
-                unlimitedMode: true,
+                // ❌ unlimitedMode causes previous slide to render
+                unlimitedMode: false,
+
                 keepPage: true,
 
-                /// 🔥 IMPORTANT: allow overflow for cube
-                clipBehavior: Clip.none,
+                // ✅ HARD CLIP (MOST IMPORTANT)
+                clipBehavior: Clip.hardEdge,
 
-                slideTransform: const CubeTransform(),
+                // ✅ FULL WIDTH (NO SIDE PEEK)
+                viewportFraction: 1.0,
 
-                /// 🔥 Slightly smaller for visible gap
-                viewportFraction: 0.86,
+                // ⚠️ CubeTransform shows sides by nature
+                // ❌ REMOVE IT
+                slideTransform: const DefaultTransform(),
 
                 enableAutoSlider: true,
                 autoSliderDelay: const Duration(seconds: 4),
-                autoSliderTransitionTime:
-                const Duration(milliseconds: 800),
-                autoSliderTransitionCurve: Curves.fastOutSlowIn,
+                autoSliderTransitionTime: const Duration(milliseconds: 800),
+                autoSliderTransitionCurve: Curves.easeInOut,
 
                 onSlideChanged: (index) {
                   provider.onAdPageChanged(index);
@@ -56,93 +58,37 @@ class HomeAdSlider extends StatelessWidget {
                 slideBuilder: (index) {
                   final ad = provider.ads[index];
 
-                  return Padding(
-                    /// 🔥 THIS CREATES THE GAP
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: GestureDetector(
-                      onTap: () => provider.onAdTap(ad),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            /// 🖼 IMAGE (CACHED)
-                            CachedImage(
-                              imageUrl: ad.imageUrl,
-                              fit: BoxFit.cover,
-                            ),
+                  return GestureDetector(
+                    onTap: () => provider.onAdTap(ad),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CachedImage(
+                            imageUrl: ad.imageUrl,
+                            fit: BoxFit.cover,
+                          ),
 
-                            /// 🌑 GRADIENT
-                            Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    Colors.black.withOpacity(0.65),
-                                    Colors.transparent,
-                                  ],
-                                ),
+                          // Gradient
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.65),
+                                  Colors.transparent,
+                                ],
                               ),
                             ),
-
-                            /// ⭐ SPONSORED BADGE
-                            Positioned(
-                              top: 14,
-                              right: 14,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.star,
-                                        size: 12, color: Colors.white),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      "Sponsored",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            /// 🏷 TITLE
-                            Positioned(
-                              left: 16,
-                              right: 16,
-                              bottom: 34,
-                              child: Text(
-                                ad.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
-              ),
-
-              /// 🔘 INDICATOR
+              ),              /// 🔘 INDICATOR
               Positioned(
                 bottom: 10,
                 left: 0,

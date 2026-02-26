@@ -95,7 +95,7 @@ class HotelCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        '${hotel.location?.city}, ${hotel.location?.state}',
+                        '${hotel.location.city}, ${hotel.location.state}',
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 13,
@@ -113,8 +113,8 @@ class HotelCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 6,
                   children:
-                      hotel.amenities?.basic
-                          ?.take(4)
+                      hotel.amenities.basic
+                          .take(4)
                           .map(
                             (a) => Chip(
                               label: Text(
@@ -124,8 +124,7 @@ class HotelCard extends StatelessWidget {
                               backgroundColor: Colors.grey.shade100,
                             ),
                           )
-                          .toList() ??
-                      [],
+                          .toList(),
                 ),
 
                 const SizedBox(height: 12),
@@ -139,7 +138,7 @@ class HotelCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '₹${hotel.priceRange?.min} - ₹${hotel.priceRange?.max}',
+                          '₹${hotel.priceRange.min} - ₹${hotel.priceRange.max}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,

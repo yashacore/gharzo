@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/model/model/reels/reels_feed_model.dart'
-    hide ReelModel;
 import 'package:gharzo_project/model/reels/comment_model.dart';
 import 'package:gharzo_project/model/reels/reels_feed_model.dart';
 import 'package:gharzo_project/model/reels/reels_model.dart';
@@ -193,7 +191,6 @@ class ReelsApiService {
     }
   }
 
-  static const _baseUrl = "https://api.gharzoreality.com/api/reels/feed";
 
   static Future<ReelsFeedResponse?> getReelsFeed({int page = 1}) async {
     try {

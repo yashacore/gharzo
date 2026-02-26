@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/providers/landlord/create_sub_owner_provider.dart';
-import 'package:gharzo_project/screens/dashboard/dashboard_provider.dart';
 import 'package:gharzo_project/screens/landloard/sub_owner/create_sub_owner_screen.dart';
 import 'package:gharzo_project/screens/landloard/sub_owner/edit_sub_owner.dart';
 import 'package:provider/provider.dart';

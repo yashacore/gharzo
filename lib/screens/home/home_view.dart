@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gharzo_project/common/common_widget/common_home_widget/common_home_widget.dart';
-import 'package:gharzo_project/common/common_widget/common_widget.dart';
-import 'package:gharzo_project/common/common_widget/network_image_helper.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/model/advertisement/advertisment_model.dart';
-import 'package:gharzo_project/model/property_model/property_model.dart';
 import 'package:gharzo_project/providers/search_provider.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar_provider.dart';
 import 'package:gharzo_project/screens/home/curosal_slider_helper.dart';
@@ -16,10 +11,6 @@ import 'package:gharzo_project/screens/home/landlord_card_helper.dart';
 import 'package:gharzo_project/screens/home/property_card_helper.dart';
 import 'package:gharzo_project/screens/home/search_screen.dart';
 import 'package:gharzo_project/screens/home/trending_properties_helper.dart';
-import 'package:gharzo_project/screens/landloard/sub_owner/create_sub_owner_screen.dart';
-import 'package:gharzo_project/screens/landloard/create_tenant/create_tenancy_screen.dart';
-import 'package:gharzo_project/screens/landloard/landlord_dashboard.dart';
-import 'package:gharzo_project/screens/landloard/landlord_properties/landlord_my_properties.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -50,7 +41,6 @@ class _HomeViewState extends State<HomeView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<HomeProvider>();
       provider.fetchPublicProperties();
-
     });
     role = PrefService.getRoleSync();
 
@@ -108,19 +98,20 @@ class _HomeViewState extends State<HomeView> {
     debugPrint("🧪 CLEAN ROLE => [${role?.replaceAll('"', '').trim()}]");
 
     return Scaffold(
-      extendBodyBehindAppBar: true, // ✅ allows gradient under status bar
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Stack(
           children: [
-            // 🔵 GRADIENT HEADER
             Container(
               height: 100,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight:  Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
                 gradient: LinearGradient(
                   colors: [
                     AppThemeColors().backgroundLeft,
@@ -137,11 +128,10 @@ class _HomeViewState extends State<HomeView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: CommonHomeWidgets.headerView(
-                      userName:     FutureBuilder(
+                      userName: FutureBuilder(
                         future: PrefService.getUser(),
                         builder: (_, snapshot) {
                           if (!snapshot.hasData) return const SizedBox();
@@ -179,10 +169,10 @@ class _HomeViewState extends State<HomeView> {
                   const SizedBox(height: 16),
 
                   Consumer<HomeProvider>(
-                      builder: (_, provider, __) {
-                        return listOfCategory(provider);
-                      },
-                    ),
+                    builder: (_, provider, __) {
+                      return listOfCategory(provider);
+                    },
+                  ),
 
                   const SizedBox(height: 12),
                   Consumer<HomeProvider>(
@@ -192,7 +182,6 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   const SizedBox(height: 12),
 
-                  /// 🔥 FEATURED
                   Consumer<HomeProvider>(
                     builder: (_, provider, __) {
                       return buildFeaturedProperties(provider);
@@ -201,16 +190,6 @@ class _HomeViewState extends State<HomeView> {
 
                   const SizedBox(height: 24),
 
-                  /// 🔥 TRENDING
-                  // Consumer<HomeProvider>(
-                  //   builder: (_, provider, __) {
-                  //     return buildTrendingProperties(provider);
-                  //   },
-                  // ),
-
-                  // const SizedBox(height: 24),
-
-                  /// 🔥 LANDLORD SECTION
                   if (isLandlord)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,6 +218,7 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
+
   Widget buildTrendingProperties(HomeProvider provider) {
     if (provider.trendingProperties.isEmpty) {
       return const SizedBox.shrink();
@@ -248,18 +228,24 @@ class _HomeViewState extends State<HomeView> {
       title: "Trending Properties",
       child: SizedBox(
         height: 250,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: provider.trendingProperties.length,
-          itemBuilder: (context, index) {
-            return SizedBox(
-              width: 220,
-              child: TrendingPropertyCard(
-                property: provider.trendingProperties[index],
-              ),
-            );
-          },
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          removeBottom: true, // ✅ KEY FIX
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: provider.trendingProperties.length,
+            itemBuilder: (context, index) {
+              return SizedBox(
+                width: 240,
+                child: TrendingPropertyCard(
+                  provider: provider,
+                  property: provider.trendingProperties[index],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -289,8 +275,7 @@ class _HomeViewState extends State<HomeView> {
                   child: SizedBox(
                     width: cardWidth,
                     child: GestureDetector(
-                      onTap: () =>
-                          provider.onCategoryTap(context, item.label),
+                      onTap: () => provider.onCategoryTap(context, item.label),
                       child: CommonHomeWidgets.categoryCardView(
                         assetPath: item.icon,
                         label: item.label,
@@ -309,8 +294,7 @@ class _HomeViewState extends State<HomeView> {
                   child: SizedBox(
                     width: cardWidth,
                     child: GestureDetector(
-                      onTap: () =>
-                          provider.onCategoryTap(context, item.label),
+                      onTap: () => provider.onCategoryTap(context, item.label),
                       child: CommonHomeWidgets.categoryCardView(
                         assetPath: item.icon,
                         label: item.label,
@@ -346,7 +330,9 @@ class _HomeViewState extends State<HomeView> {
 
             return SizedBox(
               // width: 200,
-              child: PropertyCardHelper(                 property: provider.trendingProperties[index], provider: provider,
+              child: PropertyCardHelper(
+                property: provider.trendingProperties[index],
+                provider: provider,
               ),
             );
           },
@@ -354,10 +340,6 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
-
-
-
-
 
   String? getPropertyImage(dynamic property) {
     final images = property['images'];

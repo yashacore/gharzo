@@ -5,19 +5,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_constant.dart';
 import 'package:gharzo_project/data/advertisement_service/advertisment_service.dart';
+import 'package:gharzo_project/model/add_property_type/property_details_model.dart';
 import 'package:gharzo_project/model/advertisement/advertisment_model.dart';
 import 'package:gharzo_project/model/category/category_model.dart';
-import 'package:gharzo_project/model/home/home_model.dart';
 import 'package:gharzo_project/model/property_model/property_model.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/providers/home_loan_enquiry_provider.dart';
 import 'package:gharzo_project/providers/services_provider.dart';
 import 'package:gharzo_project/screens/banquet/banquet_list_screen.dart';
 import 'package:gharzo_project/screens/category/category_provider.dart';
 import 'package:gharzo_project/screens/hotels/hotel_list_screen.dart';
-import 'package:gharzo_project/screens/loan_screen/home_loan_enquiry_screen.dart';
 import 'package:gharzo_project/screens/loan_screen/loan_screen.dart';
 import 'package:gharzo_project/screens/projects/project_list_screen.dart';
+import 'package:gharzo_project/screens/property_details/property_details_provider.dart';
 import 'package:gharzo_project/screens/services/services_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:gharzo_project/screens/category/category_view.dart';
@@ -32,10 +31,14 @@ class HomeProvider extends ChangeNotifier {
 
   final pageController = PageController();
   final ScrollController scrollController = ScrollController();
+  PropertyDetailModel? property;
 
   List<AdvertisementModel> ads = [];
   int currentAdIndex = 0;
+  bool isSaved = false;
+  final Set<String> _savedPropertyIds = {};
 
+  bool isPropertySaved(String id) => _savedPropertyIds.contains(id);
   void onAdPageChanged(int index) {
     currentAdIndex = index;
     notifyListeners();
@@ -453,4 +456,30 @@ class HomeProvider extends ChangeNotifier {
 
   List<PropertyModel> get allProperties => _allProperties;
   List<PropertyModel> _allProperties = [];
-}
+
+  Future<void> toggleSave(PropertyModel property) async {
+    final id = property.id;
+    final wasSaved = _savedPropertyIds.contains(id);
+
+    // optimistic UI
+    if (wasSaved) {
+      _savedPropertyIds.remove(id);
+    } else {
+      _savedPropertyIds.add(id);
+    }
+    notifyListeners();
+
+    final success = await SavedPropertyService.toggleSaveProperty(
+      propertyId: id,
+    );
+
+    if (!success) {
+      // rollback
+      if (wasSaved) {
+        _savedPropertyIds.add(id);
+      } else {
+        _savedPropertyIds.remove(id);
+      }
+      notifyListeners();
+    }
+  }}

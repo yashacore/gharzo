@@ -3,8 +3,6 @@ import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/screens/landloard/annoucment/announcement_list_screen.dart';
 import 'package:gharzo_project/screens/landloard/complaints/complalint_list_screen.dart';
 import 'package:gharzo_project/screens/landloard/create_tenant/tenant_dashboard.dart';
-import 'package:gharzo_project/screens/landloard/sub_owner/create_sub_owner_screen.dart';
-import 'package:gharzo_project/screens/landloard/create_tenant/create_tenancy_screen.dart';
 import 'package:gharzo_project/screens/landloard/landlord_properties/landlord_my_properties.dart';
 import 'package:gharzo_project/screens/landloard/sub_owner/sub_owner_dashboard.dart';
 import 'package:gharzo_project/screens/landloard/workers/worker_list_screen.dart';

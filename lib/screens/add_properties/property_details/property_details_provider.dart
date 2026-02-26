@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_service_method.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/screens/add_properties/add_property_type/add_property_view.dart';
 
 class BasicDetailsProvider extends ChangeNotifier {
   bool loading = false;

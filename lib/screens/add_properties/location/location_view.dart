@@ -4,7 +4,6 @@ import 'package:gharzo_project/common/common_widget/primary_button.dart';
 import 'package:gharzo_project/common/common_widget/progress_bar.dart';
 import 'package:gharzo_project/model/add_property_type/city_model.dart';
 import 'package:gharzo_project/screens/add_properties/builder_details_view.dart';
-import 'package:gharzo_project/screens/add_properties/upload_photo/upload_photo_view.dart';
 import 'package:gharzo_project/screens/map_picker_view.dart';
 import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
 import 'package:provider/provider.dart';

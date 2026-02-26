@@ -69,7 +69,6 @@ class _WorkerListScreenState extends State<WorkerListScreen> {
   // ================= WORKER CARD =================
 
   Widget _workerCard(dynamic w) {
-    final availability = w['availability'] ?? {};
     final experience = w['experience'] ?? {};
     final emergency = w['emergencyContact'] ?? {};
 

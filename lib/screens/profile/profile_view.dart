@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/channel_partner_screen.dart';
-import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/common/common_widget/primary_button.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/main.dart';
-import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
-import 'package:gharzo_project/screens/bottom_bar/bottom_bar_provider.dart';
 import 'package:gharzo_project/screens/contact_us_screen.dart';
 import 'package:gharzo_project/screens/dashboard/dashboard_provider.dart';
 import 'package:gharzo_project/screens/dashboard/dashboardh_view.dart';

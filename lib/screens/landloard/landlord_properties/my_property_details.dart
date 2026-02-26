@@ -4,10 +4,8 @@ import 'package:gharzo_project/common/common_widget/primary_button.dart';
 import 'package:gharzo_project/model/user_room_details_model.dart';
 import 'package:gharzo_project/providers/landlord/my_properties_provider.dart';
 import 'package:gharzo_project/screens/landloard/room/add_room_screen.dart';
-import 'package:gharzo_project/screens/landloard/landlord_properties/add_bed_screen.dart';
 import 'package:gharzo_project/screens/landloard/room/edit_room_screen.dart';
 import 'package:gharzo_project/screens/landloard/room/room_details_screen.dart';
-import 'package:gharzo_project/screens/room/add_room/add_room_view.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:provider/provider.dart';
 

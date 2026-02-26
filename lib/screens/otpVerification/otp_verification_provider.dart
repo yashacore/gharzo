@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/http/http_method.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
 
 // ✅ CUSTOM AUTOFILL (NOT package)

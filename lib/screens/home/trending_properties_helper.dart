@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/cached_image_helper.dart';
 import 'package:gharzo_project/model/property_model/property_model.dart';
+import 'package:provider/provider.dart';
+
+import 'home_provider.dart';
+
 
 class TrendingPropertyCard extends StatelessWidget {
   final PropertyModel property;
+  final HomeProvider provider;
 
   const TrendingPropertyCard({
     super.key,
     required this.property,
+    required this.provider,
   });
 
   @override
@@ -15,6 +21,7 @@ class TrendingPropertyCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(right: 14),
       decoration: BoxDecoration(
+        // border: Border.all(color: Colors.grey),
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
@@ -28,11 +35,10 @@ class TrendingPropertyCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🖼 IMAGE
+          /// 🖼 IMAGE (FIXED HEIGHT)
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(18),
-            ),
+            borderRadius:
+            const BorderRadius.vertical(top: Radius.circular(18)),
             child: Stack(
               children: [
                 SizedBox(
@@ -61,23 +67,34 @@ class TrendingPropertyCard extends StatelessWidget {
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.favorite_border,
-                      size: 18,
-                    ),
+                  child: Consumer<HomeProvider>(
+                    builder: (_, provider, __) {
+                      final isSaved = provider.isPropertySaved(property.id); // ✅ FIX
+
+                      return GestureDetector(
+                        onTap: () => provider.toggleSave(property),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isSaved ? Icons.favorite : Icons.favorite_border,
+                            size: 18,
+                            color: isSaved ? Colors.red : Colors.grey.shade700,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
+
               ],
             ),
           ),
 
-          /// 📄 DETAILS
+          /// 📄 DETAILS (FLEXIBLE → FIXES OVERFLOW)
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -96,9 +113,7 @@ class TrendingPropertyCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     _MiniChip(
-                      text: property.bhk == 1
-                          ? "Apartment"
-                          : "Villa",
+                      text: property.bhk == 1 ? "Apartment" : "Villa",
                     ),
                   ],
                 ),
@@ -121,11 +136,8 @@ class TrendingPropertyCard extends StatelessWidget {
                 /// 📍 LOCATION
                 Row(
                   children: [
-                    const Icon(
-                      Icons.location_on,
-                      size: 14,
-                      color: Colors.grey,
-                    ),
+                    const Icon(Icons.location_on,
+                        size: 14, color: Colors.grey),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
@@ -145,24 +157,20 @@ class TrendingPropertyCard extends StatelessWidget {
 
                 /// 🛏 SPECS
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _SpecItem(text: "${property.bhk} Beds"),
-                    _SpecItem(
-                        text: "${property.bathrooms} Baths"),
+                    _SpecItem(text: "${property.bathrooms} Baths"),
                     _SpecItem(text: property.areaText),
                   ],
                 ),
               ],
             ),
-          ),
-        ],
+          ),        ],
       ),
     );
   }
 }
-
 
 class _TagChip extends StatelessWidget {
   final String text;

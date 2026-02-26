@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/common/common_widget/primary_button.dart';
@@ -6,7 +8,6 @@ import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
 import 'package:gharzo_project/utils/theme/colors.dart';
 import 'package:gharzo_project/utils/validation/validation.dart';
 import 'package:provider/provider.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpVerificationView extends StatelessWidget {
   const OtpVerificationView({super.key});

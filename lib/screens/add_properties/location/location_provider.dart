@@ -4,7 +4,6 @@ import 'package:gharzo_project/common/api_constant/api_service_method.dart';
 import 'package:gharzo_project/common/http/http_method.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/model/add_property_type/city_model.dart';
-import 'package:gharzo_project/screens/add_properties/property_feature/property_feture_view.dart';
 
 class LocationProvider extends ChangeNotifier {
   bool loading = false;
@@ -91,11 +90,7 @@ class LocationProvider extends ChangeNotifier {
   //   return true;
   // }
 
-  bool _err(String msg) {
-    error = msg;
-    notifyListeners();
-    return false;
-  }
+
 
   Future<void> load(String propertyId) async {
     await fetchCities();

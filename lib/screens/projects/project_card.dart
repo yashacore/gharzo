@@ -129,8 +129,7 @@ class ProjectCard extends StatelessWidget {
   Widget _projectImage() {
     final imageUrl = project.image;
 
-    if (imageUrl == null ||
-        imageUrl.isEmpty ||
+    if (imageUrl.isEmpty ||
         !imageUrl.startsWith('http')) {
       // 🔁 FALLBACK IMAGE
       return Container(
