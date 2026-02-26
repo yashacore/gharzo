@@ -4,12 +4,15 @@ import 'package:gharzo_project/providers/contac_us_provider.dart';
 import 'package:gharzo_project/providers/home_loan_enquiry_provider.dart';
 import 'package:gharzo_project/providers/hotel_provider.dart';
 import 'package:gharzo_project/providers/landlord/announcement_provider.dart';
+import 'package:gharzo_project/providers/landlord/complaint_provider.dart';
 import 'package:gharzo_project/providers/landlord/create_sub_owner_provider.dart'
     show SubOwnerProvider;
 import 'package:gharzo_project/providers/landlord/my_properties_provider.dart';
+import 'package:gharzo_project/providers/landlord/payment_dashboard_provider.dart';
 import 'package:gharzo_project/providers/landlord/sub_owner_dashboard_provider.dart';
 import 'package:gharzo_project/providers/landlord/tenancy_dashboard_provider.dart';
 import 'package:gharzo_project/providers/landlord/worker_provider.dart';
+import 'package:gharzo_project/providers/project_provider.dart';
 import 'package:gharzo_project/providers/search_provider.dart';
 import 'package:gharzo_project/providers/services_provider.dart';
 import 'package:gharzo_project/providers/visit_provider.dart';
@@ -64,4 +67,7 @@ List<SingleChildWidget> appProviders = [
   ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
   ChangeNotifierProvider(create: (_) => TenancyDashboardProvider()),
   ChangeNotifierProvider(create: (_) => WorkerProvider()),
+  ChangeNotifierProvider(create: (_) => ComplaintDashboardProvider()),
+  ChangeNotifierProvider(create: (_) => ProjectProvider()),
+  ChangeNotifierProvider(create: (_) => PaymentDashboardProvider()),
 ];

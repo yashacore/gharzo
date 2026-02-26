@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gharzo_project/common/common_widget/common_home_widget/common_home_widget.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/common/common_widget/network_image_helper.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
+import 'package:gharzo_project/model/advertisement/advertisment_model.dart';
 import 'package:gharzo_project/model/property_model/property_model.dart';
 import 'package:gharzo_project/providers/search_provider.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar_provider.dart';
+import 'package:gharzo_project/screens/home/curosal_slider_helper.dart';
 import 'package:gharzo_project/screens/home/home_provider.dart';
+import 'package:gharzo_project/screens/home/landlord_card_helper.dart';
+import 'package:gharzo_project/screens/home/property_card_helper.dart';
 import 'package:gharzo_project/screens/home/search_screen.dart';
+import 'package:gharzo_project/screens/home/trending_properties_helper.dart';
 import 'package:gharzo_project/screens/landloard/sub_owner/create_sub_owner_screen.dart';
 import 'package:gharzo_project/screens/landloard/create_tenant/create_tenancy_screen.dart';
 import 'package:gharzo_project/screens/landloard/landlord_dashboard.dart';
@@ -41,7 +47,11 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<HomeProvider>();
+      provider.fetchPublicProperties();
 
+    });
     role = PrefService.getRoleSync();
 
     debugPrint("🟡 INIT STATE ROLE => $role");
@@ -87,27 +97,30 @@ class _HomeViewState extends State<HomeView> {
     );
 
     Future.microtask(() {
-      context.read<HomeProvider>().fetchHomeAds();
+      context.read<HomeProvider>().fetchHomeAds(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("🧠 BUILD ROLE => $role");
-
     debugPrint("🧪 RAW ROLE => [$role]");
     debugPrint("🧪 CLEAN ROLE => [${role?.replaceAll('"', '').trim()}]");
+
     return Scaffold(
+      extendBodyBehindAppBar: true, // ✅ allows gradient under status bar
       backgroundColor: Colors.white,
+
       body: SingleChildScrollView(
-        controller: _scrollController, // ✅ ONLY ONE SCROLL
+        controller: _scrollController,
         child: Stack(
           children: [
             // 🔵 GRADIENT HEADER
             Container(
-              height: 260,
+              height: 100,
               width: double.infinity,
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight:  Radius.circular(20)),
                 gradient: LinearGradient(
                   colors: [
                     AppThemeColors().backgroundLeft,
@@ -119,20 +132,28 @@ class _HomeViewState extends State<HomeView> {
 
             // 🔵 MAIN CONTENT
             SafeArea(
+              top: true,
+              bottom: false,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: CommonHomeWidgets.headerView(
+                      userName:     FutureBuilder(
+                        future: PrefService.getUser(),
+                        builder: (_, snapshot) {
+                          if (!snapshot.hasData) return const SizedBox();
+                          return Text(snapshot.data!['name']); // ✅ updated name
+                        },
+                      ),
                       onMenuTap: widget.action,
                       context: context,
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -152,19 +173,44 @@ class _HomeViewState extends State<HomeView> {
                   ),
 
                   const SizedBox(height: 16),
+
+                  const HomeAdSlider(),
+
+                  const SizedBox(height: 16),
+
+                  Consumer<HomeProvider>(
+                      builder: (_, provider, __) {
+                        return listOfCategory(provider);
+                      },
+                    ),
+
+                  const SizedBox(height: 12),
                   Consumer<HomeProvider>(
                     builder: (_, provider, __) {
-                      return buildAdSlider(provider);
+                      return buildTrendingProperties(provider);
                     },
-                  ),                  const SizedBox(height: 16),
-                  listOfCategory(context.read<HomeProvider>()),
-                  const SizedBox(height: 24),
-                  buildFeaturedProperties(context.read<HomeProvider>()),
-                  const SizedBox(height: 24),
-                  buildTrendingProperties(context.read<HomeProvider>()),
+                  ),
+                  const SizedBox(height: 12),
+
+                  /// 🔥 FEATURED
+                  Consumer<HomeProvider>(
+                    builder: (_, provider, __) {
+                      return buildFeaturedProperties(provider);
+                    },
+                  ),
+
                   const SizedBox(height: 24),
 
-                  // ✅ LANDLORD SECTION (NOW IT WILL SHOW)
+                  /// 🔥 TRENDING
+                  // Consumer<HomeProvider>(
+                  //   builder: (_, provider, __) {
+                  //     return buildTrendingProperties(provider);
+                  //   },
+                  // ),
+
+                  // const SizedBox(height: 24),
+
+                  /// 🔥 LANDLORD SECTION
                   if (isLandlord)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,10 +226,8 @@ class _HomeViewState extends State<HomeView> {
                             ),
                           ),
                         ),
-                        // _buildQuickActions(),
-                        stylishLandlordCard(context),
                         const SizedBox(height: 12),
-
+                        LandlordCardHelper(),
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -195,132 +239,39 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
-
-  // ================= AD SLIDER =================
-  Widget buildAdSlider(HomeProvider provider) {
-    if (provider.isLoading) {
-      return const SizedBox(
-        height: 180,
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (provider.ads.isEmpty) {
+  Widget buildTrendingProperties(HomeProvider provider) {
+    if (provider.trendingProperties.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    return SizedBox(
-      height: 180,
-      child: PageView.builder(
-        controller: provider.pageController,
-        itemCount: provider.ads.length,
-        onPageChanged: (index) => provider.trackImpression(provider.ads[index]),
-        itemBuilder: (context, index) {
-          final ad = provider.ads[index];
-
-          return GestureDetector(
-            onTap: () => provider.onAdTap(ad),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    SafeNetworkImage(
-                      debugLabel: "Ad slider",
-                      imageUrl: ad.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.7),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (ad.title.isNotEmpty)
-                            Text(
-                              ad.title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-
-                          const SizedBox(height: 12),
-
-                          /// 🔹 Explore Button
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Explore Now",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                SizedBox(width: 6),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 10,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+    return CommonHomeWidgets.commonColumn(
+      title: "Trending Properties",
+      child: SizedBox(
+        height: 250,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: provider.trendingProperties.length,
+          itemBuilder: (context, index) {
+            return SizedBox(
+              width: 220,
+              child: TrendingPropertyCard(
+                property: provider.trendingProperties[index],
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget listOfCategory(HomeProvider provider) {
-    // Split categories into 2 rows
     int halfLength = (provider.categories.length / 2).ceil();
 
-    List firstRow = provider.categories.take(halfLength).toList();
-    List secondRow = provider.categories.skip(halfLength).toList();
+    final firstRow = provider.categories.take(halfLength).toList();
+    final secondRow = provider.categories.skip(halfLength).toList();
+
+    final double cardWidth = MediaQuery.of(context).size.width / 4.0;
 
     return CommonHomeWidgets.commonColumn(
       title: "Get Started with",
@@ -330,20 +281,19 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// -------- First Row --------
+            /// ---------- FIRST ROW ----------
             Row(
               children: firstRow.map<Widget>((item) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8, bottom: 12),
                   child: SizedBox(
-                    width: 74,
-                    height: 80,
+                    width: cardWidth,
                     child: GestureDetector(
-                      onTap: () => provider.onCategoryTap(context, item.label),
+                      onTap: () =>
+                          provider.onCategoryTap(context, item.label),
                       child: CommonHomeWidgets.categoryCardView(
-                        icon: item.icon,
+                        assetPath: item.icon,
                         label: item.label,
-                        color: item.color,
                       ),
                     ),
                   ),
@@ -351,20 +301,19 @@ class _HomeViewState extends State<HomeView> {
               }).toList(),
             ),
 
-            /// -------- Second Row --------
+            /// ---------- SECOND ROW ----------
             Row(
               children: secondRow.map<Widget>((item) {
                 return Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.only(right: 8, bottom: 12),
                   child: SizedBox(
-                    width: 74,
-                    height: 80,
+                    width: cardWidth,
                     child: GestureDetector(
-                      onTap: () => provider.onCategoryTap(context, item.label),
+                      onTap: () =>
+                          provider.onCategoryTap(context, item.label),
                       child: CommonHomeWidgets.categoryCardView(
-                        icon: item.icon,
+                        assetPath: item.icon,
                         label: item.label,
-                        color: item.color,
                       ),
                     ),
                   ),
@@ -378,25 +327,27 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget buildFeaturedProperties(HomeProvider provider) {
-    if (provider.featuredProperties.isEmpty) {
+    final recentProperties = provider.recentProperty;
+
+    if (recentProperties.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return CommonHomeWidgets.commonColumn(
-      title: "Featured Properties",
+      title: "New Properties (Last 24 Hours)",
       child: SizedBox(
-        height: 150,
+        height: 340,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 4),
-          itemCount: provider.featuredProperties.length,
+          itemCount: recentProperties.length,
           itemBuilder: (context, index) {
-            final property = provider.featuredProperties[index];
+            final property = recentProperties[index];
 
-            return Container(
-              width: 200,
-              // margin: const EdgeInsets.only(right: 2),
-              child: _propertyCard(property, provider),
+            return SizedBox(
+              // width: 200,
+              child: PropertyCardHelper(                 property: provider.trendingProperties[index], provider: provider,
+              ),
             );
           },
         ),
@@ -404,213 +355,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget stylishLandlordCard(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const LandlordDashboard()),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue.shade50, width: 1),
-            ),
-            child: Row(
-              children: [
-                // Icon Container with soft background
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Icon(
-                    Icons.vignette_rounded,
-                    color: Colors.blue.shade700,
-                    size: 32,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                // Text Content
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Landlord Portal',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF1A1A1A),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '8 active properties',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Minimalist Arrow
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.grey.shade400,
-                  size: 18,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget buildTrendingProperties(HomeProvider provider) {
-    if (provider.trendingProperties.isEmpty) {
-      return const SizedBox.shrink();
-    }
 
-    return CommonHomeWidgets.commonColumn(
-      title: "Trending Properties",
-      child: SizedBox(
-        height: 150,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: provider.trendingProperties.length,
-          itemBuilder: (context, index) {
-            final property = provider.trendingProperties[index];
 
-            return Container(
-              width: 200,
-              // margin: const EdgeInsets.only(right: 14),
-              child: _propertyCard(property, provider, showLikeLeft: true),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _propertyCard(
-    PropertyModel property,
-    HomeProvider provider, {
-    bool showLikeLeft = false,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        // Add navigation or details logic here
-      },
-      child: Container(
-        margin: const EdgeInsets.all(16),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(18), // 👈 All corners circular
-          child: Container(
-            height: 100,
-            decoration: const BoxDecoration(color: Colors.white),
-            child: Stack(
-              children: [
-                /// 🔹 Image (Full Rounded)
-                Positioned.fill(
-                  child: SafeNetworkImage(
-                    debugLabel: " > PropertyCar",
-
-                    imageUrl: property.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-
-                /// 🔹 Gradient
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                /// 🔹 Like Button
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.favorite_border,
-                      size: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 12,
-                  right: 12,
-                  bottom: 12,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        property.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        // ignore: dead_code
-                        property.formattedPrice ?? '',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   String? getPropertyImage(dynamic property) {
     final images = property['images'];

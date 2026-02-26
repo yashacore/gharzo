@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_constant.dart';
@@ -16,6 +17,7 @@ import 'package:gharzo_project/screens/category/category_provider.dart';
 import 'package:gharzo_project/screens/hotels/hotel_list_screen.dart';
 import 'package:gharzo_project/screens/loan_screen/home_loan_enquiry_screen.dart';
 import 'package:gharzo_project/screens/loan_screen/loan_screen.dart';
+import 'package:gharzo_project/screens/projects/project_list_screen.dart';
 import 'package:gharzo_project/screens/services/services_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:gharzo_project/screens/category/category_view.dart';
@@ -32,67 +34,72 @@ class HomeProvider extends ChangeNotifier {
   final ScrollController scrollController = ScrollController();
 
   List<AdvertisementModel> ads = [];
+  int currentAdIndex = 0;
 
+  void onAdPageChanged(int index) {
+    currentAdIndex = index;
+    notifyListeners();
+  }
   // ================= CATEGORY DATA =================
   final List<CategoryModel> categories = [
     CategoryModel(
-      icon: Icons.apartment,
+      icon: "assets/icons/rent.png",
       label: "Rent",
-      color: Colors.orange,
+      // color: Colors.orange,
       type: "category",
     ),
     CategoryModel(
-      icon: Icons.home,
+      icon: "assets/icons/hostel.png",
       label: "Hostels",
-      color: Colors.red,
+      // color: Colors.red,
       type: "hostels",
     ),
     CategoryModel(
-      icon: Icons.shopping_bag,
+      icon: "assets/icons/buy.png",
       label: "Buy",
-      color: Colors.blue,
+      // color: Colors.blue,
       type: "buy",
     ),
     CategoryModel(
-      icon: Icons.people,
+      icon: "assets/icons/pg.png",
       label: "PG",
-      color: Colors.indigo,
+      // color: Colors.indigo,
       type: "pg",
     ),
     CategoryModel(
-      icon: Icons.business,
+      icon: "assets/icons/6.png",
       label: "Commercial",
-      color: Colors.blueGrey,
+      // color: Colors.blueGrey,
       type: "commercial",
     ),
     CategoryModel(
-      icon: Icons.celebration,
+      icon: "assets/icons/banquet.png",
       label: "Banquets",
-      color: Colors.green,
+      // color: Colors.green,
       type: "banquets",
     ),
     CategoryModel(
-      icon: Icons.design_services,
+      icon: "assets/icons/services.png",
       label: "Services",
-      color: Colors.purple,
+      // color: Colors.purple,
       type: "villa",
     ),
     CategoryModel(
-      icon: Icons.home,
+      icon: "assets/icons/loan.png",
       label: "Home Loan",
-      color: Colors.teal,
+      // color: Colors.teal,
       type: "farm",
     ),
     CategoryModel(
-      icon: Icons.hotel,
+      icon: "assets/icons/hotel.png",
       label: "Hotels",
-      color: Colors.brown,
+      // color: Colors.brown,
       type: "hotel",
     ),
     CategoryModel(
-      icon: Icons.add_to_photos_outlined,
+      icon: "assets/icons/commercial.png",
       label: "Project",
-      color: Colors.cyan,
+      // color: Colors.cyan,
       type: "shops",
     ),
   ];
@@ -130,27 +137,41 @@ class HomeProvider extends ChangeNotifier {
   }
 
   /// ================= FETCH ADS =================
-  Future<void> fetchHomeAds() async {
+  Future<void> fetchHomeAds(BuildContext context) async {
     try {
       isLoading = true;
       notifyListeners();
 
+      debugPrint("📢 Fetching home ads...");
+
       final response = await AdvertisementApi.fetchHomepageAds();
-      ads =
-          (response)
-              .map((e) => AdvertisementModel.fromJson(e))
-              .where((ad) => ad.hasImage)
-              .toList()
-            ..sort((a, b) => b.priority.compareTo(a.priority));
-    } catch (e) {
-      print("Error fetching ads: $e");
+
+      ads = response
+          .map((e) => AdvertisementModel.fromJson(e))
+          .where((ad) => ad.hasImage)
+          .toList()
+        ..sort((a, b) => b.priority.compareTo(a.priority));
+
+      debugPrint("✅ Ads loaded: ${ads.length}");
+
+      /// 🔥 PRE-CACHE IMAGES (THIS FIXES SLOW LOADING)
+      for (final ad in ads) {
+        if (ad.imageUrl.isNotEmpty) {
+          precacheImage(
+            CachedNetworkImageProvider(ad.imageUrl),
+            context,
+          );
+        }
+      }
+    } catch (e, stack) {
+      debugPrint("❌ Error fetching ads: $e");
+      debugPrint("$stack");
       ads = [];
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
-
   /// ================= PROPERTY API =================
   List<PropertyModel> featuredProperties = [];
   List<PropertyModel> trendingProperties = [];
@@ -229,7 +250,6 @@ class HomeProvider extends ChangeNotifier {
   void trackConversion(AdvertisementModel ad) =>
       AdvertisementApi.trackConversion(ad.id);
 
-  /// ================= CATEGORY TAP =================
   void onCategoryTap(BuildContext context, String type) async {
     final loggedIn = await checkLogin(context);
     if (!loggedIn) return;
@@ -261,6 +281,12 @@ class HomeProvider extends ChangeNotifier {
       await Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const HotelListScreen()),
+      );
+    } else if (type == "Project") {
+      // 👉 Open Home Loan Enquiry Screen
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ProjectListScreen()),
       );
     } else {
       // 👉 Open Category Screen
@@ -350,4 +376,81 @@ class HomeProvider extends ChangeNotifier {
       print("Error saving token: $e");
     }
   }
+
+  Future<void> fetchPublicProperties() async {
+    debugPrint("🟡 fetchPublicProperties() START");
+
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final url = "https://api.gharzoreality.com/api/public/properties";
+      debugPrint("🌐 API URL => $url");
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      debugPrint("📡 Status Code => ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+
+        final List data = decoded['data'] ?? [];
+        debugPrint("📦 Total properties received => ${data.length}");
+
+        _allProperties = data
+            .map((e) => PropertyModel.fromJson(e))
+            .toList();
+
+        debugPrint("✅ Parsed properties => ${_allProperties.length}");
+
+        // 🔍 DEBUG: recent (last 24h)
+        final recent = _allProperties.where((p) {
+          if (p.createdAt == null) return false;
+          return DateTime.now()
+              .toUtc()
+              .difference(p.createdAt!.toUtc())
+              .inHours <=
+              24;
+        }).toList();
+
+        debugPrint("🆕 Properties uploaded in last 24h => ${recent.length}");
+
+        if (recent.isNotEmpty) {
+          debugPrint(
+            "🕒 Latest property time => ${recent.first.createdAt}",
+          );
+        }
+      } else {
+        debugPrint(
+          '❌ API Error ${response.statusCode}: ${response.body}',
+        );
+      }
+    } catch (e, stack) {
+      debugPrint('❌ fetchPublicProperties error: $e');
+      debugPrint('📛 StackTrace: $stack');
+    }
+
+    isLoading = false;
+    notifyListeners();
+
+    debugPrint("🟢 fetchPublicProperties() END");
+  }
+  List<PropertyModel> get recentProperty {
+    final now = DateTime.now().toUtc();
+
+    return _allProperties.where((property) {
+      if (property.createdAt == null) return false;
+
+      // ✅ NO parsing needed
+      final diff = now.difference(property.createdAt!.toUtc());
+
+      return diff.inHours <= 48;
+    }).toList();
+  }
+
+  List<PropertyModel> get allProperties => _allProperties;
+  List<PropertyModel> _allProperties = [];
 }

@@ -2,6 +2,9 @@ class PropertyModel {
   final String id;
   final String title;
 
+  // ⏱️ ADD THIS
+  final DateTime? createdAt;
+
   // Price
   final int priceAmount;
   final bool isNegotiable;
@@ -27,6 +30,7 @@ class PropertyModel {
   PropertyModel({
     required this.id,
     required this.title,
+    required this.createdAt, // ⬅️ added
     required this.priceAmount,
     required this.isNegotiable,
     required this.city,
@@ -41,16 +45,13 @@ class PropertyModel {
     required this.imageUrl,
   });
 
-  // ================= JSON =================
-
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
     final images = json['images'] as List? ?? [];
 
-    // 🔑 pick primary image first
     String imageUrl = '';
     if (images.isNotEmpty) {
       final primary = images.firstWhere(
-        (img) => img['isPrimary'] == true,
+            (img) => img['isPrimary'] == true,
         orElse: () => images.first,
       );
       imageUrl = primary['url'] ?? '';
@@ -59,6 +60,11 @@ class PropertyModel {
     return PropertyModel(
       id: json['_id'] ?? '',
       title: json['title'] ?? '',
+
+      // ⏱️ parse createdAt safely
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
+          : null,
 
       priceAmount: json['price']?['amount'] ?? 0,
       isNegotiable: json['price']?['negotiable'] ?? false,
@@ -80,11 +86,16 @@ class PropertyModel {
     );
   }
 
-  // ================= HELPERS FOR UI =================
+  // ================= HELPERS =================
 
   String get formattedPrice => "₹$priceAmount";
-
-  String get fullLocation => locality.isNotEmpty ? "$locality, $city" : city;
-
+  String get fullLocation =>
+      locality.isNotEmpty ? "$locality, $city" : city;
   String get areaText => "$carpetArea $areaUnit";
+
+  /// 🆕 helper
+  bool get isUploadedInLast24Hours {
+    if (createdAt == null) return false;
+    return DateTime.now().toUtc().difference(createdAt!.toUtc()).inHours <= 24;
+  }
 }

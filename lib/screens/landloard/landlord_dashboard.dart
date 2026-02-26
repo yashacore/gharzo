@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
 import 'package:gharzo_project/screens/landloard/annoucment/announcement_list_screen.dart';
+import 'package:gharzo_project/screens/landloard/complaints/complalint_list_screen.dart';
 import 'package:gharzo_project/screens/landloard/create_tenant/tenant_dashboard.dart';
 import 'package:gharzo_project/screens/landloard/sub_owner/create_sub_owner_screen.dart';
 import 'package:gharzo_project/screens/landloard/create_tenant/create_tenancy_screen.dart';
 import 'package:gharzo_project/screens/landloard/landlord_properties/landlord_my_properties.dart';
 import 'package:gharzo_project/screens/landloard/sub_owner/sub_owner_dashboard.dart';
 import 'package:gharzo_project/screens/landloard/workers/worker_list_screen.dart';
+import 'package:gharzo_project/screens/payments/payment_dashboard.dart';
 
 class LandlordDashboard extends StatelessWidget {
   const LandlordDashboard({super.key});
@@ -43,7 +45,7 @@ class LandlordDashboard extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 15,
               mainAxisSpacing: 15,
-              childAspectRatio: 1.1,
+              childAspectRatio: 1.3,
               children: [
                 _buildMenuCard(
                   context,
@@ -120,7 +122,7 @@ class LandlordDashboard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SubOwnerDashboardScreen(),
+                        builder: (context) => const LandlordComplaintsScreen(),
                       ),
                     );
                   },
@@ -137,6 +139,24 @@ class LandlordDashboard extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const WorkerListScreen(),
+                      ),
+                    );
+                  },
+                ),
+
+
+                _buildMenuCard(
+                  context,
+                  title: 'Payments',
+                  subtitle: 'Manage Payments',
+                  icon: Icons.credit_card,
+                  color: Colors.purple,
+                  onTap: () {
+                    /* Navigate to Add Sub-owner */
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PaymentDashboardScreen(),
                       ),
                     );
                   },
@@ -172,13 +192,13 @@ class LandlordDashboard extends StatelessWidget {
 
   // Stylish Menu Card Builder
   Widget _buildMenuCard(
-    BuildContext context, {
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+      BuildContext context, {
+        required String title,
+        required String subtitle,
+        required IconData icon,
+        required Color color,
+        required VoidCallback onTap,
+      }) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -199,8 +219,9 @@ class LandlordDashboard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
+              mainAxisSize: MainAxisSize.min, // ✅ IMPORTANT
+              mainAxisAlignment: MainAxisAlignment.center, // ✅ FIX
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
@@ -210,25 +231,25 @@ class LandlordDashboard extends StatelessWidget {
                   ),
                   child: Icon(icon, color: color, size: 28),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 10),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.grey.shade500,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),

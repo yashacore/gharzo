@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/data/reels_api_service/reels_api_service.dart';
 import 'package:gharzo_project/model/reels/comment_model.dart';
-import 'package:gharzo_project/model/reels/reels_model.dart';
+
+import '../../../model/reels/reels_feed_model.dart';
+
 
 class ReelsFeedProvider extends ChangeNotifier {
   final List<Reel> _reels = [];
+
   List<Reel> get reels => _reels;
 
   bool isLoading = false;
@@ -23,15 +26,13 @@ class ReelsFeedProvider extends ChangeNotifier {
 
   // ================= FETCH REELS =================
   Future<void> fetchReels({bool refresh = false}) async {
-    if (isLoading) return;
+    if (isLoading || !hasMore) return;
 
     if (refresh) {
-      _reels.clear();
+      reels.clear();
       currentPage = 1;
       hasMore = true;
     }
-
-    if (!hasMore) return;
 
     isLoading = true;
     notifyListeners();
@@ -39,23 +40,22 @@ class ReelsFeedProvider extends ChangeNotifier {
     try {
       final response = await ReelsApiService.getReelsFeed(page: currentPage);
 
-      debugPrint("Response Feed Reel :: $response");
-
-      for (final reel in response!.data) {
-        debugPrint("🎬 Reel ID: ${reel.id}");
+      if (response == null || response.data.isEmpty) {
+        debugPrint("⚠️ NO MORE REELS OR API FAILED");
+        hasMore = false;
+        return;
       }
 
-      if (response != null) {
-        reels.addAll(response.data);
-        hasMore = response.currentPage < response.totalPages;
-        currentPage++;
-      }
+      reels.addAll(response.data);
+      hasMore = response.currentPage < response.totalPages;
+      currentPage++;
     } catch (e) {
-      debugPrint("Fetch reels error: $e");
+      debugPrint("🔥 Fetch reels provider error: $e");
+      hasMore = false; // ⛔ STOP LOOP
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
   Future<void> toggleLike(Reel reel) async {

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/main.dart';
@@ -5,45 +8,54 @@ import '../../model/model/profile_model.dart';
 import '../login/login_view.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  User? _user;
   bool isLoading = false;
 
-  User? _user;
   User? get user => _user;
 
-  /// 🔹 Fetch profile from SharedPref and parse into model
+  String get userName => _user?.name ?? '';
+  String get role => _user?.role ?? '';
+  String? get profileImage => _user?.profileImageUrl;
+
+  bool get isLandlord => _user?.role == 'landlord';
+
+  // -------------------------------
+  // FETCH PROFILE (API ONLY)
+  // -------------------------------
   Future<void> fetchProfile() async {
     isLoading = true;
     notifyListeners();
 
-    final rawUser = await PrefService.getUser();
-    debugPrint("RAW USER FROM PREF => $rawUser");
+    try {
+      final token = await PrefService.getToken(); // token only
+      if (token == null) return;
 
-    if (rawUser != null) {
-      _user = User.fromJson(rawUser);
+      final res = await http.get(
+        Uri.parse("https://api.gharzoreality.com/api/auth/me"),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      final decoded = jsonDecode(res.body);
+
+      if (res.statusCode == 200 && decoded['success'] == true) {
+        _user = User.fromJson(decoded['data']['user']);
+        debugPrint("✅ PROFILE FETCHED FROM API");
+        debugPrint("🖼️ Image => ${_user?.profileImageUrl}");
+      }
+    } catch (e) {
+      debugPrint("❌ Fetch profile error => $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
-  /// 🔹 Logout
+  // -------------------------------
+  // LOGOUT
+  // -------------------------------
   Future<void> clickOnLogoutBtn() async {
-    await PrefService.clearAuthData();
 
-    navigatorKey.currentState?.pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => LoginView()),
-      (route) => false,
-    );
   }
-
-  /// 🔹 Helper getters for UI
-  String get userName => _user?.name ?? '';
-  String get phone => _user?.phone ?? '';
-  String get role => _user?.role ?? '';
-  String? get profileImage => _user?.profileImage;
-  bool get isVerified => _user?.isVerified ?? false;
-  String get city => _user?.address.city ?? '';
-  String get state => _user?.address.state ?? '';
-
-  bool get isLandlord => role.toLowerCase() == 'landlord';
 }

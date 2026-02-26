@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
+import 'package:gharzo_project/model/model/reels/reels_feed_model.dart'
+    hide ReelModel;
 import 'package:gharzo_project/model/reels/comment_model.dart';
+import 'package:gharzo_project/model/reels/reels_feed_model.dart';
 import 'package:gharzo_project/model/reels/reels_model.dart';
 import 'package:gharzo_project/model/reels/save_reel_model.dart';
 import 'package:http/http.dart' as http;
@@ -22,15 +25,13 @@ class ReelsApiService {
     };
   }
 
-  static Future<ReelResponse?> getReelsFeed({
+  static Future<ReelResponse?> getReedlsFeed({
     int page = 1,
     int limit = 10,
     String type = "latest",
     String city = "Indore",
   }) async {
-    final url = Uri.parse(
-      '$baseUrl?type=$type&city=$city&page=$page&limit=$limit',
-    );
+    final url = Uri.parse('https://api.gharzoreality.com/api/reels/feed ');
 
     try {
       final response = await http.get(url, headers: await getToken());
@@ -109,17 +110,6 @@ class ReelsApiService {
       return null;
     }
   }
-
-  // static Future<List<CommentModel>> getComments(String reelId) async {
-  // final res = await http.get(
-  // Uri.parse("$baseUrl/reels/$reelId/comments"),
-  // headers: headers(),
-  // );
-  // final data = json.decode(res.body);
-  // return (data['data'] as List)
-  //     .map((e) => CommentModel.fromJson(e))
-  //     .toList();
-  // }
 
   static Future<bool> addComment({
     required String reelId,
@@ -200,6 +190,41 @@ class ReelsApiService {
     } catch (e) {
       debugPrint("🔥 fetchComments error: $e");
       return [];
+    }
+  }
+
+  static const _baseUrl = "https://api.gharzoreality.com/api/reels/feed";
+
+  static Future<ReelsFeedResponse?> getReelsFeed({int page = 1}) async {
+    try {
+      debugPrint("📥 FETCHING REELS | PAGE: $page");
+
+      final token = await PrefService.getToken();
+
+      final res = await http.get(
+        Uri.parse(
+          "https://api.gharzoreality.com/api/reels/feed?page=$page&limit=10",
+        ),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      debugPrint("📡 STATUS: ${res.statusCode}");
+      debugPrint("📦 BODY: ${res.body}");
+
+      if (res.statusCode == 200) {
+        final json = jsonDecode(res.body);
+        return ReelsFeedResponse.fromJson(json);
+      }
+
+      debugPrint("❌ Reels API failed: ${res.statusCode}");
+      return ReelsFeedResponse.empty(); // ✅ NEVER NULL
+    } catch (e, s) {
+      debugPrint("🔥 REELS API ERROR: $e");
+      debugPrint("STACK TRACE:\n$s");
+      return ReelsFeedResponse.empty(); // ✅ NEVER NULL
     }
   }
 }

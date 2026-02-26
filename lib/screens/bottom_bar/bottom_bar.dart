@@ -47,20 +47,27 @@ class _BottomBarState extends State<BottomBarView>
       builder: (context, provider, child) {
         return Stack(
           children: [
+            // ✅ MAIN SCAFFOLD (NO SAFEAREA HERE)
             Scaffold(
               extendBody: true,
+              backgroundColor: Colors.transparent,
               body: provider.currentPage(openDrawer),
 
-              bottomNavigationBar: AnimatedSlide(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOut,
-                offset: provider.isBottomBarVisible
-                    ? Offset.zero
-                    : const Offset(0, 1), // slide down
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: provider.isBottomBarVisible ? 1 : 0,
-                  child: _bottomBar(provider),
+              // ✅ SAFEAREA ONLY FOR BOTTOM BAR
+              bottomNavigationBar: SafeArea(
+                top: false,
+                bottom: true,
+                child: AnimatedSlide(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOut,
+                  offset: provider.isBottomBarVisible
+                      ? Offset.zero
+                      : const Offset(0, 1),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: provider.isBottomBarVisible ? 1 : 0,
+                    child: _bottomBar(provider),
+                  ),
                 ),
               ),
             ),
@@ -79,7 +86,7 @@ class _BottomBarState extends State<BottomBarView>
               onHorizontalDragUpdate: (details) {
                 _controller.value +=
                     details.primaryDelta! /
-                    (MediaQuery.of(context).size.width * 0.8);
+                        (MediaQuery.of(context).size.width * 0.8);
               },
               onHorizontalDragEnd: (details) {
                 if (_controller.value > 0.5) {
@@ -101,6 +108,8 @@ class _BottomBarState extends State<BottomBarView>
       },
     );
   }
+
+  // ================= BOTTOM BAR UI =================
 
   Widget _bottomBar(BottomBarProvider provider) {
     return SizedBox(
@@ -159,19 +168,22 @@ class _BottomBarState extends State<BottomBarView>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppThemeColors().primary.withOpacity(0.45),
+                          color:
+                          AppThemeColors().primary.withOpacity(0.45),
                           blurRadius: 14,
                           offset: const Offset(0, 6),
                         ),
                       ],
                     ),
-                    child: const Icon(Icons.add, color: Colors.white, size: 32),
+                    child: const Icon(Icons.add,
+                        color: Colors.white, size: 32),
                   ),
                 ),
                 const SizedBox(height: 4),
                 const Text(
                   "ADD",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  style:
+                  TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -182,11 +194,11 @@ class _BottomBarState extends State<BottomBarView>
   }
 
   Widget navItem(
-    int index,
-    IconData icon,
-    String label,
-    BottomBarProvider provider,
-  ) {
+      int index,
+      IconData icon,
+      String label,
+      BottomBarProvider provider,
+      ) {
     final isActive = provider.currentIndex == index;
 
     return GestureDetector(
@@ -197,13 +209,15 @@ class _BottomBarState extends State<BottomBarView>
           Icon(
             icon,
             size: 26,
-            color: isActive ? AppThemeColors().primary : Colors.black45,
+            color:
+            isActive ? AppThemeColors().primary : Colors.black45,
           ),
           Text(
             label,
             style: TextStyle(
               fontSize: 11,
-              color: isActive ? AppThemeColors().primary : Colors.black45,
+              color:
+              isActive ? AppThemeColors().primary : Colors.black45,
             ),
           ),
         ],

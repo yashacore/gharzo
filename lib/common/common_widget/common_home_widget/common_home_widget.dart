@@ -5,11 +5,20 @@ import '../../../main.dart';
 import '../../../screens/notification/notification_view.dart';
 
 class CommonHomeWidgets {
+
+
   // ================= HEADER =================
   static Widget headerView({
     required VoidCallback onMenuTap,
-    required BuildContext? context,
+    required BuildContext context,
+    required Widget userName,
   }) {
+
+    final TextStyle welcomeStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    );
     return SizedBox(
       height: 54,
       child: Row(
@@ -27,24 +36,40 @@ class CommonHomeWidgets {
             ),
           ),
           const SizedBox(width: 12),
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Welcome",
-                style: Theme.of(
-                  context!,
-                ).textTheme.titleMedium!.copyWith(color: Colors.white),
+              /// ✅ CORRECT
+              Row(
+                children: [
+                  const Text(
+                    "Welcome back, ",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  DefaultTextStyle(
+                    style: welcomeStyle,
+                    child: userName,
+                  ),                ],
               ),
+
+              const SizedBox(height: 2),
+
               Row(
                 children: [
                   Text(
                     "Vijay Nagar, Indore",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleMedium!.copyWith(color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: Colors.white70),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.location_on_outlined,
                     color: Colors.white70,
                     size: 14,
@@ -53,10 +78,14 @@ class CommonHomeWidgets {
               ),
             ],
           ),
-          Spacer(),
+
+          const Spacer(),
+
           GestureDetector(
             onTap: () => navigatorKey.currentState?.push(
-              MaterialPageRoute(builder: (context) => NotificationScreen()),
+              MaterialPageRoute(
+                builder: (context) => NotificationScreen(),
+              ),
             ),
             child: Container(
               height: 30,
@@ -206,36 +235,54 @@ class CommonHomeWidgets {
     );
   }
 
+
+
   static Widget categoryCardView({
-    IconData? icon,
+    String? assetPath,
     required String label,
-    Color? color,
-    bool isShowIcon = true,
+    bool isShowImage = true,
   }) {
     return Container(
-      margin: EdgeInsets.all(2),
+      padding: const EdgeInsets.symmetric(
+        vertical: 0,  // ⬅️ medium padding
+        horizontal: 0,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 3),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 3,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (isShowIcon && icon != null) ...[
-            Icon(icon, color: color, size: 22),
-            const SizedBox(height: 8),
-          ],
+          if (isShowImage && assetPath != null && assetPath.isNotEmpty)
+            Image.asset(
+              assetPath,
+              height: 55, // ⬅️ medium image size
+              fit: BoxFit.contain,
+            ),
+
+
           Text(
             label,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.w600,
               fontSize: 12,
+              // height: 1.3, // ⬅️ medium line height
             ),
           ),
+          const SizedBox(height: 6), // ⭐ medium gap (perfect)
+
         ],
       ),
     );

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_constant.dart';
@@ -428,7 +427,7 @@ class ApiServiceMethod {
       debugPrint("📤 Payload: { token: $fcmToken, device: $device }");
 
       final response = await http
-          .post(
+          .patch(
             Uri.parse(
               "https://api.gharzoreality.com/api/notifications/read-all",
             ),

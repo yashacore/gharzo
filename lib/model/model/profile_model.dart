@@ -2,7 +2,10 @@ class UserProfileResponse {
   final User user;
   final dynamic subscription;
 
-  UserProfileResponse({required this.user, this.subscription});
+  UserProfileResponse({
+    required this.user,
+    this.subscription,
+  });
 
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
     return UserProfileResponse(
@@ -19,11 +22,15 @@ class User {
   final String role;
   final bool isVerified;
   final bool isActive;
-  final String? profileImage;
-  final DateTime lastLogin;
 
-  /// ✅ THIS WAS MISSING / NOT MATCHING
-  final Address address;
+  /// ✅ FIXED
+  final String? profileImageUrl;
+
+  /// ✅ FIXED
+  final DateTime? lastLogin;
+
+  /// ✅ FIXED
+  final Address? address;
 
   final List<FcmToken> fcmTokens;
 
@@ -34,46 +41,59 @@ class User {
     required this.role,
     required this.isVerified,
     required this.isActive,
-    required this.profileImage,
-    required this.lastLogin,
-    required this.address,
+    this.profileImageUrl,
+    this.lastLogin,
+    this.address,
     required this.fcmTokens,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['_id'],
+      id: json['_id'] ?? '',
       name: json['name'] ?? '',
       phone: json['phone'] ?? '',
       role: json['role'] ?? '',
       isVerified: json['isVerified'] ?? false,
       isActive: json['isActive'] ?? false,
-      profileImage: json['profileImage'],
-      lastLogin: DateTime.parse(json['lastLogin']),
-      address: Address.fromJson(json['address'] ?? {}),
+
+      /// 🔥 FIX: read nested object
+      profileImageUrl: json['profileImage']?['url'],
+
+      /// 🔥 FIX: null-safe DateTime
+      lastLogin: json['lastLogin'] != null
+          ? DateTime.tryParse(json['lastLogin'])
+          : null,
+
+      /// 🔥 FIX: nullable address
+      address: json['address'] != null
+          ? Address.fromJson(json['address'])
+          : null,
+
       fcmTokens: (json['fcmTokens'] as List? ?? [])
           .map((e) => FcmToken.fromJson(e))
           .toList(),
     );
   }
 }
-
 class Address {
-  final String city;
-  final String state;
-  final String pincode;
+  final String? city;
+  final String? state;
+  final String? pincode;
 
-  Address({required this.city, required this.state, required this.pincode});
+  Address({
+    this.city,
+    this.state,
+    this.pincode,
+  });
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
-      city: json['city'] ?? '',
-      state: json['state'] ?? '',
-      pincode: json['pincode'] ?? '',
+      city: json['city'],
+      state: json['state'],
+      pincode: json['pincode'],
     );
   }
 }
-
 class FcmToken {
   final String? token;
   final String device;

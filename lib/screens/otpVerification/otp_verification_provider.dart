@@ -118,9 +118,10 @@ class OtpVerificationProvider extends ChangeNotifier with CodeAutoFill {
       );
 
       debugPrint("➡️ Navigating to BottomBar");
-      navigatorKey.currentState?.pushAndRemoveUntil(
+
+      Navigator.push(
+        context,
         MaterialPageRoute(builder: (_) => BottomBarView()),
-        (route) => false,
       );
     } catch (e) {
       debugPrint("🔥 OTP ERROR: $e");

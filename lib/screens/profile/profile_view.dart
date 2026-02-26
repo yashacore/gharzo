@@ -124,10 +124,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       /// 🔹 Profile Avatar
                       CircleAvatar(
                         radius: 47,
-
-                        child: const Icon(Icons.person, size: 40),
+                        backgroundColor: Colors.grey.shade300,
+                        backgroundImage:
+                            (value.profileImage != null &&
+                                value.profileImage!.isNotEmpty)
+                            ? NetworkImage(value.profileImage!)
+                            : null,
+                        child:
+                            (value.profileImage == null ||
+                                value.profileImage!.isEmpty)
+                            ? const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.white,
+                              )
+                            : null,
                       ),
-
                       const SizedBox(height: 12),
 
                       /// 🔹 Name + Edit
@@ -344,7 +356,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(height: 40),
                             PrimaryButton(
                               title: "Logout",
-                              onPressed: () => value.clickOnLogoutBtn(),
+                              onPressed: () async {
+                                await PrefService.logout(context);
+                              },
                             ),
                             const SizedBox(height: 40),
                           ],

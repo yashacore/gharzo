@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/model/user_model/user_model.dart';
+import 'package:gharzo_project/screens/login/login_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefService {
@@ -98,5 +99,37 @@ class PrefService {
 
   static String? getRoleSync() {
     return _prefs?.getString(roleKey);
+  }
+  static Future<void> logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    debugPrint('🚪 LOGOUT INITIATED');
+
+    // Optional: get values before clearing (for logs / API)
+    final token = prefs.getString(tokenKey);
+    final role = prefs.getString(roleKey);
+    final fcm = prefs.getString(_fcmTokenKey);
+
+    debugPrint('🔑 Token before logout: $token');
+    debugPrint('👤 Role before logout: $role');
+    debugPrint('📲 FCM before logout: $fcm');
+
+    // 🔥 Clear all auth-related data
+    await prefs.remove(tokenKey);
+    await prefs.remove(userKey);
+    await prefs.remove(roleKey);
+    await prefs.remove(_fcmTokenKey);
+
+    debugPrint('🗑️ Auth + FCM data cleared');
+
+    // 🔁 Navigate to Login (replace all routes)
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => LoginView()),
+      );
+    }
+
+    debugPrint('✅ Logout completed');
   }
 }
