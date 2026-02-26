@@ -18,9 +18,7 @@ class ReelSearchModel {
       id: json['_id'] ?? '',
       title: json['title'] ?? '',
       city: json['city'] ?? '',
-      tags: json['tags'] != null
-          ? List<String>.from(json['tags'])
-          : [],
+      tags: json['tags'] != null ? List<String>.from(json['tags']) : [],
       imageUrl: json['imageUrl'] ?? '',
     );
   }

@@ -25,7 +25,8 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Material( // ✅ REQUIRED
+    return Material(
+      // ✅ REQUIRED
       color: Colors.transparent,
       child: DraggableScrollableSheet(
         initialChildSize: 0.6,
@@ -54,10 +55,7 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
 
                 const Text(
                   "Comments",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
 
                 const Divider(height: 16),
@@ -67,9 +65,7 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
                   child: Consumer<ReelsFeedProvider>(
                     builder: (context, provider, _) {
                       if (provider.isCommentsLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (provider.comments.isEmpty) {
@@ -113,29 +109,19 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
         }
 
         return Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           color: Colors.grey.shade100,
           child: Row(
             children: [
               Expanded(
                 child: Text(
                   "Replying to ${provider.replyingToUser}",
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
               GestureDetector(
                 onTap: provider.cancelReply,
-                child: const Icon(
-                  Icons.close,
-                  size: 16,
-                  color: Colors.grey,
-                ),
+                child: const Icon(Icons.close, size: 16, color: Colors.grey),
               ),
             ],
           ),
@@ -156,9 +142,7 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade200),
-          ),
+          border: Border(top: BorderSide(color: Colors.grey.shade200)),
         ),
         child: Row(
           children: [
@@ -196,13 +180,13 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
               onTap: _controller.text.trim().isEmpty
                   ? null
                   : () {
-                provider.postComment(
-                  reelId: widget.reelId,
-                  text: _controller.text.trim(),
-                );
-                _controller.clear();
-                FocusScope.of(context).unfocus();
-              },
+                      provider.postComment(
+                        reelId: widget.reelId,
+                        text: _controller.text.trim(),
+                      );
+                      _controller.clear();
+                      FocusScope.of(context).unfocus();
+                    },
               child: Text(
                 "Post",
                 style: TextStyle(
@@ -219,17 +203,14 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
     );
   }
 
-
   List<Widget> _buildCommentsTree(
-      List<CommentModel> comments,
-      ReelsFeedProvider provider,
-      ) {
-    final mainComments =
-    comments.where((c) => c.parentId == null).toList();
+    List<CommentModel> comments,
+    ReelsFeedProvider provider,
+  ) {
+    final mainComments = comments.where((c) => c.parentId == null).toList();
 
     return mainComments.map((comment) {
-      final replies =
-      comments.where((r) => r.parentId == comment.id).toList();
+      final replies = comments.where((r) => r.parentId == comment.id).toList();
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,8 +221,9 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
               padding: const EdgeInsets.only(left: 46, top: 8),
               child: Column(
                 children: replies
-                    .map((reply) =>
-                    _commentTile(reply, provider, isReply: true))
+                    .map(
+                      (reply) => _commentTile(reply, provider, isReply: true),
+                    )
                     .toList(),
               ),
             ),
@@ -252,10 +234,10 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
   }
 
   Widget _commentTile(
-      CommentModel comment,
-      ReelsFeedProvider provider, {
-        required bool isReply,
-      }) {
+    CommentModel comment,
+    ReelsFeedProvider provider, {
+    required bool isReply,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -318,15 +300,10 @@ class _ReelCommentsSheetState extends State<ReelCommentsSheet> {
           /// LIKE ICON
           const Padding(
             padding: EdgeInsets.only(top: 4),
-            child: Icon(
-              Icons.favorite_border,
-              size: 14,
-              color: Colors.grey,
-            ),
+            child: Icon(Icons.favorite_border, size: 14, color: Colors.grey),
           ),
         ],
       ),
     );
   }
-
 }

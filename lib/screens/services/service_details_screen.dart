@@ -13,8 +13,9 @@ class ServiceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? image =
-    service.images.isNotEmpty ? service.images.first.url : null;
+    final String? image = service.images.isNotEmpty
+        ? service.images.first.url
+        : null;
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F6FA),
@@ -49,8 +50,11 @@ class ServiceDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(Icons.location_on,
-                              size: 14, color: Colors.grey),
+                          const Icon(
+                            Icons.location_on,
+                            size: 14,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             service.provider.city,
@@ -69,8 +73,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 26,
-                        backgroundColor:
-                        AppThemeColors().primary.withOpacity(.1),
+                        backgroundColor: AppThemeColors().primary.withOpacity(
+                          .1,
+                        ),
                         child: Icon(
                           Icons.business,
                           color: AppThemeColors().primary,
@@ -149,6 +154,7 @@ class ServiceDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _heroImage(String? image) {
     return Container(
       height: 240,
@@ -156,16 +162,11 @@ class ServiceDetailsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         image: image != null && image.isNotEmpty
-            ? DecorationImage(
-          image: NetworkImage(image),
-          fit: BoxFit.cover,
-        )
+            ? DecorationImage(image: NetworkImage(image), fit: BoxFit.cover)
             : null,
       ),
       child: image == null
-          ? const Center(
-        child: Icon(Icons.image, size: 48, color: Colors.grey),
-      )
+          ? const Center(child: Icon(Icons.image, size: 48, color: Colors.grey))
           : null,
     );
   }
@@ -175,10 +176,7 @@ class ServiceDetailsScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -215,10 +213,7 @@ class ServiceDetailsScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.08),
-              blurRadius: 12,
-            ),
+            BoxShadow(color: Colors.black.withOpacity(.08), blurRadius: 12),
           ],
         ),
         child: SafeArea(
@@ -248,7 +243,6 @@ class ServiceDetailsScreen extends StatelessWidget {
                       label: "WhatsApp",
                       color: const Color(0xFF25D366),
                       onTap: () async {
-
                         final uri = Uri.parse(
                           "https://wa.me/91$phone", // ✅ country code
                         );
@@ -262,7 +256,6 @@ class ServiceDetailsScreen extends StatelessWidget {
                           debugPrint("WhatsApp launch failed: $e");
                         }
                       },
-
                     ),
                   ),
                 ],
@@ -279,9 +272,8 @@ class ServiceDetailsScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => ServiceEnquiryScreen(
-                          serviceId: service.id,
-                        ),
+                        builder: (_) =>
+                            ServiceEnquiryScreen(serviceId: service.id),
                       ),
                     );
                   },
@@ -295,10 +287,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     "Send Enquiry",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -308,6 +297,7 @@ class ServiceDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _actionButton({
     required IconData icon,
     required String label,
@@ -330,16 +320,14 @@ class ServiceDetailsScreen extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(color: color, fontWeight: FontWeight.w600),
             ),
           ],
         ),
       ),
     );
   }
+
   Widget _actionButtonWithImage({
     required String imagePath,
     required String label,
@@ -358,24 +346,15 @@ class ServiceDetailsScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              height: 20,
-              width: 20,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(imagePath, height: 20, width: 20, fit: BoxFit.contain),
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(color: color, fontWeight: FontWeight.w600),
             ),
           ],
         ),
       ),
     );
   }
-
 }

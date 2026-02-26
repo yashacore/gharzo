@@ -1,5 +1,3 @@
-
-
 class HotelModel {
   final String id;
   final String name;
@@ -79,6 +77,7 @@ class HotelModel {
     );
   }
 }
+
 class LocationModel {
   final String address;
   final String city;
@@ -108,13 +107,12 @@ class LocationModel {
       landmark: json['landmark'] ?? '',
       pincode: json['pincode'] ?? '',
       state: json['state'] ?? '',
-      latitude:
-      (json['coordinates']?['latitude'] ?? 0).toDouble(),
-      longitude:
-      (json['coordinates']?['longitude'] ?? 0).toDouble(),
+      latitude: (json['coordinates']?['latitude'] ?? 0).toDouble(),
+      longitude: (json['coordinates']?['longitude'] ?? 0).toDouble(),
     );
   }
 }
+
 class ContactInfoModel {
   final String phone;
   final String alternatePhone;
@@ -140,6 +138,7 @@ class ContactInfoModel {
     );
   }
 }
+
 class PriceRangeModel {
   final int min;
   final int max;
@@ -159,6 +158,7 @@ class PriceRangeModel {
     );
   }
 }
+
 class RoomTypeModel {
   final String type;
   final int count;
@@ -184,6 +184,7 @@ class RoomTypeModel {
     );
   }
 }
+
 class AmenitiesModel {
   final List<String> basic;
   final List<String> dining;
@@ -212,6 +213,7 @@ class AmenitiesModel {
     );
   }
 }
+
 class PoliciesModel {
   final String checkIn;
   final String checkOut;
@@ -237,22 +239,18 @@ class PoliciesModel {
     );
   }
 }
+
 class ImageModel {
   final String url;
   final String category;
 
-  ImageModel({
-    required this.url,
-    required this.category,
-  });
+  ImageModel({required this.url, required this.category});
 
   factory ImageModel.fromJson(Map<String, dynamic> json) {
-    return ImageModel(
-      url: json['url'] ?? '',
-      category: json['category'] ?? '',
-    );
+    return ImageModel(url: json['url'] ?? '', category: json['category'] ?? '');
   }
 }
+
 class NearbyPlaceModel {
   final String name;
   final String type;
@@ -272,14 +270,12 @@ class NearbyPlaceModel {
     );
   }
 }
+
 class RatingModel {
   final double average;
   final int count;
 
-  RatingModel({
-    required this.average,
-    required this.count,
-  });
+  RatingModel({required this.average, required this.count});
 
   factory RatingModel.fromJson(Map<String, dynamic> json) {
     return RatingModel(
@@ -288,14 +284,12 @@ class RatingModel {
     );
   }
 }
+
 class StatsModel {
   final int views;
   final int enquiries;
 
-  StatsModel({
-    required this.views,
-    required this.enquiries,
-  });
+  StatsModel({required this.views, required this.enquiries});
 
   factory StatsModel.fromJson(Map<String, dynamic> json) {
     return StatsModel(

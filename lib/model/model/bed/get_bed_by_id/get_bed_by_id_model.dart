@@ -2,10 +2,7 @@ class GetBedByIdResponseModel {
   final bool success;
   final BedDetail data;
 
-  GetBedByIdResponseModel({
-    required this.success,
-    required this.data,
-  });
+  GetBedByIdResponseModel({required this.success, required this.data});
 
   factory GetBedByIdResponseModel.fromJson(Map<String, dynamic> json) {
     return GetBedByIdResponseModel(
@@ -207,18 +204,10 @@ class Landlord {
   final String name;
   final String phone;
 
-  Landlord({
-    required this.id,
-    required this.name,
-    required this.phone,
-  });
+  Landlord({required this.id, required this.name, required this.phone});
 
   factory Landlord.fromJson(Map<String, dynamic> json) {
-    return Landlord(
-      id: json['_id'],
-      name: json['name'],
-      phone: json['phone'],
-    );
+    return Landlord(id: json['_id'], name: json['name'], phone: json['phone']);
   }
 }
 
@@ -227,11 +216,7 @@ class BedSize {
   final int width;
   final String unit;
 
-  BedSize({
-    required this.length,
-    required this.width,
-    required this.unit,
-  });
+  BedSize({required this.length, required this.width, required this.unit});
 
   factory BedSize.fromJson(Map<String, dynamic> json) {
     return BedSize(
@@ -336,10 +321,7 @@ class Preferences {
   final String genderPreference;
   final String occupationType;
 
-  Preferences({
-    required this.genderPreference,
-    required this.occupationType,
-  });
+  Preferences({required this.genderPreference, required this.occupationType});
 
   factory Preferences.fromJson(Map<String, dynamic> json) {
     return Preferences(
@@ -353,15 +335,9 @@ class CreatedBy {
   final String userId;
   final String role;
 
-  CreatedBy({
-    required this.userId,
-    required this.role,
-  });
+  CreatedBy({required this.userId, required this.role});
 
   factory CreatedBy.fromJson(Map<String, dynamic> json) {
-    return CreatedBy(
-      userId: json['userId'],
-      role: json['role'],
-    );
+    return CreatedBy(userId: json['userId'], role: json['role']);
   }
 }

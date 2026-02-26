@@ -45,7 +45,7 @@ class User {
   final String role;
   final bool isVerified;
   final bool isActive;
-  final String? profileImage;
+  final ProfileImage? profileImage; // ✅ FIXED
   final DateTime lastLogin;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -73,7 +73,9 @@ class User {
       role: json['role'],
       isVerified: json['isVerified'],
       isActive: json['isActive'],
-      profileImage: json['profileImage'],
+      profileImage: json['profileImage'] != null
+          ? ProfileImage.fromJson(json['profileImage'])
+          : null,
       lastLogin: DateTime.parse(json['lastLogin']),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -89,11 +91,42 @@ class User {
       'role': role,
       'isVerified': isVerified,
       'isActive': isActive,
-      'profileImage': profileImage,
+      'profileImage': profileImage?.toJson(),
       'lastLogin': lastLogin.toIso8601String(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       '__v': v,
+    };
+  }
+}
+
+
+class ProfileImage {
+  final String? url;
+  final String? key;
+  final DateTime? uploadedAt;
+
+  ProfileImage({
+    this.url,
+    this.key,
+    this.uploadedAt,
+  });
+
+  factory ProfileImage.fromJson(Map<String, dynamic> json) {
+    return ProfileImage(
+      url: json['url'],
+      key: json['key'],
+      uploadedAt: json['uploadedAt'] != null
+          ? DateTime.parse(json['uploadedAt'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'url': url,
+      'key': key,
+      'uploadedAt': uploadedAt?.toIso8601String(),
     };
   }
 }

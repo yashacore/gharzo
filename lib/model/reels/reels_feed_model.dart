@@ -1,290 +1,204 @@
-import 'dart:convert';
+class Reel {
+  final String id;
+  final String videoUrl;
+  final String? caption;
 
-class ReelModel {
-  bool success;
-  int count;
-  int total;
-  int totalPages;
-  int currentPage;
-  List<ReelData> data;
+  final String? userName;
+  final String? userImage;
 
-  ReelModel({
-    required this.success,
-    required this.count,
-    required this.total,
-    required this.totalPages,
-    required this.currentPage,
-    required this.data,
+  final String? city;
+  final String? locality;
+
+  final int likesCount;
+  final int savesCount;
+  final int commentsCount;
+
+  final bool isLiked;
+  final bool isSaved;
+
+  Reel({
+    required this.id,
+    required this.videoUrl,
+    this.caption,
+    this.userName,
+    this.userImage,
+    this.city,
+    this.locality,
+    required this.likesCount,
+    required this.savesCount,
+    required this.commentsCount,
+    required this.isLiked,
+    required this.isSaved,
   });
 
-  factory ReelModel.fromJson(Map<String, dynamic> json) {
-    return ReelModel(
-      success: json['success'],
-      count: json['count'],
-      total: json['total'],
-      totalPages: json['totalPages'],
-      currentPage: json['currentPage'],
-      data: (json['data'] as List)
-          .map((e) => ReelData.fromJson(e))
-          .toList(),
+  /// ✅ FROM JSON
+  factory Reel.fromJson(Map<String, dynamic> json) {
+    return Reel(
+      id: json['_id'],
+      videoUrl: json['videoUrl'],
+      caption: json['caption'],
+      userName: json['uploadedBy']?['name'],
+      userImage: json['uploadedBy']?['profileImage']?['url'],
+      city: json['location']?['city'],
+      locality: json['location']?['locality'],
+      likesCount: json['likes'] ?? 0,
+      savesCount: json['saves'] ?? 0,
+      commentsCount: json['comments'] ?? 0,
+      isLiked: json['isLiked'] ?? false, // backend dependent
+      isSaved: json['isSaved'] ?? false, // backend dependent
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'count': count,
-      'total': total,
-      'totalPages': totalPages,
-      'currentPage': currentPage,
-      'data': data.map((e) => e.toJson()).toList(),
-    };
+  /// ✅ COPY WITH (THIS FIXES YOUR ERROR)
+  Reel copyWith({
+    String? id,
+    String? videoUrl,
+    String? caption,
+    String? userName,
+    String? userImage,
+    String? city,
+    String? locality,
+    int? likesCount,
+    int? savesCount,
+    int? commentsCount,
+    bool? isLiked,
+    bool? isSaved,
+  }) {
+    return Reel(
+      id: id ?? this.id,
+      videoUrl: videoUrl ?? this.videoUrl,
+      caption: caption ?? this.caption,
+      userName: userName ?? this.userName,
+      userImage: userImage ?? this.userImage,
+      city: city ?? this.city,
+      locality: locality ?? this.locality,
+      likesCount: likesCount ?? this.likesCount,
+      savesCount: savesCount ?? this.savesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      isLiked: isLiked ?? this.isLiked,
+      isSaved: isSaved ?? this.isSaved,
+    );
+  }
+}class ReelsFeedResponse {
+  final List<Reel> data;
+  final int currentPage;
+  final int totalPages;
+
+  ReelsFeedResponse({
+    required this.data,
+    required this.currentPage,
+    required this.totalPages,
+  });
+
+  factory ReelsFeedResponse.fromJson(Map<String, dynamic> json) {
+    return ReelsFeedResponse(
+      data: (json['data'] as List? ?? [])
+          .map((e) => Reel.fromJson(e))
+          .toList(),
+      currentPage: json['currentPage'] ?? 1,
+      totalPages: json['totalPages'] ?? 1,
+    );
+  }
+
+  factory ReelsFeedResponse.empty() {
+    return ReelsFeedResponse(
+      data: const [],
+      currentPage: 1,
+      totalPages: 1,
+    );
   }
 }
+class ReelModel {
+  final String id;
+  final ReelProperty? property;
+  final ReelUser uploadedBy;
+  final String videoUrl;
+  final String caption;
+  final List<String> tags;
+  final int duration;
+  final int views;
+  final int likes;
+  final int saves;
+  final int shares;
+  final int comments;
+  final String status;
+  final DateTime createdAt;
 
-class ReelData {
-  String id;
-  Property property;
-  UploadedBy uploadedBy;
-  String videoUrl;
-  String videoKey;
-  String? caption;
-  List<String>? tags;
-  int duration;
-  int views;
-  int likes;
-  int saves;
-  int shares;
-  int comments;
-
-  ReelData({
+  ReelModel({
     required this.id,
     required this.property,
     required this.uploadedBy,
     required this.videoUrl,
-    required this.videoKey,
-    this.caption,
-    this.tags,
+    required this.caption,
+    required this.tags,
     required this.duration,
     required this.views,
     required this.likes,
     required this.saves,
     required this.shares,
     required this.comments,
+    required this.status,
+    required this.createdAt,
   });
 
-  factory ReelData.fromJson(Map<String, dynamic> json) {
-    return ReelData(
+  factory ReelModel.fromJson(Map<String, dynamic> json) {
+    return ReelModel(
       id: json['_id'],
-      property: Property.fromJson(json['propertyId']),
-      uploadedBy: UploadedBy.fromJson(json['uploadedBy']),
+      property: json['propertyId'] != null
+          ? ReelProperty.fromJson(json['propertyId'])
+          : null,
+      uploadedBy: ReelUser.fromJson(json['uploadedBy']),
       videoUrl: json['videoUrl'],
-      videoKey: json['videoKey'],
-      caption: json['caption'],
-      tags: json['tags'] != null ? List<String>.from(json['tags']) : null,
-      duration: json['duration'],
-      views: json['views'],
-      likes: json['likes'],
-      saves: json['saves'],
-      shares: json['shares'],
-      comments: json['comments'],
+      caption: json['caption'] ?? '',
+      tags: List<String>.from(json['tags'] ?? []),
+      duration: json['duration'] ?? 0,
+      views: json['views'] ?? 0,
+      likes: json['likes'] ?? 0,
+      saves: json['saves'] ?? 0,
+      shares: json['shares'] ?? 0,
+      comments: json['comments'] ?? 0,
+      status: json['status'] ?? '',
+      createdAt: DateTime.parse(json['createdAt']),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'propertyId': property.toJson(),
-      'uploadedBy': uploadedBy.toJson(),
-      'videoUrl': videoUrl,
-      'videoKey': videoKey,
-      'caption': caption,
-      'tags': tags,
-      'duration': duration,
-      'views': views,
-      'likes': likes,
-      'saves': saves,
-      'shares': shares,
-      'comments': comments,
-    };
   }
 }
 
-class Property {
-  String id;
-  String listingType;
-  Price price;
-  String title;
-  Location location;
-  List<PropertyImage> images;
+class ReelProperty {
+  final String id;
+  final String title;
+  final String listingType;
 
-  Property({
+  ReelProperty({
     required this.id,
-    required this.listingType,
-    required this.price,
     required this.title,
-    required this.location,
-    required this.images,
+    required this.listingType,
   });
 
-  factory Property.fromJson(Map<String, dynamic> json) {
-    return Property(
+  factory ReelProperty.fromJson(Map<String, dynamic> json) {
+    return ReelProperty(
       id: json['_id'],
-      listingType: json['listingType'],
-      price: Price.fromJson(json['price']),
-      title: json['title'],
-      location: Location.fromJson(json['location']),
-      images: (json['images'] as List)
-          .map((e) => PropertyImage.fromJson(e))
-          .toList(),
+      title: json['title'] ?? '',
+      listingType: json['listingType'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'listingType': listingType,
-      'price': price.toJson(),
-      'title': title,
-      'location': location.toJson(),
-      'images': images.map((e) => e.toJson()).toList(),
-    };
   }
 }
 
-class Price {
-  int amount;
-  String per;
-  bool negotiable;
-  int pricePerSqft;
-  int securityDeposit;
+class ReelUser {
+  final String id;
+  final String name;
+  final String? profileImage;
 
-  Price({
-    required this.amount,
-    required this.per,
-    required this.negotiable,
-    required this.pricePerSqft,
-    required this.securityDeposit,
+  ReelUser({
+    required this.id,
+    required this.name,
+    this.profileImage,
   });
 
-  factory Price.fromJson(Map<String, dynamic> json) {
-    return Price(
-      amount: json['amount'],
-      per: json['per'],
-      negotiable: json['negotiable'],
-      pricePerSqft: json['pricePerSqft'],
-      securityDeposit: json['securityDeposit'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'amount': amount,
-      'per': per,
-      'negotiable': negotiable,
-      'pricePerSqft': pricePerSqft,
-      'securityDeposit': securityDeposit,
-    };
-  }
-}
-
-class PropertyImage {
-  String url;
-  bool isPrimary;
-
-  PropertyImage({required this.url, required this.isPrimary});
-
-  factory PropertyImage.fromJson(Map<String, dynamic> json) {
-    return PropertyImage(
-      url: json['url'],
-      isPrimary: json['isPrimary'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'url': url,
-      'isPrimary': isPrimary,
-    };
-  }
-}
-
-class Location {
-  String city;
-  String locality;
-  String address;
-
-  Location({required this.city, required this.locality, required this.address});
-
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      city: json['city'],
-      locality: json['locality'],
-      address: json['address'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'city': city,
-      'locality': locality,
-      'address': address,
-    };
-  }
-}
-
-class UploadedBy {
-  String id;
-  String name;
-
-  UploadedBy({required this.id, required this.name});
-
-  factory UploadedBy.fromJson(Map<String, dynamic> json) {
-    return UploadedBy(
+  factory ReelUser.fromJson(Map<String, dynamic> json) {
+    return ReelUser(
       id: json['_id'],
-      name: json['name'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'name': name,
-    };
-  }
-}
-
-
-class PropertyLocation {
-  final String city;
-  final String locality;
-
-  PropertyLocation({
-    required this.city,
-    required this.locality,
-  });
-
-  factory PropertyLocation.fromJson(Map<String, dynamic> json) {
-    return PropertyLocation(
-      city: json['city'],
-      locality: json['locality'],
-    );
-  }
-}
-
-class ReelLocation {
-  final String city;
-  final String locality;
-
-  ReelLocation({
-    required this.city,
-    required this.locality,
-  });
-
-  factory ReelLocation.fromJson(Map<String, dynamic> json) {
-    return ReelLocation(
-      city: json['city'],
-      locality: json['locality'],
+      name: json['name'] ?? '',
+      profileImage: json['profileImage']?['url'],
     );
   }
 }

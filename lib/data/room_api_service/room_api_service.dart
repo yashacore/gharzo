@@ -14,15 +14,12 @@ import 'package:gharzo_project/model/room/update_room_image/update_room_image_mo
 import 'package:http/http.dart' as http;
 import 'package:gharzo_project/common/api_constant/api_constant.dart';
 
-
 class RoomApiService {
-
   static Future<List<RoomDetail>> getRoomsByPropertyId(
-      String propertyId) async {
-
+    String propertyId,
+  ) async {
     final response = await http.get(
-      Uri.parse(
-          "https://api.gharzoreality.com/api/rooms/property/$propertyId"),
+      Uri.parse("https://api.gharzoreality.com/api/rooms/property/$propertyId"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer Token",
@@ -39,14 +36,11 @@ class RoomApiService {
     }
   }
 
-
   //------------Create room with image
   static Future<RoomModel> createRoom(Map<String, dynamic> payload) async {
     final response = await http.post(
       Uri.parse("https://api.gharzoreality.com/api/rooms/create"),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: {"Content-Type": "application/json"},
       body: jsonEncode(payload),
     );
 
@@ -61,10 +55,9 @@ class RoomApiService {
 
   /* ---------- 2. Bulk Create Rooms ---------- */
   Future<BulkCreateRoomResponse> bulkCreateRooms(
-      BulkCreateRoomRequestModel request,
-      String token,
-      ) async {
-
+    BulkCreateRoomRequestModel request,
+    String token,
+  ) async {
     final response = await http.post(
       Uri.parse("https://api.gharzoreality.com/api/rooms/bulk-create"),
       headers: {
@@ -111,9 +104,7 @@ class RoomApiService {
     final body = jsonDecode(response.body);
 
     if (body['success'] == true) {
-      return (body['data'] as List)
-          .map((e) => RoomModel.fromJson(e))
-          .toList();
+      return (body['data'] as List).map((e) => RoomModel.fromJson(e)).toList();
     } else {
       throw Exception("Failed to fetch rooms");
     }
@@ -141,7 +132,6 @@ class RoomApiService {
     }
   }
 
-
   Future<RoomSearchResponse> filterByRentRange({
     String? city,
     String? roomType,
@@ -159,8 +149,9 @@ class RoomApiService {
       "limit": limit.toString(),
     };
 
-    final uri = Uri.parse("https://api.gharzoreality.com/api/rooms/available/search")
-        .replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      "https://api.gharzoreality.com/api/rooms/available/search",
+    ).replace(queryParameters: queryParams);
 
     final response = await http.get(uri);
     final body = jsonDecode(response.body);
@@ -172,8 +163,7 @@ class RoomApiService {
     }
   }
 
-
-//----------------filter by gender and furnishing
+  //----------------filter by gender and furnishing
 
   Future<RoomSearchResponse> genderByFurnishing({
     String? genderPreference,
@@ -182,29 +172,25 @@ class RoomApiService {
     int limit = 10,
   }) async {
     final queryParams = {
-      if (genderPreference != null)
-        "genderPreference": genderPreference,
-      if (furnished != null)
-        "furnished": furnished,
+      if (genderPreference != null) "genderPreference": genderPreference,
+      if (furnished != null) "furnished": furnished,
       "page": page.toString(),
       "limit": limit.toString(),
     };
 
-    final uri = Uri.parse("https://api.gharzoreality.com/api/rooms/available/search")
-        .replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      "https://api.gharzoreality.com/api/rooms/available/search",
+    ).replace(queryParameters: queryParams);
 
     final response = await http.get(uri);
     final body = jsonDecode(response.body);
 
-    if (response.statusCode == 200 &&
-        body['success'] == true) {
+    if (response.statusCode == 200 && body['success'] == true) {
       return RoomSearchResponse.fromJson(body);
     } else {
-      throw Exception(
-          body['message'] ?? "Failed to fetch rooms");
+      throw Exception(body['message'] ?? "Failed to fetch rooms");
     }
   }
-
 
   //---------------------combined filter
   Future<RoomSearchResponse> combinedFilters({
@@ -218,39 +204,30 @@ class RoomApiService {
     int limit = 10,
   }) async {
     final queryParams = {
-      if (city != null && city.isNotEmpty)
-        "city": city,
-      if (locality != null && locality.isNotEmpty)
-        "locality": locality,
-      if (roomType != null && roomType.isNotEmpty)
-        "roomType": roomType,
-      if (minRent != null)
-        "minRent": minRent.toString(),
-      if (maxRent != null)
-        "maxRent": maxRent.toString(),
-      if (genderPreference != null &&
-          genderPreference.isNotEmpty)
+      if (city != null && city.isNotEmpty) "city": city,
+      if (locality != null && locality.isNotEmpty) "locality": locality,
+      if (roomType != null && roomType.isNotEmpty) "roomType": roomType,
+      if (minRent != null) "minRent": minRent.toString(),
+      if (maxRent != null) "maxRent": maxRent.toString(),
+      if (genderPreference != null && genderPreference.isNotEmpty)
         "genderPreference": genderPreference,
       "page": page.toString(),
       "limit": limit.toString(),
     };
 
     final uri = Uri.parse(
-        "https://api.gharzoreality.com/api/rooms/available/search")
-        .replace(queryParameters: queryParams);
+      "https://api.gharzoreality.com/api/rooms/available/search",
+    ).replace(queryParameters: queryParams);
 
     final response = await http.get(uri);
     final body = jsonDecode(response.body);
 
-    if (response.statusCode == 200 &&
-        body['success'] == true) {
+    if (response.statusCode == 200 && body['success'] == true) {
       return RoomSearchResponse.fromJson(body);
     } else {
-      throw Exception(
-          body['message'] ?? "Failed to fetch rooms");
+      throw Exception(body['message'] ?? "Failed to fetch rooms");
     }
   }
-
 
   //-----------------update room
   static Future<UpdateRoomResponseModel> updateRoom({
@@ -275,7 +252,6 @@ class RoomApiService {
     }
   }
 
-
   //-----------------Update room image
 
   static Future<UpdateRoomImagesResponseModel> updateRoomImages({
@@ -290,9 +266,7 @@ class RoomApiService {
     });
 
     for (var img in images) {
-      request.files.add(
-        await http.MultipartFile.fromPath("images", img.path),
-      );
+      request.files.add(await http.MultipartFile.fromPath("images", img.path));
     }
 
     final streamedResponse = await request.send();
@@ -346,7 +320,6 @@ class RoomApiService {
       throw Exception(data['message'] ?? "Room delete failed");
     }
   }
-
 
   // get room details
   static Future<RoomDetailModel> getPropertyById(String id) async {

@@ -6,13 +6,11 @@ import 'package:gharzo_project/utils/theme/colors.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class ChannelPartnerFormView extends StatefulWidget {
   const ChannelPartnerFormView({super.key});
 
   @override
-  State<ChannelPartnerFormView> createState() =>
-      _ChannelPartnerFormViewState();
+  State<ChannelPartnerFormView> createState() => _ChannelPartnerFormViewState();
 }
 
 class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
@@ -46,9 +44,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
         "phone": controllers["phone"]!.text.trim(),
         "email": controllers["email"]!.text.trim(),
       },
-      "channelPartnerDetails": {
-        "companyName": companyName,
-      },
+      "channelPartnerDetails": {"companyName": companyName},
       "message": "Channel Partner Inquiry from $companyName",
     };
 
@@ -61,8 +57,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
       builder: (_) => const Center(child: CircularProgressIndicator()),
     );
 
-    final success =
-    await ChannelPartnerService.submitChannelPartner(payload);
+    final success = await ChannelPartnerService.submitChannelPartner(payload);
 
     Navigator.pop(context); // close loader
 
@@ -78,8 +73,9 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: PrimaryButton(title: "Submit",
-        onPressed: () async =>_submitForm(),
+        child: PrimaryButton(
+          title: "Submit",
+          onPressed: () async => _submitForm(),
         ),
       ),
 
@@ -89,14 +85,14 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
         onPressed: () {
           Navigator.pop(context);
         },
-      ),      body: SingleChildScrollView(
+      ),
+      body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-
               /// 🔥 TOP CARD
               _headerCard(),
 
@@ -110,8 +106,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
                     keyName: "name",
                     label: "Full Name",
                     icon: Icons.person_outline,
-                    validator: (v) =>
-                    v!.isEmpty ? "Name required" : null,
+                    validator: (v) => v!.isEmpty ? "Name required" : null,
                   ),
                   _dynamicField(
                     keyName: "phone",
@@ -119,7 +114,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
                     icon: Icons.phone_outlined,
                     keyboardType: TextInputType.phone,
                     validator: (v) =>
-                    v!.length != 10 ? "Enter valid phone" : null,
+                        v!.length != 10 ? "Enter valid phone" : null,
                   ),
                   _dynamicField(
                     keyName: "email",
@@ -127,7 +122,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
                     icon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                     validator: (v) =>
-                    !v!.contains("@") ? "Enter valid email" : null,
+                        !v!.contains("@") ? "Enter valid email" : null,
                   ),
                 ],
               ),
@@ -142,8 +137,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
                     keyName: "company",
                     label: "Company Name",
                     icon: Icons.business_outlined,
-                    validator: (v) =>
-                    v!.isEmpty ? "Company required" : null,
+                    validator: (v) => v!.isEmpty ? "Company required" : null,
                   ),
                 ],
               ),
@@ -202,20 +196,14 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
           SizedBox(height: 8),
           Text(
             "Partner with us and grow your real estate business",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.white70, fontSize: 14),
           ),
         ],
       ),
     );
   }
 
-  Widget _formCard({
-    required String title,
-    required List<Widget> children,
-  }) {
+  Widget _formCard({required String title, required List<Widget> children}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -234,10 +222,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           ...children,
@@ -264,20 +249,16 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: AppThemeColors().primary,
-              width: 1.4,
-            ),
+            borderSide: BorderSide(color: AppThemeColors().primary, width: 1.4),
           ),
         ),
       ),
     );
   }
+
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -316,10 +297,7 @@ class _ChannelPartnerFormViewState extends State<ChannelPartnerFormView> {
       ),
     );
   }
-
 }
-
-
 
 class ChannelPartnerService {
   static const String _baseUrl =
@@ -329,9 +307,7 @@ class ChannelPartnerService {
     try {
       final response = await http.post(
         Uri.parse(_baseUrl),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(payload),
       );
 

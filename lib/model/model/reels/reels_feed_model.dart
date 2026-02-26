@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ReelModel {
   bool success;
   int count;
@@ -24,9 +22,7 @@ class ReelModel {
       total: json['total'],
       totalPages: json['totalPages'],
       currentPage: json['currentPage'],
-      data: (json['data'] as List)
-          .map((e) => ReelData.fromJson(e))
-          .toList(),
+      data: (json['data'] as List).map((e) => ReelData.fromJson(e)).toList(),
     );
   }
 
@@ -195,17 +191,11 @@ class PropertyImage {
   PropertyImage({required this.url, required this.isPrimary});
 
   factory PropertyImage.fromJson(Map<String, dynamic> json) {
-    return PropertyImage(
-      url: json['url'],
-      isPrimary: json['isPrimary'],
-    );
+    return PropertyImage(url: json['url'], isPrimary: json['isPrimary']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'url': url,
-      'isPrimary': isPrimary,
-    };
+    return {'url': url, 'isPrimary': isPrimary};
   }
 }
 
@@ -225,11 +215,7 @@ class Location {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'city': city,
-      'locality': locality,
-      'address': address,
-    };
+    return {'city': city, 'locality': locality, 'address': address};
   }
 }
 
@@ -240,35 +226,22 @@ class UploadedBy {
   UploadedBy({required this.id, required this.name});
 
   factory UploadedBy.fromJson(Map<String, dynamic> json) {
-    return UploadedBy(
-      id: json['_id'],
-      name: json['name'],
-    );
+    return UploadedBy(id: json['_id'], name: json['name']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'name': name,
-    };
+    return {'_id': id, 'name': name};
   }
 }
-
 
 class PropertyLocation {
   final String city;
   final String locality;
 
-  PropertyLocation({
-    required this.city,
-    required this.locality,
-  });
+  PropertyLocation({required this.city, required this.locality});
 
   factory PropertyLocation.fromJson(Map<String, dynamic> json) {
-    return PropertyLocation(
-      city: json['city'],
-      locality: json['locality'],
-    );
+    return PropertyLocation(city: json['city'], locality: json['locality']);
   }
 }
 
@@ -276,15 +249,9 @@ class ReelLocation {
   final String city;
   final String locality;
 
-  ReelLocation({
-    required this.city,
-    required this.locality,
-  });
+  ReelLocation({required this.city, required this.locality});
 
   factory ReelLocation.fromJson(Map<String, dynamic> json) {
-    return ReelLocation(
-      city: json['city'],
-      locality: json['locality'],
-    );
+    return ReelLocation(city: json['city'], locality: json['locality']);
   }
 }

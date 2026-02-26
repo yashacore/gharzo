@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:gharzo_project/common/api_constant/api_service_method.dart';
 import 'package:gharzo_project/common/http/http_method.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/model/add_property_type/city_model.dart';
-import 'package:gharzo_project/screens/add_properties/property_feature/property_feture_view.dart';
 
 class LocationProvider extends ChangeNotifier {
   bool loading = false;
   bool cityLoading = false;
   bool localityLoading = false;
   String? error;
+
+  // 🔥 CONTROLLERS (IMPORTANT)
+  final addressCtrl = TextEditingController();
+  final pinCodeCtrl = TextEditingController();
+  final stateCtrl = TextEditingController();
+  final landmarkCtrl = TextEditingController();
+  final subLocalityCtrl = TextEditingController();
+  final latCtrl = TextEditingController();
+  final lngCtrl = TextEditingController();
+
+  List<CityModel> cities = [];
+  List<LocalityModel> localities = [];
+
+  CityModel? selectedCity;
+  LocalityModel? selectedLocality;
 
   String address = "";
   String pinCode = "";
@@ -17,12 +33,6 @@ class LocationProvider extends ChangeNotifier {
   String subLocality = "";
   double latitude = 0;
   double longitude = 0;
-
-  List<CityModel> cities = [];
-  List<LocalityModel> localities = [];
-
-  CityModel? selectedCity;
-  LocalityModel? selectedLocality;
 
   // ---------------- FETCH CITIES ----------------
   Future<void> fetchCities() async {
@@ -72,39 +82,76 @@ class LocationProvider extends ChangeNotifier {
   }
 
   // ---------------- VALIDATION ----------------
-  bool validate() {
-    if (selectedCity == null) return _err("City required");
-    if (selectedLocality == null) return _err("Locality required");
-    if (address.isEmpty) return _err("Address required");
-    if (pinCode.isEmpty) return _err("Pincode required");
-    return true;
+  // bool validate() {
+  //   if (selectedCity == null) return _err("City required");
+  //   if (selectedLocality == null) return _err("Locality required");
+  //   if (address.isEmpty) return _err("Address required");
+  //   if (pinCode.isEmpty) return _err("Pincode required");
+  //   return true;
+  // }
+
+
+
+  Future<void> load(String propertyId) async {
+    await fetchCities();
+    // await loadProperty(propertyId);
   }
 
-  bool _err(String msg) {
-    error = msg;
-    notifyListeners();
-    return false;
+  Future<void> loadProperty(String propertyId) async {
+    try {
+      final res = await ApiServiceMethod.getPropertyById(propertyId);
+      if (res['success'] != true) return;
+
+      final loc = res['data']['location'] ?? {};
+
+      addressCtrl.text = loc['address'] ?? "";
+      pinCodeCtrl.text = loc['pincode'] ?? "";
+      stateCtrl.text = loc['state'] ?? "";
+      landmarkCtrl.text = loc['landmark'] ?? "";
+      subLocalityCtrl.text = loc['subLocality'] ?? "";
+
+      if (loc['coordinates'] != null) {
+        latCtrl.text = loc['coordinates']['latitude']?.toString() ?? "";
+        lngCtrl.text = loc['coordinates']['longitude']?.toString() ?? "";
+      }
+
+      // City selection
+      if (loc['city'] != null) {
+        selectedCity = cities.firstWhere((c) => c.name == loc['city']);
+        await fetchLocalities(selectedCity!.name);
+      }
+
+      // Locality selection
+      if (loc['locality'] != null) {
+        selectedLocality = localities.firstWhere(
+          (l) => l.name == loc['locality'],
+        );
+      }
+
+      notifyListeners();
+    } catch (e) {
+      error = "Failed to load location";
+    }
   }
 
-  // ---------------- SUBMIT ----------------
   Future<bool> submit(String propertyId) async {
-    if (!validate()) return false;
+    // if (!validate()) return false;
 
     loading = true;
     error = null;
     notifyListeners();
 
     final body = {
-      "address": address,
-      "city": selectedCity!.name,
-      "locality": selectedLocality!.name,
-      "subLocality": subLocality,
-      "landmark": landmark,
-      "pincode": pinCode,
-      "state": state,
+      "address": addressCtrl.text,
+      "city": selectedCity?.name,
+      "locality": selectedLocality?.name,
+      "subLocality": subLocalityCtrl.text,
+      "landmark": landmarkCtrl.text,
+      "pincode": pinCodeCtrl.text,
+      "state": stateCtrl.text,
       "coordinates": {
-        "latitude": latitude,
-        "longitude": longitude,
+        "latitude": double.tryParse(latCtrl.text),
+        "longitude": double.tryParse(lngCtrl.text),
       },
     };
 
@@ -136,10 +183,54 @@ class LocationProvider extends ChangeNotifier {
     }
   }
 
-  void clickOnBtn(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => PropertyFeatureView(propertyId: '')),
-    );
+  Future<void> setFromMap(Map<String, dynamic> data) async {
+    latitude = data['latitude'];
+    longitude = data['longitude'];
+
+    latCtrl.text = latitude.toString();
+    lngCtrl.text = longitude.toString();
+
+    try {
+      final placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+      if (placemarks.isNotEmpty) {
+        final p = placemarks.first;
+
+        // ✅ ADDRESS
+        addressCtrl.text = "${p.street ?? ""}, ${p.subLocality ?? ""}".trim();
+
+        // ✅ STATE
+        stateCtrl.text = p.administrativeArea ?? "";
+
+        // ✅ PINCODE
+        pinCodeCtrl.text = p.postalCode ?? "";
+
+        // ✅ CITY AUTO SELECT
+        final cityName = p.locality ?? p.subAdministrativeArea;
+
+        if (cityName != null) {
+          final city = cities.firstWhere(
+            (c) => c.name.toLowerCase() == cityName.toLowerCase(),
+            orElse: () => cities.first,
+          );
+
+          selectedCity = city;
+          await fetchLocalities(city.name);
+        }
+
+        // ✅ LOCALITY AUTO SELECT
+        final localityName = p.subLocality;
+        if (localityName != null && localities.isNotEmpty) {
+          selectedLocality = localities.firstWhere(
+            (l) => l.name.toLowerCase() == localityName.toLowerCase(),
+            orElse: () => localities.first,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint("❌ Reverse geocoding failed: $e");
+    }
+
+    notifyListeners();
   }
 }

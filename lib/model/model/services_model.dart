@@ -33,22 +33,18 @@ class ServicesResponse {
     );
   }
 }
+
 class ServiceCategory {
   final String id;
   final int count;
 
-  ServiceCategory({
-    required this.id,
-    required this.count,
-  });
+  ServiceCategory({required this.id, required this.count});
 
   factory ServiceCategory.fromJson(Map<String, dynamic> json) {
-    return ServiceCategory(
-      id: json['_id'],
-      count: json['count'],
-    );
+    return ServiceCategory(id: json['_id'], count: json['count']);
   }
 }
+
 class ServiceModel {
   final String id;
   final String serviceName;
@@ -85,16 +81,13 @@ class ServiceModel {
     );
   }
 }
+
 class Pricing {
   final int amount;
   final String type;
   final String currency;
 
-  Pricing({
-    required this.amount,
-    required this.type,
-    required this.currency,
-  });
+  Pricing({required this.amount, required this.type, required this.currency});
 
   factory Pricing.fromJson(Map<String, dynamic> json) {
     return Pricing(
@@ -104,6 +97,7 @@ class Pricing {
     );
   }
 }
+
 class ProviderInfo {
   final String companyName;
   final String city;
@@ -123,14 +117,12 @@ class ProviderInfo {
     );
   }
 }
+
 class ServiceImage {
   final String url;
   final bool isPrimary;
 
-  ServiceImage({
-    required this.url,
-    required this.isPrimary,
-  });
+  ServiceImage({required this.url, required this.isPrimary});
 
   factory ServiceImage.fromJson(Map<String, dynamic> json) {
     return ServiceImage(

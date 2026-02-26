@@ -21,8 +21,7 @@ class _LoanScreenState extends State<LoanScreen> {
   double get emi {
     final r = interest / 12 / 100;
     final n = tenure * 12;
-    return (loanAmount * r * pow(1 + r, n)) /
-        (pow(1 + r, n) - 1);
+    return (loanAmount * r * pow(1 + r, n)) / (pow(1 + r, n) - 1);
   }
 
   double get totalPayment => emi * tenure * 12;
@@ -46,48 +45,39 @@ class _LoanScreenState extends State<LoanScreen> {
             _infoCard(),
 
             /// 📊 EMI Calculator
-            _section(
-              "EMI Calculator",
-              [
-                _slider(
-                  "Loan Amount (₹)",
-                  loanAmount,
-                  500000,
-                  10000000,
-                      (v) => setState(() => loanAmount = v),
-                ),
-                _slider(
-                  "Interest Rate (%)",
-                  interest,
-                  5,
-                  15,
-                      (v) => setState(() => interest = v),
-                ),
-                _slider(
-                  "Tenure (Years)",
-                  tenure.toDouble(),
-                  5,
-                  30,
-                      (v) =>
-                      setState(() => tenure = v.toInt()),
-                ),
-              ],
-            ),
+            _section("EMI Calculator", [
+              _slider(
+                "Loan Amount (₹)",
+                loanAmount,
+                500000,
+                10000000,
+                (v) => setState(() => loanAmount = v),
+              ),
+              _slider(
+                "Interest Rate (%)",
+                interest,
+                5,
+                15,
+                (v) => setState(() => interest = v),
+              ),
+              _slider(
+                "Tenure (Years)",
+                tenure.toDouble(),
+                5,
+                30,
+                (v) => setState(() => tenure = v.toInt()),
+              ),
+            ]),
 
             /// 💰 EMI Result
             _emiCard(),
 
             /// 📈 Payment Breakdown
-            _section(
-              "Payment Breakdown",
-              [
-                _breakdownRow("Monthly EMI", emi),
-                _breakdownRow(
-                    "Total Interest", totalInterest),
-                _breakdownRow(
-                    "Total Payment", totalPayment),
-              ],
-            ),
+            _section("Payment Breakdown", [
+              _breakdownRow("Monthly EMI", emi),
+              _breakdownRow("Total Interest", totalInterest),
+              _breakdownRow("Total Payment", totalPayment),
+            ]),
 
             const SizedBox(height: 24),
 
@@ -95,12 +85,11 @@ class _LoanScreenState extends State<LoanScreen> {
             PrimaryButton(
               title: "Apply for Home Loan",
               onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                    const HomeLoanEnquiryScreen(),
-                  ),
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const HomeLoanEnquiryScreen(),
                 ),
+              ),
             ),
           ],
         ),
@@ -147,10 +136,7 @@ class _LoanScreenState extends State<LoanScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.05),
-            blurRadius: 10,
-          ),
+          BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 10),
         ],
       ),
       child: Column(
@@ -158,10 +144,7 @@ class _LoanScreenState extends State<LoanScreen> {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           ...children,
@@ -171,12 +154,12 @@ class _LoanScreenState extends State<LoanScreen> {
   }
 
   Widget _slider(
-      String label,
-      double value,
-      double min,
-      double max,
-      ValueChanged<double> onChanged,
-      ) {
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -184,12 +167,7 @@ class _LoanScreenState extends State<LoanScreen> {
           "$label: ${value.toStringAsFixed(0)}",
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
-        Slider(
-          value: value,
-          min: min,
-          max: max,
-          onChanged: onChanged,
-        ),
+        Slider(value: value, min: min, max: max, onChanged: onChanged),
       ],
     );
   }
@@ -204,17 +182,11 @@ class _LoanScreenState extends State<LoanScreen> {
       ),
       child: Column(
         children: [
-          const Text(
-            "Monthly EMI",
-            style: TextStyle(fontSize: 15),
-          ),
+          const Text("Monthly EMI", style: TextStyle(fontSize: 15)),
           const SizedBox(height: 8),
           Text(
             "₹${emi.toStringAsFixed(0)}",
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -230,8 +202,7 @@ class _LoanScreenState extends State<LoanScreen> {
           Text(label),
           Text(
             "₹${value.toStringAsFixed(0)}",
-            style:
-            const TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ],
       ),

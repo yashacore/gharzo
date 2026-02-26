@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gharzo_project/data/room_api_service/room_api_service.dart';
 
 import '../../../model/room/get_all_room/get_all_room_model.dart';
-
 
 class AllRoomsProvider with ChangeNotifier {
   List<AllRoomModel> _rooms = [];

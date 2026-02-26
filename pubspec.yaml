@@ -26,14 +26,21 @@ dependencies:
   http_parser: ^4.1.2
   file_picker: ^10.3.10
   material_symbols_icons: ^4.2906.0
-  font_awesome_flutter: ^10.7.0
+  font_awesome_flutter: ^10.12.0
   url_launcher: ^6.1.10
   firebase_core: ^4.4.0
   firebase_messaging: ^16.1.1
   flutter_local_notifications: ^20.0.0
   device_info_plus: ^12.3.0
   circle_nav_bar: ^2.2.0
-
+  sms_autofill: ^2.4.1
+  google_fonts: ^8.0.1
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  google_maps_flutter: ^2.14.2
+  intl: ^0.20.2
+  cached_network_image: ^3.4.1
+  flutter_carousel_slider:
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -52,4 +59,5 @@ flutter:
   assets:
     - assets/
     - assets/onboarding/
+    - assets/icons/
     - assets/logo/

@@ -2,12 +2,10 @@
 
 class RoomDetailResponse {
   final bool success;
-  final List<RoomDetail> data; // Updated to List, assuming API returns a list of rooms
+  final List<RoomDetail>
+  data; // Updated to List, assuming API returns a list of rooms
 
-  RoomDetailResponse({
-    required this.success,
-    required this.data,
-  });
+  RoomDetailResponse({required this.success, required this.data});
 
   factory RoomDetailResponse.fromJson(Map<String, dynamic> json) {
     return RoomDetailResponse(
@@ -64,7 +62,9 @@ class RoomDetail {
     return RoomDetail(
       id: json['_id'] ?? '',
       roomNumber: json['roomNumber'] ?? '',
-      roomType: json['type'] ?? '', // API mein shayad 'type' ho, screenshot ke hisaab se
+      roomType:
+          json['type'] ??
+          '', // API mein shayad 'type' ho, screenshot ke hisaab se
       floor: json['floor'] ?? 0,
       isActive: json['isActive'] ?? false,
       isDeleted: json['isDeleted'] ?? false,
@@ -78,8 +78,12 @@ class RoomDetail {
       availability: Availability.fromJson(json['availability'] ?? {}),
       area: Area.fromJson(json['area'] ?? {}),
       // Handling potential null for nested objects
-      property: json['propertyId'] != null ? PropertyMini.fromJson(json['propertyId']) : null,
-      landlord: json['landlordId'] != null ? LandlordMini.fromJson(json['landlordId']) : null,
+      property: json['propertyId'] != null
+          ? PropertyMini.fromJson(json['propertyId'])
+          : null,
+      landlord: json['landlordId'] != null
+          ? LandlordMini.fromJson(json['landlordId'])
+          : null,
     );
   }
 }
@@ -105,7 +109,9 @@ class Pricing {
     return Pricing(
       rentPerBed: json['rentPerBed'] ?? 0,
       securityDeposit: json['securityDeposit'] ?? 0,
-      maintenanceCharges: MaintenanceCharges.fromJson(json['maintenanceCharges'] ?? {}),
+      maintenanceCharges: MaintenanceCharges.fromJson(
+        json['maintenanceCharges'] ?? {},
+      ),
       electricityCharges: json['electricityCharges'] ?? '',
       waterCharges: json['waterCharges'] ?? '',
     );
@@ -116,10 +122,7 @@ class MaintenanceCharges {
   final int amount;
   final bool includedInRent;
 
-  MaintenanceCharges({
-    required this.amount,
-    required this.includedInRent,
-  });
+  MaintenanceCharges({required this.amount, required this.includedInRent});
 
   factory MaintenanceCharges.fromJson(Map<String, dynamic> json) {
     return MaintenanceCharges(
@@ -133,10 +136,7 @@ class Capacity {
   final int totalBeds;
   final int occupiedBeds;
 
-  Capacity({
-    required this.totalBeds,
-    required this.occupiedBeds,
-  });
+  Capacity({required this.totalBeds, required this.occupiedBeds});
 
   factory Capacity.fromJson(Map<String, dynamic> json) {
     return Capacity(
@@ -152,9 +152,7 @@ class Media {
   Media({required this.images});
 
   factory Media.fromJson(Map<String, dynamic> json) {
-    return Media(
-      images: List<String>.from(json['images'] ?? []),
-    );
+    return Media(images: List<String>.from(json['images'] ?? []));
   }
 }
 
@@ -225,9 +223,7 @@ class Availability {
   Availability({required this.status});
 
   factory Availability.fromJson(Map<String, dynamic> json) {
-    return Availability(
-      status: json['status'] ?? 'Available',
-    );
+    return Availability(status: json['status'] ?? 'Available');
   }
 }
 
@@ -238,10 +234,7 @@ class Area {
   Area({required this.carpet, required this.unit});
 
   factory Area.fromJson(Map<String, dynamic> json) {
-    return Area(
-      carpet: json['carpet'] ?? 0,
-      unit: json['unit'] ?? '',
-    );
+    return Area(carpet: json['carpet'] ?? 0, unit: json['unit'] ?? '');
   }
 }
 
@@ -250,17 +243,15 @@ class PropertyMini {
   final String title;
   final PropertyLocation? location; // Made nullable
 
-  PropertyMini({
-    required this.id,
-    required this.title,
-    this.location,
-  });
+  PropertyMini({required this.id, required this.title, this.location});
 
   factory PropertyMini.fromJson(Map<String, dynamic> json) {
     return PropertyMini(
       id: json['_id'] ?? '',
       title: json['title'] ?? '',
-      location: json['location'] != null ? PropertyLocation.fromJson(json['location']) : null,
+      location: json['location'] != null
+          ? PropertyLocation.fromJson(json['location'])
+          : null,
     );
   }
 }
@@ -302,11 +293,7 @@ class LandlordMini {
   final String name;
   final String phone;
 
-  LandlordMini({
-    required this.id,
-    required this.name,
-    required this.phone,
-  });
+  LandlordMini({required this.id, required this.name, required this.phone});
 
   factory LandlordMini.fromJson(Map<String, dynamic> json) {
     return LandlordMini(

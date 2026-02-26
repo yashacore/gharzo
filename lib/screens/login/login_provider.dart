@@ -6,7 +6,6 @@ import 'package:gharzo_project/screens/otpVerification/otp_verification.dart';
 import 'package:gharzo_project/screens/otpVerification/otp_verification_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class LoginProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
@@ -33,8 +32,7 @@ class LoginProvider extends ChangeNotifier {
       return;
     }
 
-  final bool isRegistration =
-        response.data?.purpose == "registration";
+    final bool isRegistration = response.data?.purpose == "registration";
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -48,11 +46,8 @@ class LoginProvider extends ChangeNotifier {
       ),
     );
   }
+
   void clickOn(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (_) => BottomBarView()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => BottomBarView()));
   }
 }

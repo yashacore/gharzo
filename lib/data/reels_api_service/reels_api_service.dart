@@ -2,19 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/model/reels/comment_model.dart';
+import 'package:gharzo_project/model/reels/reels_feed_model.dart';
 import 'package:gharzo_project/model/reels/reels_model.dart';
 import 'package:gharzo_project/model/reels/save_reel_model.dart';
 import 'package:http/http.dart' as http;
 
 class ReelsApiService {
-
-
   static const String baseUrl = "https://api.gharzoreality.com/api/reels/feed";
   static const String token = "YOUR_TOKEN";
 
-  static Map<String, String> headers() => {
-    "Authorization": "Bearer $token",
-  };
+  static Map<String, String> headers() => {"Authorization": "Bearer $token"};
 
   //fetch reels
   static Future<Map<String, String>> getToken() async {
@@ -22,26 +19,20 @@ class ReelsApiService {
 
     return {
       'Content-Type': 'application/json',
-      if (token != null && token.isNotEmpty)
-        'Authorization': 'Bearer $token',
+      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
     };
   }
 
-  static Future<ReelResponse?> getReelsFeed({
+  static Future<ReelResponse?> getReedlsFeed({
     int page = 1,
     int limit = 10,
     String type = "latest",
     String city = "Indore",
   }) async {
-    final url = Uri.parse(
-      '$baseUrl?type=$type&city=$city&page=$page&limit=$limit',
-    );
+    final url = Uri.parse('https://api.gharzoreality.com/api/reels/feed ');
 
     try {
-      final response = await http.get(
-        url,
-        headers: await getToken(),
-      );
+      final response = await http.get(url, headers: await getToken());
 
       if (response.statusCode == 200) {
         final jsonBody = json.decode(response.body);
@@ -55,7 +46,6 @@ class ReelsApiService {
       return null;
     }
   }
-
 
   static Future<bool> toggleLike(String reelId, String token) async {
     try {
@@ -77,28 +67,30 @@ class ReelsApiService {
     }
   }
 
-  static Future<int> likeReel(String reelId) async {
+  static Future<Map<String, dynamic>> likeReel(String reelId) async {
+    final token = await PrefService.getToken();
+
     final response = await http.post(
       Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/like"),
       headers: {
-        "Authorization": "Bearer YOUR_TOKEN",
+        "Authorization": "Bearer $token",
         "Content-Type": "application/json",
       },
     );
 
     final json = jsonDecode(response.body);
 
-    if (json["success"] == true) {
-      return json["likes"];
+    if (response.statusCode == 200 && json["success"] == true) {
+      return {"likes": json["likes"], "isLiked": json["isLiked"]};
     } else {
       throw Exception("Like failed");
     }
   }
 
-
-
- static Future<ReelSaveResponse?> saveReel(String reelId, String token) async {
-    final url = Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/save");
+  static Future<ReelSaveResponse?> saveReel(String reelId, String token) async {
+    final url = Uri.parse(
+      "https://api.gharzoreality.com/api/reels/$reelId/save",
+    );
 
     final response = await http.post(
       url,
@@ -106,9 +98,7 @@ class ReelsApiService {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({
-        "save": true,
-      }),
+      body: jsonEncode({"save": true}),
     );
 
     if (response.statusCode == 200) {
@@ -118,17 +108,6 @@ class ReelsApiService {
       return null;
     }
   }
-
-  // static Future<List<CommentModel>> getComments(String reelId) async {
-  // final res = await http.get(
-  // Uri.parse("$baseUrl/reels/$reelId/comments"),
-  // headers: headers(),
-  // );
-  // final data = json.decode(res.body);
-  // return (data['data'] as List)
-  //     .map((e) => CommentModel.fromJson(e))
-  //     .toList();
-  // }
 
   static Future<bool> addComment({
     required String reelId,
@@ -142,7 +121,9 @@ class ReelsApiService {
         throw Exception("Token not found");
       }
 
-      final url = Uri.parse('https://api.gharzoreality.com/api/reels/$reelId/comments');
+      final url = Uri.parse(
+        'https://api.gharzoreality.com/api/reels/$reelId/comments',
+      );
 
       final response = await http.post(
         url,
@@ -150,9 +131,7 @@ class ReelsApiService {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode(
-          AddCommentRequest(text: text).toJson(),
-        ),
+        body: jsonEncode(AddCommentRequest(text: text).toJson()),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -162,13 +141,11 @@ class ReelsApiService {
         print("Failed: ${response.body}");
         return false;
       }
-
     } catch (e) {
       print("🔥 Error addComment: $e");
       return false;
     }
   }
-
 
   //--------------fetch Comment
   static Future<List<CommentModel>> fetchComments(String reelId) async {
@@ -180,7 +157,9 @@ class ReelsApiService {
         return [];
       }
 
-      final url = Uri.parse("https://api.gharzoreality.com/api/reels/$reelId/comments");
+      final url = Uri.parse(
+        "https://api.gharzoreality.com/api/reels/$reelId/comments",
+      );
 
       debugPrint("📥 FETCH COMMENTS");
       debugPrint("🆔 ReelId: $reelId");
@@ -201,9 +180,7 @@ class ReelsApiService {
 
         final List list = decoded["data"] ?? [];
 
-        return list
-            .map((e) => CommentModel.fromJson(e))
-            .toList();
+        return list.map((e) => CommentModel.fromJson(e)).toList();
       } else {
         debugPrint("❌ Failed to fetch comments");
         return [];
@@ -213,5 +190,38 @@ class ReelsApiService {
       return [];
     }
   }
-}
 
+
+  static Future<ReelsFeedResponse?> getReelsFeed({int page = 1}) async {
+    try {
+      debugPrint("📥 FETCHING REELS | PAGE: $page");
+
+      final token = await PrefService.getToken();
+
+      final res = await http.get(
+        Uri.parse(
+          "https://api.gharzoreality.com/api/reels/feed?page=$page&limit=10",
+        ),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      debugPrint("📡 STATUS: ${res.statusCode}");
+      debugPrint("📦 BODY: ${res.body}");
+
+      if (res.statusCode == 200) {
+        final json = jsonDecode(res.body);
+        return ReelsFeedResponse.fromJson(json);
+      }
+
+      debugPrint("❌ Reels API failed: ${res.statusCode}");
+      return ReelsFeedResponse.empty(); // ✅ NEVER NULL
+    } catch (e, s) {
+      debugPrint("🔥 REELS API ERROR: $e");
+      debugPrint("STACK TRACE:\n$s");
+      return ReelsFeedResponse.empty(); // ✅ NEVER NULL
+    }
+  }
+}

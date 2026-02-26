@@ -3,7 +3,5 @@ class ToggleRoomStatusRequestModel {
 
   ToggleRoomStatusRequestModel({required this.status});
 
-  Map<String, dynamic> toJson() => {
-    "status": status,
-  };
+  Map<String, dynamic> toJson() => {"status": status};
 }

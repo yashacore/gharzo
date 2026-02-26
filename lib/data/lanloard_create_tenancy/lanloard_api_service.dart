@@ -6,8 +6,6 @@ import 'package:image_picker/image_picker.dart';
 class TenancyApiService {
   static const String baseUrl = 'https://api.gharzoreality.com/api/tenancies';
 
-
-
   static Future<http.Response> createTenancy(Map<String, dynamic> data) async {
     final token = await PrefService.getToken();
 
@@ -18,15 +16,13 @@ class TenancyApiService {
       "Authorization": "Bearer $token",
     };
 
-    return await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.post(url, headers: headers, body: jsonEncode(data));
   }
 
-
-  static Future<http.Response> approveTenancy(String tenancyId, Map<String, dynamic> data) async {
+  static Future<http.Response> approveTenancy(
+    String tenancyId,
+    Map<String, dynamic> data,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/approve');
 
@@ -35,12 +31,9 @@ class TenancyApiService {
       "Authorization": "Bearer $token",
     };
 
-    return await http.patch(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.patch(url, headers: headers, body: jsonEncode(data));
   }
+
   static Future<http.Response> getTenancyDetails(String tenancyId) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/details');
@@ -52,7 +45,10 @@ class TenancyApiService {
     return await http.get(url, headers: headers);
   }
 
-  static Future<http.Response> updateTenancy(String tenancyId, Map<String, dynamic> data) async {
+  static Future<http.Response> updateTenancy(
+    String tenancyId,
+    Map<String, dynamic> data,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId');
 
@@ -61,11 +57,7 @@ class TenancyApiService {
       "Content-Type": "application/json",
     };
 
-    return await http.put(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.put(url, headers: headers, body: jsonEncode(data));
   }
 
   static Future<http.Response> getLandlordTenancies() async {
@@ -80,7 +72,10 @@ class TenancyApiService {
     return await http.get(url, headers: headers);
   }
 
-  static Future<http.Response> rateTenant(String tenancyId, Map<String, dynamic> data) async {
+  static Future<http.Response> rateTenant(
+    String tenancyId,
+    Map<String, dynamic> data,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/rate-tenant');
 
@@ -89,11 +84,7 @@ class TenancyApiService {
       "Content-Type": "application/json",
     };
 
-    return await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.post(url, headers: headers, body: jsonEncode(data));
   }
 
   static Future<http.Response> getTenantTenancies() async {
@@ -108,7 +99,10 @@ class TenancyApiService {
     return await http.get(url, headers: headers);
   }
 
-  static Future<http.Response> rateLandlord(String tenancyId, Map<String, dynamic> data) async {
+  static Future<http.Response> rateLandlord(
+    String tenancyId,
+    Map<String, dynamic> data,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/rate-landlord');
 
@@ -117,16 +111,14 @@ class TenancyApiService {
       "Content-Type": "application/json",
     };
 
-    return await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.post(url, headers: headers, body: jsonEncode(data));
   }
 
-
   ///--------------------Lanloard give notice to tenant and tenant give notice lanloard
-  static Future<http.Response> sendNotice(String tenancyId, Map<String, dynamic> data) async {
+  static Future<http.Response> sendNotice(
+    String tenancyId,
+    Map<String, dynamic> data,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/notice');
 
@@ -135,18 +127,14 @@ class TenancyApiService {
       "Content-Type": "application/json",
     };
 
-    return await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.post(url, headers: headers, body: jsonEncode(data));
   }
 
   static Future<http.StreamedResponse> moveIn(
-      String tenancyId,
-      String checklistJson,
-      List<XFile> images
-      ) async {
+    String tenancyId,
+    String checklistJson,
+    List<XFile> images,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/move-in');
 
@@ -165,10 +153,10 @@ class TenancyApiService {
   }
 
   static Future<http.StreamedResponse> moveOut(
-      String tenancyId,
-      String checklistJson,
-      List<XFile> images
-      ) async {
+    String tenancyId,
+    String checklistJson,
+    List<XFile> images,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/move-out');
 
@@ -187,7 +175,10 @@ class TenancyApiService {
     return await request.send();
   }
 
-  static Future<http.Response> renewTenancy(String tenancyId, Map<String, dynamic> data) async {
+  static Future<http.Response> renewTenancy(
+    String tenancyId,
+    Map<String, dynamic> data,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/renew');
 
@@ -196,14 +187,13 @@ class TenancyApiService {
       "Content-Type": "application/json",
     };
 
-    return await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(data)
-    );
+    return await http.post(url, headers: headers, body: jsonEncode(data));
   }
 
-  static Future<http.Response> rejectTenancy(String tenancyId, String reason) async {
+  static Future<http.Response> rejectTenancy(
+    String tenancyId,
+    String reason,
+  ) async {
     final token = await PrefService.getToken();
     final url = Uri.parse('$baseUrl/$tenancyId/reject');
 
@@ -212,9 +202,7 @@ class TenancyApiService {
       "Content-Type": "application/json",
     };
 
-    final body = jsonEncode({
-      "reason": reason,
-    });
+    final body = jsonEncode({"reason": reason});
 
     return await http.patch(url, headers: headers, body: body);
   }

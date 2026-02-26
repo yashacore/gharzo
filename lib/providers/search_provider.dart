@@ -17,10 +17,7 @@ class PropertySearchProvider extends ChangeNotifier {
   String searchQuery = '';
 
   Timer? _debounce;
-  bool get isInitial =>
-      searchQuery.isEmpty && properties.isEmpty && !isLoading;
-
-
+  bool get isInitial => searchQuery.isEmpty && properties.isEmpty && !isLoading;
 
   /// 🔍 Called on each key press
   void updateSearch(String value) {
@@ -39,16 +36,12 @@ class PropertySearchProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final uri = Uri.https(
-        'api.gharzoreality.com',
-        '/api/public/properties',
-        {
-          'limit': '20',
-          if (city.isNotEmpty) 'city': city,
-          if (locality.isNotEmpty) 'locality': locality,
-          if (searchQuery.isNotEmpty) 'search': searchQuery,
-        },
-      );
+      final uri = Uri.https('api.gharzoreality.com', '/api/public/properties', {
+        'limit': '20',
+        if (city.isNotEmpty) 'city': city,
+        if (locality.isNotEmpty) 'locality': locality,
+        if (searchQuery.isNotEmpty) 'search': searchQuery,
+      });
 
       final response = await http.get(uri);
 
@@ -56,8 +49,7 @@ class PropertySearchProvider extends ChangeNotifier {
         final decoded = json.decode(response.body);
         final List list = decoded['data'];
 
-        properties =
-            list.map((e) => PropertyModel.fromJson(e)).toList();
+        properties = list.map((e) => PropertyModel.fromJson(e)).toList();
       } else {
         error = 'Failed to load properties';
       }

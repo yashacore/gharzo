@@ -38,10 +38,7 @@ class MaintenanceCharges {
   int amount;
   bool includedInRent;
 
-  MaintenanceCharges({
-    required this.amount,
-    required this.includedInRent,
-  });
+  MaintenanceCharges({required this.amount, required this.includedInRent});
 
   Map<String, dynamic> toJson() => {
     "amount": amount,
@@ -108,7 +105,3 @@ class Rules {
     "lockInPeriod": lockInPeriod,
   };
 }
-
-
-
-

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
+import 'package:gharzo_project/common/common_widget/primary_button.dart';
+import 'package:gharzo_project/common/common_widget/progress_bar.dart';
 import 'package:gharzo_project/model/add_property_type/city_model.dart';
-import 'package:gharzo_project/screens/add_properties/add_property_type/add_property_provider.dart';
-import 'package:gharzo_project/screens/add_properties/upload_photo/upload_photo_view.dart';
+import 'package:gharzo_project/screens/add_properties/builder_details_view.dart';
+import 'package:gharzo_project/screens/map_picker_view.dart';
 import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
 import 'package:provider/provider.dart';
 import 'location_provider.dart';
@@ -15,137 +17,165 @@ class LocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LocationProvider()..fetchCities(),
+      create: (_) {
+        final p = LocationProvider();
+        p.load(propertyId); // 🔥 LOAD EDIT DATA + CITIES
+        return p;
+      },
       child: Scaffold(
         appBar: CommonWidget.gradientAppBar(
           title: PageConstVar.selectLocation,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         body: Consumer<LocationProvider>(
           builder: (context, p, _) {
+            if (p.cityLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // ---------------- ADDRESS ----------------
-                  _textField(
-                    label: "Address *",
-                    onChanged: (v) => p.address = v,
+                  PropertyProgressBar(
+                    progress: 4 / 8, // 0.125
+                    label: "Step 4 of 8 • Add Location",
                   ),
 
-                  // ---------------- CITY ----------------
-                  const SizedBox(height: 16),
-                  p.cityLoading
-                      ? const CircularProgressIndicator()
-                      : _dropdown<CityModel>(
-                    label: "Select City *",
-                    value: p.selectedCity,
-                    items: p.cities,
-                    itemLabel: (c) => c.name,
-                    onChanged: (val) {
-                      if (val != null) p.selectCity(val);
-                    },
-                  ),
+                  // ================= MAP PICKER =================
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        OutlinedButton.icon(
+                          icon: const Icon(Icons.map_outlined),
+                          label: const Text("Select from Map"),
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const MapPickerView(),
+                              ),
+                            );
 
-                  // ---------------- LOCALITY ----------------
-                  const SizedBox(height: 16),
-                  p.localityLoading
-                      ? const CircularProgressIndicator()
-                      : _dropdown<LocalityModel>(
-                    label: "Select Locality *",
-                    value: p.selectedLocality,
-                    items: p.localities,
-                    itemLabel: (l) => l.name,
-                    onChanged: (val) {
-                      if (val != null) p.selectLocality(val);
-                    },
-                  ),
-
-                  // ---------------- STATE ----------------
-                  const SizedBox(height: 16),
-                  _textField(
-                    label: "State",
-                    initialValue: p.state,
-                    onChanged: (v) => p.state = v,
-                  ),
-
-                  // ---------------- COORDINATES ----------------
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _textField(
-                          label: "Latitude",
-                          keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                          onChanged: (v) =>
-                          p.latitude = double.tryParse(v) ?? 0,
+                            if (result != null &&
+                                result is Map<String, dynamic>) {
+                              p.setFromMap(result); // ✅ PREFILL DATA
+                            }
+                          },
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _textField(
-                          label: "Longitude",
-                          keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                          onChanged: (v) =>
-                          p.longitude = double.tryParse(v) ?? 0,
+
+                        const SizedBox(height: 16),
+
+                        // ================= ADDRESS =================
+                        _textField(
+                          label: "Address *",
+                          controller: p.addressCtrl,
                         ),
-                      ),
-                    ],
-                  ),
 
-                  // ---------------- PINCODE ----------------
-                  const SizedBox(height: 16),
-                  _textField(
-                    label: "PinCode *",
-                    keyboardType: TextInputType.number,
-                    onChanged: (v) => p.pinCode = v,
-                  ),
+                        // ================= CITY =================
+                        const SizedBox(height: 16),
+                        _dropdown<CityModel>(
+                          label: "Select City *",
+                          value: p.selectedCity,
+                          items: p.cities,
+                          itemLabel: (c) => c.name,
+                          onChanged: (val) {
+                            if (val != null) p.selectCity(val);
+                          },
+                        ),
 
-                  // ---------------- SUB LOCALITY ----------------
-                  const SizedBox(height: 16),
-                  _textField(
-                    label: "Sub Locality",
-                    onChanged: (v) => p.subLocality = v,
-                  ),
+                        // ================= LOCALITY =================
+                        const SizedBox(height: 16),
+                        p.localityLoading
+                            ? const CircularProgressIndicator()
+                            : _dropdown<LocalityModel>(
+                                label: "Select Locality *",
+                                value: p.selectedLocality,
+                                items: p.localities,
+                                itemLabel: (l) => l.name,
+                                onChanged: (val) {
+                                  if (val != null) p.selectLocality(val);
+                                },
+                              ),
 
-                  // ---------------- LANDMARK ----------------
-                  const SizedBox(height: 16),
-                  _textField(
-                    label: "Landmark",
-                    onChanged: (v) => p.landmark = v,
-                  ),
+                        // ================= STATE =================
+                        const SizedBox(height: 16),
+                        _textField(label: "State", controller: p.stateCtrl),
 
-                  // ---------------- ERROR ----------------
-                  if (p.error != null) ...[
-                    const SizedBox(height: 12),
-                    Text(p.error!,
-                        style: const TextStyle(color: Colors.red)),
-                  ],
+                        // ================= COORDINATES =================
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _textField(
+                                label: "Latitude",
+                                controller: p.latCtrl,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _textField(
+                                label: "Longitude",
+                                controller: p.lngCtrl,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
 
-                  const SizedBox(height: 20),
+                        // ================= PINCODE =================
+                        const SizedBox(height: 16),
+                        _textField(
+                          label: "PinCode *",
+                          controller: p.pinCodeCtrl,
+                          keyboardType: TextInputType.number,
+                        ),
 
-                  // ---------------- SAVE BUTTON ----------------
-                  CommonWidget.commonElevatedBtn(
-                    btnText: "Save & Continue",
-                    isLoading: p.loading,
-                    onPressed: p.loading
-                        ? null
-                        : () async {
-                      final success = await p.submit(propertyId);
-                      if (success && context.mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                UploadPhotoView(propertyId: propertyId),
-                          ),
-                        );
-                      }
-                    },
+                        // ================= SUB LOCALITY =================
+                        const SizedBox(height: 16),
+                        _textField(
+                          label: "Sub Locality",
+                          controller: p.subLocalityCtrl,
+                        ),
+
+                        // ================= LANDMARK =================
+                        const SizedBox(height: 16),
+                        _textField(
+                          label: "Landmark",
+                          controller: p.landmarkCtrl,
+                        ),
+
+                        // ================= ERROR =================
+                        const SizedBox(height: 24),
+
+                        // ================= SAVE =================
+                        PrimaryButton(
+                          title: "Save & Continue",
+                          onPressed: p.loading
+                              ? null
+                              : () async {
+                                  final success = await p.submit(propertyId);
+                                  if (success && context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => BuilderDetailsView(
+                                          propertyId: propertyId,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -156,22 +186,20 @@ class LocationView extends StatelessWidget {
     );
   }
 
-  // =================== UI HELPERS ===================
+  // ================= UI HELPERS =================
 
   Widget _textField({
     required String label,
-    String? initialValue,
+    required TextEditingController controller,
     TextInputType keyboardType = TextInputType.text,
-    required Function(String) onChanged,
   }) {
     return TextFormField(
-      initialValue: initialValue,
+      controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
       ),
-      onChanged: onChanged,
     );
   }
 
@@ -189,12 +217,7 @@ class LocationView extends StatelessWidget {
         border: const OutlineInputBorder(),
       ),
       items: items
-          .map(
-            (e) => DropdownMenuItem<T>(
-          value: e,
-          child: Text(itemLabel(e)),
-        ),
-      )
+          .map((e) => DropdownMenuItem<T>(value: e, child: Text(itemLabel(e))))
           .toList(),
       onChanged: onChanged,
     );

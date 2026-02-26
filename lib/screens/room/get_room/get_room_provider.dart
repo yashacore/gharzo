@@ -18,7 +18,6 @@ class RoomDetailProvider with ChangeNotifier {
 
       final response = await _apiService.getRoomById(roomId, token);
       _room = response as RoomDetail?;
-
     } catch (e) {
       debugPrint("Room Detail Error: $e");
       rethrow;

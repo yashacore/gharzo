@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/bed_api_service/bed_api_service.dart';
 import 'package:gharzo_project/model/bed/search_bed/search_bed_model.dart';
 
-
 class SearchBedsProvider with ChangeNotifier {
   final BedApiService _apiService = BedApiService();
 

@@ -7,7 +7,6 @@ import 'package:gharzo_project/screens/plan/plan_view.dart';
 import 'package:gharzo_project/screens/profile/profile_view.dart';
 import 'package:gharzo_project/screens/reels/reels_feed/reels_feed_view.dart';
 
-
 class BottomBarProvider with ChangeNotifier {
   int _currentIndex = 0;
 
@@ -25,7 +24,7 @@ class BottomBarProvider with ChangeNotifier {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const LoginView()),
-            (route) => false,
+        (route) => false,
       );
       return;
     }
@@ -48,6 +47,14 @@ class BottomBarProvider with ChangeNotifier {
         return ProfilePage();
       default:
         return HomeView(action: openDrawer);
+    }
+  }
+
+  bool isBottomBarVisible = true;
+  void setBottomBarVisibility(bool visible) {
+    if (isBottomBarVisible != visible) {
+      isBottomBarVisible = visible;
+      notifyListeners();
     }
   }
 }

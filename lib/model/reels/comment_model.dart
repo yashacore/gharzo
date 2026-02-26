@@ -4,12 +4,9 @@ class AddCommentRequest {
   AddCommentRequest({required this.text});
 
   Map<String, dynamic> toJson() {
-    return {
-      "text": text,
-    };
+    return {"text": text};
   }
 }
-
 
 class CommentModel {
   final String id;

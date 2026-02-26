@@ -11,7 +11,7 @@ class HotelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors();
-    final images = hotel.images ?? [];
+    final images = hotel.images;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -38,20 +38,20 @@ class HotelCard extends StatelessWidget {
                 ),
                 child: images.isNotEmpty
                     ? Image.network(
-                  images.first.url,
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                )
+                        images.first.url,
+                        height: 180,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
                     : Container(
-                  height: 180,
-                  color: Colors.grey.shade300,
-                  child: const Icon(
-                    Icons.hotel,
-                    size: 64,
-                    color: Colors.white,
-                  ),
-                ),
+                        height: 180,
+                        color: Colors.grey.shade300,
+                        child: const Icon(
+                          Icons.hotel,
+                          size: 64,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
 
               /// FEATURED BADGE
@@ -66,10 +66,7 @@ class HotelCard extends StatelessWidget {
               Positioned(
                 top: 12,
                 right: 12,
-                child: _badge(
-                  hotel.category ?? '',
-                  colors.primary,
-                ),
+                child: _badge(hotel.category, colors.primary),
               ),
             ],
           ),
@@ -82,7 +79,7 @@ class HotelCard extends StatelessWidget {
               children: [
                 /// NAME
                 Text(
-                  hotel.name ?? '',
+                  hotel.name,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -94,12 +91,11 @@ class HotelCard extends StatelessWidget {
                 /// LOCATION
                 Row(
                   children: [
-                    const Icon(Icons.location_on,
-                        size: 14, color: Colors.grey),
+                    const Icon(Icons.location_on, size: 14, color: Colors.grey),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        '${hotel.location?.city}, ${hotel.location?.state}',
+                        '${hotel.location.city}, ${hotel.location.state}',
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 13,
@@ -116,20 +112,19 @@ class HotelCard extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 6,
-                  children: hotel.amenities?.basic
-                      ?.take(4)
-                      .map(
-                        (a) => Chip(
-                      label: Text(
-                        a,
-                        style: const TextStyle(fontSize: 11),
-                      ),
-                      backgroundColor:
-                      Colors.grey.shade100,
-                    ),
-                  )
-                      .toList() ??
-                      [],
+                  children:
+                      hotel.amenities.basic
+                          .take(4)
+                          .map(
+                            (a) => Chip(
+                              label: Text(
+                                a,
+                                style: const TextStyle(fontSize: 11),
+                              ),
+                              backgroundColor: Colors.grey.shade100,
+                            ),
+                          )
+                          .toList(),
                 ),
 
                 const SizedBox(height: 12),
@@ -143,7 +138,7 @@ class HotelCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '₹${hotel.priceRange?.min} - ₹${hotel.priceRange?.max}',
+                          '₹${hotel.priceRange.min} - ₹${hotel.priceRange.max}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -151,10 +146,7 @@ class HotelCard extends StatelessWidget {
                         ),
                         const Text(
                           'per night',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -174,9 +166,11 @@ class HotelCard extends StatelessWidget {
                             builder: (_) => HotelDetailsScreen(hotel: hotel),
                           ),
                         );
-
                       },
-                      child: const Text('View',style: TextStyle(fontSize: 12,color: Colors.white),),
+                      child: const Text(
+                        'View',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -190,10 +184,7 @@ class HotelCard extends StatelessWidget {
 
   Widget _badge(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(20),

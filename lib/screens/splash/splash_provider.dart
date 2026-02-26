@@ -1,81 +1,71 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/main.dart';
 import 'package:gharzo_project/screens/bottom_bar/bottom_bar.dart';
-import 'package:gharzo_project/screens/login/login_view.dart';
 import 'package:gharzo_project/screens/onboardring/onboarding_one.dart';
+import 'package:gharzo_project/screens/welcome_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashProvider extends ChangeNotifier {
   VideoPlayerController? controller;
   bool isInitialized = false;
-  bool useVideo = false;
+  bool navigationDone = false;
 
   Future<void> start() async {
-    useVideo = await _canPlayVideoSplash();
+    try {
+      debugPrint("🎬 Splash start");
 
-    if (useVideo) {
-      try {
-        controller = VideoPlayerController.asset(
-          'assets/gharzo_splash_video.mp4',
-        );
+      controller = VideoPlayerController.asset('assets/splash.mp4');
 
-        await controller!.initialize();
-        controller!.setLooping(false);
-        controller!.play();
-      } catch (e) {
-        debugPrint("❌ Video splash failed: $e");
-        useVideo = false;
-      }
+      await controller!.initialize();
+      controller!.setLooping(false);
+      controller!.play();
+
+      isInitialized = true;
+      notifyListeners();
+
+      // 🔥 Navigate when video finishes
+      controller!.addListener(() {
+        if (!navigationDone &&
+            controller!.value.isInitialized &&
+            controller!.value.position >= controller!.value.duration) {
+          navigationDone = true;
+          handleNavigation();
+        }
+      });
+    } catch (e) {
+      debugPrint("❌ Asset video failed: $e");
+
+      isInitialized = true;
+      notifyListeners();
+
+      // fallback immediately
+      handleNavigation();
     }
-
-    isInitialized = true;
-    notifyListeners();
-
-    /// Splash duration
-    await Future.delayed(const Duration(seconds: 3));
-
-    _handleNavigation();
   }
 
-  /// 🔍 Detect MediaTek & unsupported devices
-  Future<bool> _canPlayVideoSplash() async {
-    if (!Platform.isAndroid) return true;
+  Future<void> handleNavigation() async {
+    if (navigationDone) return;
+    navigationDone = true;
 
-    final info = await DeviceInfoPlugin().androidInfo;
-    final hardware = info.hardware.toLowerCase();
-    final manufacturer = info.manufacturer.toLowerCase();
+    final onboardingViewed = await PrefService.getOnboardingPageViews();
 
-    /// ❌ Block MediaTek devices
-    if (hardware.contains("mt") || manufacturer.contains("xiaomi")) {
-      return false;
-    }
-
-    return true;
-  }
-
-  Future<void> _handleNavigation() async {
-    final getOnboardingPageViews =
-    await PrefService.getOnboardingPageViews();
-
-    if (getOnboardingPageViews) {
-      final token = await PrefService.getToken();
-      print("Token-------");
-      print(token);
-      if (token != null && token.isNotEmpty) {
-        navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const BottomBarView()),
-        );
-      } else {
-        navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginView()),
-        );
-      }
-    } else {
+    if (onboardingViewed == false) {
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(builder: (_) => const OnboardingView()),
+      );
+      return;
+    }
+
+    final token = await PrefService.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (_) => const BottomBarView()),
+      );
+    } else {
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
       );
     }
   }
@@ -87,41 +77,33 @@ class SplashProvider extends ChangeNotifier {
   }
 }
 
-
-
-
 // void start(BuildContext context) async {
-  //   await Future.delayed(const Duration(seconds: 3));
-  //   final getOnboardingPageViews = await PrefService.getOnboardingPageViews();
-  //   print('getOnboardingPageViews::  $getOnboardingPageViews');
-  //   if(getOnboardingPageViews){
-  //     final token = await PrefService.getToken();
-  //     debugPrint('token::  $token');
-  //
-  //     if(token != null && token.isNotEmpty){
-  //       navigatorKey.currentState?.pushReplacement(
-  //         MaterialPageRoute(
-  //           builder: (_) => const BottomBarView(),
-  //         ),
-  //       );
-  //     }else{
-  //       navigatorKey.currentState?.pushReplacement(
-  //         MaterialPageRoute(
-  //           builder: (_) => const LoginView(),
-  //         ),
-  //       );
-  //     }
-  //   }
-  //   else{
-  //     navigatorKey.currentState?.pushReplacement(
-  //       MaterialPageRoute(
-  //         builder: (_) => const OnboardingView()
-  //       ),
-  //     );
-  //   }
-  // }
-
-
-
-
-
+//   await Future.delayed(const Duration(seconds: 3));
+//   final getOnboardingPageViews = await PrefService.getOnboardingPageViews();
+//   print('getOnboardingPageViews::  $getOnboardingPageViews');
+//   if(getOnboardingPageViews){
+//     final token = await PrefService.getToken();
+//     debugPrint('token::  $token');
+//
+//     if(token != null && token.isNotEmpty){
+//       navigatorKey.currentState?.pushReplacement(
+//         MaterialPageRoute(
+//           builder: (_) => const BottomBarView(),
+//         ),
+//       );
+//     }else{
+//       navigatorKey.currentState?.pushReplacement(
+//         MaterialPageRoute(
+//           builder: (_) => const LoginView(),
+//         ),
+//       );
+//     }
+//   }
+//   else{
+//     navigatorKey.currentState?.pushReplacement(
+//       MaterialPageRoute(
+//         builder: (_) => const OnboardingView()
+//       ),
+//     );
+//   }
+// }

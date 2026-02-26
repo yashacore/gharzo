@@ -16,9 +16,7 @@ class GetBedsByRoomResponseModel {
       success: json['success'],
       count: json['count'],
       room: Room.fromJson(json['room']),
-      data: List<BedModel>.from(
-        json['data'].map((x) => BedModel.fromJson(x)),
-      ),
+      data: List<BedModel>.from(json['data'].map((x) => BedModel.fromJson(x))),
     );
   }
 }
@@ -52,10 +50,7 @@ class RoomCapacity {
   final int totalBeds;
   final int occupiedBeds;
 
-  RoomCapacity({
-    required this.totalBeds,
-    required this.occupiedBeds,
-  });
+  RoomCapacity({required this.totalBeds, required this.occupiedBeds});
 
   factory RoomCapacity.fromJson(Map<String, dynamic> json) {
     return RoomCapacity(
@@ -151,11 +146,7 @@ class BedSize {
   final int width;
   final String unit;
 
-  BedSize({
-    required this.length,
-    required this.width,
-    required this.unit,
-  });
+  BedSize({required this.length, required this.width, required this.unit});
 
   factory BedSize.fromJson(Map<String, dynamic> json) {
     return BedSize(
@@ -260,10 +251,7 @@ class Preferences {
   final String genderPreference;
   final String occupationType;
 
-  Preferences({
-    required this.genderPreference,
-    required this.occupationType,
-  });
+  Preferences({required this.genderPreference, required this.occupationType});
 
   factory Preferences.fromJson(Map<String, dynamic> json) {
     return Preferences(
@@ -277,15 +265,9 @@ class CreatedBy {
   final String userId;
   final String role;
 
-  CreatedBy({
-    required this.userId,
-    required this.role,
-  });
+  CreatedBy({required this.userId, required this.role});
 
   factory CreatedBy.fromJson(Map<String, dynamic> json) {
-    return CreatedBy(
-      userId: json['userId'],
-      role: json['role'],
-    );
+    return CreatedBy(userId: json['userId'], role: json['role']);
   }
 }

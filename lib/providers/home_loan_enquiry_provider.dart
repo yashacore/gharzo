@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class HomeLoanEnquiryProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isSuccess = false;
@@ -23,17 +22,14 @@ class HomeLoanEnquiryProvider extends ChangeNotifier {
 
       final httpResponse = await http.post(
         Uri.parse(_homeLoanUrl),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(request.toJson()),
       );
 
       debugPrint("📥 STATUS → ${httpResponse.statusCode}");
       debugPrint("📥 RESPONSE → ${httpResponse.body}");
 
-      if (httpResponse.statusCode == 200 ||
-          httpResponse.statusCode == 201) {
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
         response = jsonDecode(httpResponse.body);
         isSuccess = true;
       } else {
@@ -81,25 +77,19 @@ class LoanDetails {
     };
   }
 }
+
 class ContactInfo {
   final String name;
   final String email;
   final String phone;
 
-  ContactInfo({
-    required this.name,
-    required this.email,
-    required this.phone,
-  });
+  ContactInfo({required this.name, required this.email, required this.phone});
 
   Map<String, dynamic> toJson() {
-    return {
-      "name": name,
-      "email": email,
-      "phone": phone,
-    };
+    return {"name": name, "email": email, "phone": phone};
   }
 }
+
 class HomeLoanEnquiryRequest {
   final ContactInfo contactInfo;
   final LoanDetails loanDetails;

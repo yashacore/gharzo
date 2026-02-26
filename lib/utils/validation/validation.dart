@@ -26,10 +26,7 @@ class Validation {
     return null; // valid
   }
 
-  static String? otpValidate({
-    required String otp,
-    int length = 4,
-  }) {
+  static String? otpValidate({required String otp, int length = 4}) {
     if (otp.isEmpty) {
       return "OTP is required";
     }
@@ -63,8 +60,8 @@ class Validation {
     if (value == null || value.trim().isEmpty) {
       return "Email is required";
     } else if (!RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(value.trim())) {
+      r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+    ).hasMatch(value.trim())) {
       return "Enter a valid email";
     }
     return null;
@@ -87,4 +84,3 @@ class Validation {
     return null;
   }
 }
-

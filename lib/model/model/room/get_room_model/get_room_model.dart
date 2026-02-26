@@ -2,10 +2,7 @@ class RoomDetailResponse {
   final bool success;
   final RoomDetail data;
 
-  RoomDetailResponse({
-    required this.success,
-    required this.data,
-  });
+  RoomDetailResponse({required this.success, required this.data});
 
   factory RoomDetailResponse.fromJson(Map<String, dynamic> json) {
     return RoomDetailResponse(
@@ -99,8 +96,9 @@ class Pricing {
     return Pricing(
       rentPerBed: json['rentPerBed'],
       securityDeposit: json['securityDeposit'],
-      maintenanceCharges:
-      MaintenanceCharges.fromJson(json['maintenanceCharges']),
+      maintenanceCharges: MaintenanceCharges.fromJson(
+        json['maintenanceCharges'],
+      ),
       electricityCharges: json['electricityCharges'],
       waterCharges: json['waterCharges'],
     );
@@ -111,10 +109,7 @@ class MaintenanceCharges {
   final int amount;
   final bool includedInRent;
 
-  MaintenanceCharges({
-    required this.amount,
-    required this.includedInRent,
-  });
+  MaintenanceCharges({required this.amount, required this.includedInRent});
 
   factory MaintenanceCharges.fromJson(Map<String, dynamic> json) {
     return MaintenanceCharges(
@@ -128,10 +123,7 @@ class Capacity {
   final int totalBeds;
   final int occupiedBeds;
 
-  Capacity({
-    required this.totalBeds,
-    required this.occupiedBeds,
-  });
+  Capacity({required this.totalBeds, required this.occupiedBeds});
 
   factory Capacity.fromJson(Map<String, dynamic> json) {
     return Capacity(
@@ -147,9 +139,7 @@ class Media {
   Media({required this.images});
 
   factory Media.fromJson(Map<String, dynamic> json) {
-    return Media(
-      images: List<String>.from(json['images'] ?? []),
-    );
+    return Media(images: List<String>.from(json['images'] ?? []));
   }
 }
 
@@ -220,9 +210,7 @@ class Availability {
   Availability({required this.status});
 
   factory Availability.fromJson(Map<String, dynamic> json) {
-    return Availability(
-      status: json['status'],
-    );
+    return Availability(status: json['status']);
   }
 }
 
@@ -233,10 +221,7 @@ class Area {
   Area({required this.carpet, required this.unit});
 
   factory Area.fromJson(Map<String, dynamic> json) {
-    return Area(
-      carpet: json['carpet'],
-      unit: json['unit'],
-    );
+    return Area(carpet: json['carpet'], unit: json['unit']);
   }
 }
 
@@ -245,11 +230,7 @@ class PropertyMini {
   final String title;
   final PropertyLocation location;
 
-  PropertyMini({
-    required this.id,
-    required this.title,
-    required this.location,
-  });
+  PropertyMini({required this.id, required this.title, required this.location});
 
   factory PropertyMini.fromJson(Map<String, dynamic> json) {
     return PropertyMini(
@@ -297,11 +278,7 @@ class LandlordMini {
   final String name;
   final String phone;
 
-  LandlordMini({
-    required this.id,
-    required this.name,
-    required this.phone,
-  });
+  LandlordMini({required this.id, required this.name, required this.phone});
 
   factory LandlordMini.fromJson(Map<String, dynamic> json) {
     return LandlordMini(

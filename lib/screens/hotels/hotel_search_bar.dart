@@ -43,14 +43,13 @@ class _HotelSearchBarState extends State<HotelSearchBar> {
             icon: Icon(Icons.search, color: colors.primary),
             suffixIcon: controller.text.isNotEmpty
                 ? IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                controller.clear();
-                context.read<HotelProvider>().searchHotels('');
-              },
-            )
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      controller.clear();
+                      context.read<HotelProvider>().searchHotels('');
+                    },
+                  )
                 : null,
-
           ),
         ),
       ),

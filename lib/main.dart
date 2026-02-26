@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/routes/pages.dart';
 import 'package:gharzo_project/screens/splash/splash_view.dart';
 import 'package:gharzo_project/utils/theme/text_style.dart';
 import 'package:provider/provider.dart';
-
 import 'notification_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -19,15 +19,13 @@ void main() async {
   await NotificationService().initialize();
 
   String? token = await FirebaseMessaging.instance.getToken();
-  print('🔥 FCM Token: $token');
 
-  runApp(
-    MultiProvider(
-      providers: appProviders,
-      child: MyApp(),
-    ),
-  );
+  print('🔥 FCM Token: $token');
+  await PrefService.init(); // 🔥 REQUIRED
+
+  runApp(MultiProvider(providers: appProviders, child: MyApp()));
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -35,11 +33,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: AppTextTheme.theme(fontFamily: 'Poppins'),
-      ),
+      theme: ThemeData(textTheme: AppTextTheme.theme(fontFamily: 'Poppins')),
       navigatorKey: navigatorKey,
-      home: SplashView(),
+      home: SplashScreen(),
     );
   }
 }
+
+// test commit

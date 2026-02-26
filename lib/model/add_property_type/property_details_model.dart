@@ -105,8 +105,6 @@
 //   }
 // }
 
-
-
 class PropertyDetailModel {
   final String id;
   final String title;
@@ -150,6 +148,9 @@ class PropertyDetailModel {
 
   final List<String> images;
 
+  /// 🔥 NEW: Saved state
+  final bool isSaved;
+
   PropertyDetailModel({
     required this.id,
     required this.title,
@@ -184,6 +185,7 @@ class PropertyDetailModel {
     required this.latitude,
     required this.longitude,
     required this.images,
+    required this.isSaved,
   });
 
   factory PropertyDetailModel.fromJson(Map<String, dynamic> json) {
@@ -193,6 +195,7 @@ class PropertyDetailModel {
     final locationJson = json['location'] ?? {};
     final coordJson = locationJson['coordinates'] ?? {};
     final furnishingJson = json['furnishing'] ?? {};
+
     final imageList = (json['images'] as List? ?? [])
         .map((e) => e['url']?.toString() ?? '')
         .where((e) => e.isNotEmpty)
@@ -240,7 +243,9 @@ class PropertyDetailModel {
       longitude: (coordJson['longitude'] ?? 0).toDouble(),
 
       images: imageList,
+
+      /// ✅ Safe parsing
+      isSaved: json['isSaved'] ?? false,
     );
   }
 }
-

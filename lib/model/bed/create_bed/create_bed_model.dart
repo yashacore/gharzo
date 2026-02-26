@@ -102,11 +102,7 @@ class Room {
   final String roomNumber;
   final String roomType;
 
-  Room({
-    required this.id,
-    required this.roomNumber,
-    required this.roomType,
-  });
+  Room({required this.id, required this.roomNumber, required this.roomType});
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(
@@ -122,11 +118,7 @@ class Property {
   final String title;
   final Location location;
 
-  Property({
-    required this.id,
-    required this.title,
-    required this.location,
-  });
+  Property({required this.id, required this.title, required this.location});
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
@@ -174,11 +166,7 @@ class BedSize {
   final int width;
   final String unit;
 
-  BedSize({
-    required this.length,
-    required this.width,
-    required this.unit,
-  });
+  BedSize({required this.length, required this.width, required this.unit});
 
   factory BedSize.fromJson(Map<String, dynamic> json) {
     return BedSize(
@@ -283,10 +271,7 @@ class Preferences {
   final String genderPreference;
   final String occupationType;
 
-  Preferences({
-    required this.genderPreference,
-    required this.occupationType,
-  });
+  Preferences({required this.genderPreference, required this.occupationType});
 
   factory Preferences.fromJson(Map<String, dynamic> json) {
     return Preferences(
@@ -300,18 +285,9 @@ class CreatedBy {
   final String userId;
   final String role;
 
-  CreatedBy({
-    required this.userId,
-    required this.role,
-  });
+  CreatedBy({required this.userId, required this.role});
 
   factory CreatedBy.fromJson(Map<String, dynamic> json) {
-    return CreatedBy(
-      userId: json['userId'],
-      role: json['role'],
-    );
+    return CreatedBy(userId: json['userId'], role: json['role']);
   }
 }
-
-
-

@@ -55,32 +55,28 @@ class _HotelListScreenState extends State<HotelListScreen> {
                 : provider.hotels.isEmpty
                 ? const Center(child: Text('No hotels found'))
                 : ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              physics: const BouncingScrollPhysics(),
-              itemCount: provider.hotels.length,
-              itemBuilder: (context, index) {
-                final hotel = provider.hotels[index];
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: provider.hotels.length,
+                    itemBuilder: (context, index) {
+                      final hotel = provider.hotels[index];
 
-                return TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.95, end: 1.0),
-                  duration: const Duration(milliseconds: 250),
-                  builder: (context, scale, child) {
-                    return Transform.scale(
-                      scale: scale,
-                      child: child,
-                    );
-                  },
-                  child: HotelCard(hotel: hotel),
-                );
-              },
-            ),
+                      return TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.95, end: 1.0),
+                        duration: const Duration(milliseconds: 250),
+                        builder: (context, scale, child) {
+                          return Transform.scale(scale: scale, child: child);
+                        },
+                        child: HotelCard(hotel: hotel),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
     );
   }
 }
-
 
 class StarRating extends StatelessWidget {
   final double rating;
@@ -114,7 +110,6 @@ class StarRating extends StatelessWidget {
     );
   }
 }
-
 
 class HotelFilterTabs extends StatelessWidget {
   const HotelFilterTabs({super.key});
@@ -151,9 +146,7 @@ class HotelFilterTabs extends StatelessWidget {
                 child: Text(
                   tabs[index],
                   style: TextStyle(
-                    color: isSelected
-                        ? colors.textWhite
-                        : colors.textPrimary,
+                    color: isSelected ? colors.textWhite : colors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -165,4 +158,3 @@ class HotelFilterTabs extends StatelessWidget {
     );
   }
 }
-

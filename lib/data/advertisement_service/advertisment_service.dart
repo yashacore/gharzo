@@ -15,20 +15,14 @@ class AdvertisementApi {
   }
 
   static Future<void> trackImpression(String adId) async {
-    await http.post(
-      Uri.parse("$baseUrl/$adId/impression"),
-    );
+    await http.post(Uri.parse("$baseUrl/$adId/impression"));
   }
 
   static Future<void> trackClick(String adId) async {
-    await http.post(
-      Uri.parse("$baseUrl/$adId/click"),
-    );
+    await http.post(Uri.parse("$baseUrl/$adId/click"));
   }
 
   static Future<void> trackConversion(String adId) async {
-    await http.post(
-      Uri.parse("$baseUrl/$adId/conversion"),
-    );
+    await http.post(Uri.parse("$baseUrl/$adId/conversion"));
   }
 }

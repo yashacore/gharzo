@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/bed_api_service/bed_api_service.dart';
 import 'package:gharzo_project/model/bed/update_bed_image/update_bed_image_model.dart';
 
-
 class UpdateBedImagesProvider with ChangeNotifier {
   final BedApiService _apiService = BedApiService();
 

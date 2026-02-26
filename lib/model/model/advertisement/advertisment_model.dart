@@ -1,8 +1,8 @@
 class AdvertisementModel {
   final String id;
   final String title;
-  final String adType;     // popup | sidebar | hero
-  final String format;     // image | video
+  final String adType; // popup | sidebar | hero
+  final String format; // image | video
   final int priority;
 
   final AdMedia media;
@@ -39,15 +39,11 @@ class AdvertisementModel {
   bool get hasImage => imageUrl.isNotEmpty;
 }
 
-
 class AdMedia {
   final String desktopImage;
   final String mobileImage;
 
-  AdMedia({
-    required this.desktopImage,
-    required this.mobileImage,
-  });
+  AdMedia({required this.desktopImage, required this.mobileImage});
 
   factory AdMedia.fromJson(Map<String, dynamic> json) {
     return AdMedia(
@@ -56,7 +52,6 @@ class AdMedia {
     );
   }
 }
-
 
 class AdClickAction {
   final String type; // external_url | internal

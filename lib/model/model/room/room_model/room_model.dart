@@ -70,7 +70,6 @@ class RoomModel {
       status: status ?? this.status,
     );
   }
-
 }
 
 /* ---------- Sub Models ---------- */
@@ -113,9 +112,7 @@ class Capacity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    "totalBeds": totalBeds,
-  };
+  Map<String, dynamic> toJson() => {"totalBeds": totalBeds};
 }
 
 class Features {
@@ -185,16 +182,10 @@ class Area {
   Area({required this.carpet, required this.unit});
 
   factory Area.fromJson(Map<String, dynamic> json) {
-    return Area(
-      carpet: json['carpet'] ?? 0,
-      unit: json['unit'] ?? '',
-    );
+    return Area(carpet: json['carpet'] ?? 0, unit: json['unit'] ?? '');
   }
 
-  Map<String, dynamic> toJson() => {
-    "carpet": carpet,
-    "unit": unit,
-  };
+  Map<String, dynamic> toJson() => {"carpet": carpet, "unit": unit};
 }
 
 class RoomImage {
@@ -204,9 +195,6 @@ class RoomImage {
   RoomImage({required this.url, this.isPrimary = false});
 
   factory RoomImage.fromJson(Map<String, dynamic> json) {
-    return RoomImage(
-      url: json['url'],
-      isPrimary: json['isPrimary'] ?? false,
-    );
+    return RoomImage(url: json['url'], isPrimary: json['isPrimary'] ?? false);
   }
 }

@@ -3,7 +3,6 @@ import 'package:gharzo_project/data/room_api_service/room_api_service.dart';
 import 'package:gharzo_project/model/room/update_room/update_room_model.dart';
 import 'package:gharzo_project/model/room/update_room/update_room_response_model.dart';
 
-
 class UpdateRoomProvider extends ChangeNotifier {
   bool isLoading = false;
   UpdateRoomResponseModel? updatedRoom;
@@ -18,8 +17,7 @@ class UpdateRoomProvider extends ChangeNotifier {
       errorMessage = null;
       notifyListeners();
 
-      updatedRoom =
-      await RoomApiService.updateRoom(roomId: roomId, body: body);
+      updatedRoom = await RoomApiService.updateRoom(roomId: roomId, body: body);
     } catch (e) {
       errorMessage = e.toString();
     } finally {

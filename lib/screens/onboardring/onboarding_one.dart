@@ -27,7 +27,8 @@ class OnboardingView extends StatelessWidget {
                         context: context,
                         imagePath: value.onboardingData[index]['logo']!,
                         title: value.onboardingData[index]['title']!,
-                        description: value.onboardingData[index]['description']!,
+                        description:
+                            value.onboardingData[index]['description']!,
                         currentIndex: value.currentIndex,
                         totalCount: value.onboardingData.length,
                       );
@@ -35,8 +36,10 @@ class OnboardingView extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 30,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 4,
@@ -44,14 +47,19 @@ class OnboardingView extends StatelessWidget {
                       CommonWidget.commonElevatedBtn(
                         btnText: "Next",
                         isLoading: value.isBtnLoading,
-                        onPressed:() {
+                        onPressed: () {
                           value.next(context);
                         },
                       ),
-                      SizedBox(height: 4,),
+                      SizedBox(height: 4),
                       TextButton(
                         onPressed: () async => await value.callLoginPage(),
-                        child: Text("Skip", style: AppTextStyle.bodyMedium(AppThemeColors().textGrey)),
+                        child: Text(
+                          "Skip",
+                          style: AppTextStyle.bodyMedium(
+                            AppThemeColors().textGrey,
+                          ),
+                        ),
                       ),
                     ],
                   ),

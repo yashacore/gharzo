@@ -26,12 +26,10 @@ class _BottomBarState extends State<BottomBarView>
       reverseDuration: const Duration(milliseconds: 220),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(-1, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+        );
   }
 
   void openDrawer() => _controller.forward();
@@ -49,10 +47,29 @@ class _BottomBarState extends State<BottomBarView>
       builder: (context, provider, child) {
         return Stack(
           children: [
+            // ✅ MAIN SCAFFOLD (NO SAFEAREA HERE)
             Scaffold(
               extendBody: true,
+              backgroundColor: Colors.transparent,
               body: provider.currentPage(openDrawer),
-              bottomNavigationBar: _bottomBar(provider),
+
+              // ✅ SAFEAREA ONLY FOR BOTTOM BAR
+              bottomNavigationBar: SafeArea(
+                top: false,
+                bottom: true,
+                child: AnimatedSlide(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOut,
+                  offset: provider.isBottomBarVisible
+                      ? Offset.zero
+                      : const Offset(0, 1),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: provider.isBottomBarVisible ? 1 : 0,
+                    child: _bottomBar(provider),
+                  ),
+                ),
+              ),
             ),
 
             // 🔥 DARK OVERLAY
@@ -60,9 +77,7 @@ class _BottomBarState extends State<BottomBarView>
               Positioned.fill(
                 child: GestureDetector(
                   onTap: closeDrawer,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
-                  ),
+                  child: Container(color: Colors.black.withOpacity(0.3)),
                 ),
               ),
 
@@ -93,6 +108,8 @@ class _BottomBarState extends State<BottomBarView>
       },
     );
   }
+
+  // ================= BOTTOM BAR UI =================
 
   Widget _bottomBar(BottomBarProvider provider) {
     return SizedBox(
@@ -165,7 +182,8 @@ class _BottomBarState extends State<BottomBarView>
                 const SizedBox(height: 4),
                 const Text(
                   "ADD",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  style:
+                  TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
               ],
             ),

@@ -15,10 +15,7 @@ import 'package:gharzo_project/model/send_otp_model/sendotp_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
-
-
 class AuthService {
-
   //========================================Auth
 
   static Future<SendOtpModel> sendOtp(String phone) async {
@@ -33,7 +30,7 @@ class AuthService {
 
     final body = jsonDecode(response.body);
 
-     debugPrint("Body :: $body");
+    debugPrint("Body :: $body");
     return SendOtpModel.fromJson(body);
   }
 
@@ -75,7 +72,6 @@ class AuthService {
     return LoginModel.fromJson(json);
   }
 
-
   //--------------------------------------Home
   static Future<Home> getFeaturedProperties() async {
     final response = await http.get(
@@ -116,7 +112,9 @@ class AuthService {
   }
 
   //----------------------property category buy hostel and other
-  static Future<List<PropertyModel>> getPropertiesByCategory(String category) async {
+  static Future<List<PropertyModel>> getPropertiesByCategory(
+    String category,
+  ) async {
     final query = ApiConstant.categoryToQuery[category] ?? '';
     final url = "https://api.gharzoreality.com/api/public/properties?$query";
 
@@ -139,16 +137,15 @@ class AuthService {
     }
   }
 
-
   //=================================Advertisement
   static Future<List<AdvertisementModel>> getAds({
     required String placement,
   }) async {
     final response = await http.get(
-      Uri.parse("https://api.gharzoreality.com/api/v2/advertisements/public/placement"),
-      headers: {
-        'Accept': 'application/json',
-      },
+      Uri.parse(
+        "https://api.gharzoreality.com/api/v2/advertisements/public/placement",
+      ),
+      headers: {'Accept': 'application/json'},
     );
 
     final json = jsonDecode(response.body);
@@ -162,13 +159,10 @@ class AuthService {
     }
   }
 
-
-
   static Future<PropertyDetailModel> getPropertyDetails(String id) async {
     final response = await http.get(
       Uri.parse("https://api.gharzoreality.com/api/public/properties/$id"),
     );
-
 
     debugPrint("Get Property details :: $response");
     final body = jsonDecode(response.body);
@@ -180,13 +174,12 @@ class AuthService {
     }
   }
 
-
   // ------------------------------------Add Property
 
   static Future<Map<String, dynamic>> put(
-      String path, {
-        required Map<String, dynamic> body,
-      }) async {
+    String path, {
+    required Map<String, dynamic> body,
+  }) async {
     final token = await PrefService.getToken();
 
     final response = await http.put(
@@ -231,7 +224,6 @@ class AuthService {
     }
   }
 
-
   static Future<List<CityModel>> getCities() async {
     final response = await http.get(
       Uri.parse("https://api.gharzoreality.com/api/master-data/v2/cities"),
@@ -248,17 +240,14 @@ class AuthService {
       throw Exception("Invalid data format for cities");
     }
 
-    return (decoded['data'] as List)
-        .map((e) => CityModel.fromJson(e))
-        .toList();
+    return (decoded['data'] as List).map((e) => CityModel.fromJson(e)).toList();
   }
-
-
-
 
   static Future<List<LocalityModel>> getLocalities(String cityName) async {
     final response = await http.get(
-      Uri.parse("https://api.gharzoreality.com/api/master-data/localities/$cityName"),
+      Uri.parse(
+        "https://api.gharzoreality.com/api/master-data/localities/$cityName",
+      ),
       headers: {"Content-Type": "application/json"},
     );
 
@@ -271,7 +260,6 @@ class AuthService {
 
     return data.map((name) => LocalityModel.fromJson(name)).toList();
   }
-
 
   // ------------------------------------Update Location
   // static Future<void> updatePropertyLocation({
@@ -305,14 +293,14 @@ class AuthService {
     required Map<String, dynamic> location,
   }) async {
     final res = await http.put(
-      Uri.parse("https://api.gharzoreality.com/api/v2/properties/$propertyId/location"),
+      Uri.parse(
+        "https://api.gharzoreality.com/api/v2/properties/$propertyId/location",
+      ),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({
-        "location": location,
-      }),
+      body: jsonEncode({"location": location}),
     );
 
     final decoded = jsonDecode(res.body);
@@ -324,7 +312,6 @@ class AuthService {
     }
   }
 
-
   // ------------------------------------Update Basic Details
   static Future<void> updatePropertyDetails({
     required String propertyId,
@@ -332,7 +319,9 @@ class AuthService {
   }) async {
     final token = await PrefService.getToken();
     final res = await http.put(
-      Uri.parse("https://api.gharzoreality.com/api/v2/properties/$propertyId/basic-details"),
+      Uri.parse(
+        "https://api.gharzoreality.com/api/v2/properties/$propertyId/basic-details",
+      ),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
@@ -356,7 +345,9 @@ class AuthService {
   }) async {
     final token = await PrefService.getToken();
     final response = await http.put(
-      Uri.parse("${ApiConstant.baseUrl}/api/v2/properties/$propertyId/basic-details"),
+      Uri.parse(
+        "${ApiConstant.baseUrl}/api/v2/properties/$propertyId/basic-details",
+      ),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token",
@@ -364,30 +355,20 @@ class AuthService {
       body: jsonEncode({
         "title": "Spacious 2BHK Flat in Vijay Nagar",
         "description":
-        "Beautiful 2 BHK flat with modern amenities. Perfect for small families. Well-ventilated rooms with natural light. Located in prime location with easy access to schools, hospitals and markets.",
+            "Beautiful 2 BHK flat with modern amenities. Perfect for small families. Well-ventilated rooms with natural light. Located in prime location with easy access to schools, hospitals and markets.",
         "bhk": 2,
         "bathrooms": 2,
         "balconies": 1,
         "price": {
           "amount": price,
           "negotiable": true,
-          "maintenanceCharges": {
-            "amount": maintenance,
-            "frequency": "Monthly"
-          },
-          "securityDeposit": 30000
+          "maintenanceCharges": {"amount": maintenance, "frequency": "Monthly"},
+          "securityDeposit": 30000,
         },
-        "area": {
-          "carpet": 950,
-          "builtUp": 1100,
-          "unit": "sqft"
-        },
-        "floor": {
-          "current": 3,
-          "total": 5
-        },
+        "area": {"carpet": 950, "builtUp": 1100, "unit": "sqft"},
+        "floor": {"current": 3, "total": 5},
         "propertyAge": "1-5 years",
-        "availableFrom": "2024-02-01"
+        "availableFrom": "2024-02-01",
       }),
     );
 
@@ -446,15 +427,11 @@ class AuthService {
   }
 
   //----------------------publish Property
-  static Future<void> publishProperty({
-    required String propertyId,
-  }) async {
+  static Future<void> publishProperty({required String propertyId}) async {
     final token = await PrefService.getToken();
     final res = await http.post(
       Uri.parse("${ApiConstant.baseUrl}/api/v2/properties/$propertyId/submit"),
-      headers: {
-        "Authorization": "Bearer $token",
-      },
+      headers: {"Authorization": "Bearer $token"},
     );
 
     debugPrint("🚀 PUBLISH STATUS => ${res.statusCode}");
@@ -522,5 +499,4 @@ class AuthService {
       throw Exception(decoded['message'] ?? 'Something went wrong');
     }
   }
-
-} 
+}

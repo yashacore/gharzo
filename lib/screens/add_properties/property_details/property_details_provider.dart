@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/api_constant/api_service_method.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
-import 'package:gharzo_project/screens/add_properties/add_property_type/add_property_view.dart';
 
 class BasicDetailsProvider extends ChangeNotifier {
   bool loading = false;
@@ -74,21 +73,11 @@ class BasicDetailsProvider extends ChangeNotifier {
       "price": {
         "amount": price,
         "negotiable": negotiable,
-        "maintenanceCharges": {
-          "amount": maintenance,
-          "frequency": "Monthly",
-        },
+        "maintenanceCharges": {"amount": maintenance, "frequency": "Monthly"},
         "securityDeposit": securityDeposit,
       },
-      "area": {
-        "carpet": carpetArea,
-        "builtUp": builtUpArea,
-        "unit": areaUnit,
-      },
-      "floor": {
-        "current": currentFloor,
-        "total": totalFloors,
-      },
+      "area": {"carpet": carpetArea, "builtUp": builtUpArea, "unit": areaUnit},
+      "floor": {"current": currentFloor, "total": totalFloors},
       "propertyAge": propertyAge,
       "availableFrom": availableFrom?.toIso8601String(),
       "postedBy": postedBy,
@@ -97,14 +86,17 @@ class BasicDetailsProvider extends ChangeNotifier {
           "roomType": roomType,
           "totalBeds": totalBeds,
           "availableBeds": availableBeds,
-        }
+        },
     };
 
     try {
       final token = await PrefService.getToken();
       if (token == null || token.isEmpty) throw Exception("Token missing");
 
-      final response = await ApiServiceMethod.updateBasicDetails(propertyId, payload);
+      final response = await ApiServiceMethod.updateBasicDetails(
+        propertyId,
+        payload,
+      );
 
       debugPrint("Basic Details :: $response ");
 
@@ -117,5 +109,4 @@ class BasicDetailsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

@@ -1,5 +1,9 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'package:flutter/material.dart';
 import 'package:gharzo_project/common/common_widget/common_widget.dart';
+import 'package:gharzo_project/common/common_widget/primary_button.dart';
+import 'package:gharzo_project/common/common_widget/progress_bar.dart';
 import 'package:gharzo_project/screens/add_properties/contact_information/contact_info_provider.dart';
 import 'package:gharzo_project/screens/add_properties/submit_property/submit_property_view.dart';
 import 'package:gharzo_project/utils/pageconstvar/page_const_var.dart';
@@ -8,10 +12,7 @@ import 'package:provider/provider.dart';
 class ContactInfoView extends StatelessWidget {
   final String propertyId;
 
-  const ContactInfoView({
-    super.key,
-    required this.propertyId,
-  });
+  const ContactInfoView({super.key, required this.propertyId});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ContactInfoView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ContactProvider(),
       child: Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Colors.white,
         appBar: CommonWidget.gradientAppBar(
           title: PageConstVar.contactDetails,
           onPressed: () {
@@ -30,30 +31,37 @@ class ContactInfoView extends StatelessWidget {
         body: Consumer<ContactProvider>(
           builder: (context, provider, _) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: gradientStart,
-                          borderRadius: BorderRadius.circular(2),
+                  PropertyProgressBar(
+                    progress: 7 / 8, // 0.125
+                    label: "Step 7 of 8 • Contact Details",
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 4,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: gradientStart,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        "Primary Contact",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF2C3E50),
+                        const SizedBox(width: 12),
+                        const Text(
+                          "Primary Contact",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF2C3E50),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Padding(
@@ -65,6 +73,7 @@ class ContactInfoView extends StatelessWidget {
                   ),
                   const SizedBox(height: 28),
                   Card(
+                    color: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -82,6 +91,7 @@ class ContactInfoView extends StatelessWidget {
                             onChanged: (v) => provider.name = v,
                           ),
                           _customTextField(
+                            maxLength: 10,
                             label: "Phone Number",
                             hint: "Phone Number",
                             icon: Icons.phone_android_rounded,
@@ -90,6 +100,7 @@ class ContactInfoView extends StatelessWidget {
                             onChanged: (v) => provider.phone = v,
                           ),
                           _customTextField(
+                            maxLength: 10,
                             label: "Alternate Phone",
                             hint: "Secondary number (optional)",
                             icon: Icons.add_call,
@@ -112,33 +123,48 @@ class ContactInfoView extends StatelessWidget {
                             ),
                             child: DropdownButtonFormField<String>(
                               value: provider.preferredCallTime,
-                              icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                              ),
                               decoration: InputDecoration(
                                 labelText: "Preferred Call Time",
                                 labelStyle: const TextStyle(fontSize: 14),
-                                prefixIcon: const Icon(Icons.history_toggle_off_rounded, color: gradientStart),
+                                prefixIcon: const Icon(
+                                  Icons.history_toggle_off_rounded,
+                                  color: gradientStart,
+                                ),
                                 filled: true,
                                 fillColor: Colors.grey[50],
-                                contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 12,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.grey[200]!),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey[200]!,
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.grey[200]!),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey[200]!,
+                                  ),
                                 ),
                               ),
                               items: const [
                                 DropdownMenuItem(
-                                    value: "Morning (9AM-12PM)",
-                                    child: Text("Morning (9AM-12PM)")),
+                                  value: "Morning (9AM-12PM)",
+                                  child: Text("Morning (9AM-12PM)"),
+                                ),
                                 DropdownMenuItem(
-                                    value: "Afternoon (12PM-5PM)",
-                                    child: Text("Afternoon (12PM-5PM)")),
+                                  value: "Afternoon (12PM-5PM)",
+                                  child: Text("Afternoon (12PM-5PM)"),
+                                ),
                                 DropdownMenuItem(
-                                    value: "Evening (5PM-9PM)",
-                                    child: Text("Evening (5PM-9PM)")),
+                                  value: "Evening (5PM-9PM)",
+                                  child: Text("Evening (5PM-9PM)"),
+                                ),
                               ],
                               onChanged: (v) => provider.preferredCallTime = v!,
                             ),
@@ -147,54 +173,44 @@ class ContactInfoView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 36),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: gradientStart.withOpacity(0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: CommonWidget.commonElevatedBtn(
-                      btnText: "Continue",
-                      isLoading: provider.loading,
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: PrimaryButton(
+                      title: "Continue",
                       onPressed: provider.loading
                           ? null
                           : () async {
-                        // Start loading
-                        provider.loading = true;
-                        provider.notifyListeners();
+                              // Start loading
+                              provider.loading = true;
+                              provider.notifyListeners();
 
-                        // Submit Contact Info
-                        bool success = await provider.submit(propertyId);
+                              // Submit Contact Info
+                              bool success = await provider.submit(propertyId);
 
-                        provider.loading = false;
-                        provider.notifyListeners();
+                              provider.loading = false;
+                              provider.notifyListeners();
 
-                        if (success) {
-                          if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => SubmitPropertyView(
-                                  propertyId: propertyId,
-                                ),
-                              ),
-                            );
-                          }
-                        } else {
-                          // Show error
-                          if (context.mounted && provider.error != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(provider.error!)),
-                            );
-                          }
-                        }
-                      },
+                              if (success) {
+                                if (context.mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => SubmitPropertyView(
+                                        propertyId: propertyId,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                // Show error
+                                if (context.mounted && provider.error != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(provider.error!)),
+                                  );
+                                }
+                              }
+                            },
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -214,14 +230,19 @@ class ContactInfoView extends StatelessWidget {
     required Color accentColor,
     required Function(String) onChanged,
     bool isNumber = false,
+    int? maxLength, // ✅ OPTIONAL
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: TextField(
-        keyboardType: isNumber ? TextInputType.phone : TextInputType.text,
+        maxLength: maxLength, // ✅ applied only if not null
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         onChanged: onChanged,
         style: const TextStyle(fontWeight: FontWeight.w500),
         decoration: InputDecoration(
+          counterText: maxLength != null
+              ? null
+              : "", // ✅ hide counter if not needed
           labelText: label,
           labelStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
           hintText: hint,
@@ -229,7 +250,10 @@ class ContactInfoView extends StatelessWidget {
           prefixIcon: Icon(icon, color: accentColor, size: 22),
           filled: true,
           fillColor: Colors.grey[50],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 18,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(color: Colors.grey[200]!),
@@ -238,7 +262,10 @@ class ContactInfoView extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(color: accentColor, width: 1.5),
           ),
-          floatingLabelStyle: TextStyle(color: accentColor, fontWeight: FontWeight.bold),
+          floatingLabelStyle: TextStyle(
+            color: accentColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

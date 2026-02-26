@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/db_service/db_service.dart';
 import 'package:gharzo_project/data/reels_api_service/reels_api_service.dart';
 import 'package:gharzo_project/model/reels/comment_model.dart';
-import 'package:gharzo_project/model/reels/reels_model.dart';
+
+import '../../../model/reels/reels_feed_model.dart';
+
 
 class ReelsFeedProvider extends ChangeNotifier {
   final List<Reel> _reels = [];
+
   List<Reel> get reels => _reels;
 
   bool isLoading = false;
@@ -23,40 +26,36 @@ class ReelsFeedProvider extends ChangeNotifier {
 
   // ================= FETCH REELS =================
   Future<void> fetchReels({bool refresh = false}) async {
-    if (isLoading) return;
+    if (isLoading || !hasMore) return;
 
     if (refresh) {
-      _reels.clear();
+      reels.clear();
       currentPage = 1;
       hasMore = true;
     }
-
-    if (!hasMore) return;
 
     isLoading = true;
     notifyListeners();
 
     try {
-      final response =
-      await ReelsApiService.getReelsFeed(page: currentPage);
+      final response = await ReelsApiService.getReelsFeed(page: currentPage);
 
-      debugPrint("Response Feed Reel :: $response");
-
-      for (final reel in response!.data) {
-        debugPrint("🎬 Reel ID: ${reel.id}");
+      if (response == null || response.data.isEmpty) {
+        debugPrint("⚠️ NO MORE REELS OR API FAILED");
+        hasMore = false;
+        return;
       }
 
-      if (response != null) {
-        reels.addAll(response.data);
-        hasMore = response.currentPage < response.totalPages;
-        currentPage++;
-      }
+      reels.addAll(response.data);
+      hasMore = response.currentPage < response.totalPages;
+      currentPage++;
     } catch (e) {
-      debugPrint("Fetch reels error: $e");
+      debugPrint("🔥 Fetch reels provider error: $e");
+      hasMore = false; // ⛔ STOP LOOP
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
   Future<void> toggleLike(Reel reel) async {
@@ -72,51 +71,47 @@ class ReelsFeedProvider extends ChangeNotifier {
 
     final oldReel = _reels[index];
 
-    debugPrint("Old likesCount: ${oldReel.likesCount}");
-
-    final bool newLikeState = !oldReel.isLiked;
-    final int newLikesCount =
-    newLikeState ? oldReel.likesCount + 1 : oldReel.likesCount - 1;
+    // 🔥 Optimistic update
+    final bool optimisticLike = !oldReel.isLiked;
+    final int optimisticLikes = optimisticLike
+        ? oldReel.likesCount + 1
+        : (oldReel.likesCount > 0 ? oldReel.likesCount - 1 : 0);
 
     _reels[index] = oldReel.copyWith(
-      isLiked: newLikeState,
-      likesCount: newLikesCount,
+      isLiked: optimisticLike,
+      likesCount: optimisticLikes,
     );
     notifyListeners();
 
-
-    debugPrint("New likesCount: $newLikesCount");
-
     try {
-      debugPrint("CALLING LIKE API...");
+      debugPrint("📡 CALLING LIKE API...");
 
-      final int serverLikes =
-      await ReelsApiService.likeReel(reel.id);
+      // final result = await ReelsApiService.likeReel(reel.id);
 
-      /// 🟣 API RESPONSE
-      debugPrint("🟣 API RESPONSE");
-      debugPrint("Server likesCount: $serverLikes");
+      final result = await ReelsApiService.likeReel(reel.id);
+      debugPrint("🟣 API RESPONSE: $result");
 
-      /// 🔥 sync count from backend
-      _reels[index] =
-          _reels[index].copyWith(likesCount: serverLikes);
+      _reels[index] = _reels[index].copyWith(
+        isLiked: result["isLiked"] as bool,
+        likesCount: result["likes"] as int,
+      );
+
       notifyListeners();
     } catch (e) {
-      /// ❌ rollback on error
       debugPrint("❌ LIKE API ERROR: $e");
 
+      // 🔄 Rollback
       _reels[index] = oldReel;
       notifyListeners();
+    } finally {
+      likeProcessing.remove(reel.id);
     }
-
-    likeProcessing.remove(reel.id);
   }
 
-
   Future<void> toggleSave(Reel reel) async {
-    if (reel.id == null) return;
-
     final token = await PrefService.getToken();
+    print("token");
+    print(token);
     if (token == null) return;
 
     final index = _reels.indexWhere((r) => r.id == reel.id);
@@ -127,14 +122,11 @@ class ReelsFeedProvider extends ChangeNotifier {
     final oldReel = _reels[index];
     final bool newSavedState = !oldReel.isSaved;
 
-    _reels[index] = oldReel.copyWith(
-      isSaved: newSavedState,
-    );
+    _reels[index] = oldReel.copyWith(isSaved: newSavedState);
     notifyListeners();
 
     try {
-      final response =
-      await ReelsApiService.saveReel(reel.id!, token);
+      final response = await ReelsApiService.saveReel(reel.id, token);
 
       if (response == null || !response.success) {
         _reels[index] = oldReel;
@@ -151,7 +143,6 @@ class ReelsFeedProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   Future<void> fetchComments(String reelId) async {
     isCommentsLoading = true;
@@ -171,7 +162,6 @@ class ReelsFeedProvider extends ChangeNotifier {
     required String reelId,
     required String text,
   }) async {
-
     final success = await ReelsApiService.addComment(
       reelId: reelId,
       text: text,
@@ -213,7 +203,4 @@ class ReelsFeedProvider extends ChangeNotifier {
     replyingToUser = null;
     notifyListeners();
   }
-
-
-
 }

@@ -28,7 +28,8 @@ class ServicesApi {
       "https://api.gharzoreality.com/api/service-enquiries/create";
 
   static Future<Map<String, dynamic>> createEnquiry(
-      ServiceEnquiryRequest request) async {
+    ServiceEnquiryRequest request,
+  ) async {
     try {
       final response = await http.post(
         Uri.parse(_url),
@@ -50,6 +51,7 @@ class ServicesApi {
     }
   }
 }
+
 class ServiceEnquiryRequest {
   final String name;
   final String phone;
@@ -110,6 +112,7 @@ class Location {
     };
   }
 }
+
 class EnquiryResponse {
   final bool success;
   final String message;
@@ -129,23 +132,21 @@ class EnquiryResponse {
     );
   }
 }
+
 class EnquiryData {
   final Enquiry enquiry;
   final ServiceProviderContact serviceProvider;
 
-  EnquiryData({
-    required this.enquiry,
-    required this.serviceProvider,
-  });
+  EnquiryData({required this.enquiry, required this.serviceProvider});
 
   factory EnquiryData.fromJson(Map<String, dynamic> json) {
     return EnquiryData(
       enquiry: Enquiry.fromJson(json['enquiry']),
-      serviceProvider:
-      ServiceProviderContact.fromJson(json['serviceProvider']),
+      serviceProvider: ServiceProviderContact.fromJson(json['serviceProvider']),
     );
   }
 }
+
 class Enquiry {
   final String enquiryNumber;
   final String subject;
@@ -174,6 +175,7 @@ class Enquiry {
     );
   }
 }
+
 class ServiceProviderContact {
   final String companyName;
   final String phone;

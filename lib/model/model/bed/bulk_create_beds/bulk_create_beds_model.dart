@@ -2,16 +2,10 @@ class BulkCreateBedsRequest {
   final String roomId;
   final List<BulkBedItem> beds;
 
-  BulkCreateBedsRequest({
-    required this.roomId,
-    required this.beds,
-  });
+  BulkCreateBedsRequest({required this.roomId, required this.beds});
 
   Map<String, dynamic> toJson() {
-    return {
-      "roomId": roomId,
-      "beds": beds.map((e) => e.toJson()).toList(),
-    };
+    return {"roomId": roomId, "beds": beds.map((e) => e.toJson()).toList()};
   }
 }
 
@@ -84,13 +78,9 @@ class BedFeatures {
 class BedPreferences {
   final String genderPreference;
 
-  BedPreferences({
-    required this.genderPreference,
-  });
+  BedPreferences({required this.genderPreference});
 
   Map<String, dynamic> toJson() {
-    return {
-      "genderPreference": genderPreference,
-    };
+    return {"genderPreference": genderPreference};
   }
 }

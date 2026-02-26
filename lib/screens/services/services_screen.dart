@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../providers/services_provider.dart';
 import '../../utils/theme/colors.dart';
 
-
 class ServicesScreen extends StatelessWidget {
   const ServicesScreen({super.key});
 
@@ -26,10 +25,10 @@ class ServicesScreen extends StatelessWidget {
           // 🔍 DEBUG PRINT
           debugPrint(
             '🖥 ServicesScreen → '
-                'loading=${provider.isLoading}, '
-                'services=${provider.services.length}, '
-                'categories=${provider.categories.length}, '
-                'error=${provider.error}',
+            'loading=${provider.isLoading}, '
+            'services=${provider.services.length}, '
+            'categories=${provider.categories.length}, '
+            'error=${provider.error}',
           );
 
           // 🔄 Loading
@@ -72,9 +71,7 @@ class ServicesScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.services.length,
                   itemBuilder: (_, index) {
-                    return ServiceCard(
-                      service: provider.services[index],
-                    );
+                    return ServiceCard(service: provider.services[index]);
                   },
                 ),
               ),
@@ -88,34 +85,6 @@ class ServicesScreen extends StatelessWidget {
 
 /* ===================== CATEGORIES ===================== */
 
-class _CategoriesBar extends StatelessWidget {
-  final List<ServiceCategory> categories;
-
-  const _CategoriesBar({required this.categories});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (_, index) {
-          final c = categories[index];
-          return Chip(
-            label: Text('${c.id} (${c.count})'),
-            backgroundColor: Colors.white,
-            shape: StadiumBorder(
-              side: BorderSide(color: Colors.grey.shade300),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 /* ===================== SERVICE CARD ===================== */
 
@@ -126,157 +95,211 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? image =
-    service.images.isNotEmpty ? service.images.first.url : null;
+    final String? image = service.images.isNotEmpty
+        ? service.images.first.url
+        : null;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🖼 Image
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16),
-            ),
-            child: image != null && image.isNotEmpty
-                ? Image.network(
-              image,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _placeholder(),
-            )
-                : _placeholder(),
-          ),
-
+          // ================= TOP ROW =================
           Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(
+            padding: const EdgeInsets.all(12),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// 🏷 Service Name
-                Text(
-                  service.serviceName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                // IMAGE
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Stack(
+                    children: [
+                      image != null
+                          ? Image.network(
+                              image,
+                              height: 80,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              height: 80,
+                              width: 100,
+                              color: Colors.grey.shade200,
+                              child: const Icon(Icons.image_not_supported),
+                            ),
+
+                      // IMAGE COUNT / STATUS
+                      Positioned(
+                        left: 4,
+                        bottom: 4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            "Updated",
+                            style: TextStyle(color: Colors.white, fontSize: 9),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 6),
+                const SizedBox(width: 12),
 
-                /// 🏢 Provider
-                Text(
-                  service.provider.companyName,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                /// 📍 Location
-                Row(
-                  children: [
-                    const Icon(Icons.location_on,
-                        size: 14, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      service.provider.city,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 10),
-
-                /// 📝 Description
-                Text(
-                  service.shortDescription,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-
-                const SizedBox(height: 14),
-
-                /// 💰 Price + CTA
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '₹${service.pricing.amount} ${service.pricing.type}',
+                // DETAILS
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // PRICE
+                      Text(
+                        "₹${service.pricing.amount}",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      // TITLE
+                      Text(
+                        service.serviceName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      // AREA / TYPE
+                      Text(
+                        service.shortDescription,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      // LOCATION
+                      Text(
+                        service.provider.city,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const Divider(height: 1),
+
+          // ================= ACTION BAR =================
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(
+              children: [
+                // FAVORITE
+                Container(
+                  height: 36,
+                  width: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: const Icon(Icons.favorite_border, size: 18),
+                ),
+
+                const SizedBox(width: 10),
+
+                // GET PHONE
+                Expanded(
+                  child: SizedBox(
+                    height: 36,
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppThemeColors().primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text(
+                        "Get Phone No.",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
+                  ),
+                ),
 
-                    ElevatedButton(
+                const SizedBox(width: 10),
+
+                // CONTACT OWNER
+                Expanded(
+                  child: SizedBox(
+                    height: 36,
+                    child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => ChangeNotifierProvider(
                               create: (_) => ServicesProvider(),
-                              child:  ServiceDetailsScreen(service: service),
+                              child: ServiceDetailsScreen(service: service),
                             ),
                           ),
                         );
-                        },
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppThemeColors().primary,
-                        foregroundColor: Colors.white,
+
                         elevation: 0,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 8,
-                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: const Text(
-                        'View Details',
-                        style: TextStyle(fontSize: 12),
+                        "Contact Owner",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _placeholder() {
-    return Container(
-      height: 180,
-      color: Colors.grey.shade200,
-      child: const Center(
-        child: Icon(Icons.image, size: 40, color: Colors.grey),
       ),
     );
   }

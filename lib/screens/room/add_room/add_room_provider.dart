@@ -87,7 +87,8 @@ class AddRoomProvider extends ChangeNotifier {
   final TextEditingController totalBedsController = TextEditingController();
   final TextEditingController carpetAreaController = TextEditingController();
   final TextEditingController rentPerBedController = TextEditingController();
-  final TextEditingController securityDepositController = TextEditingController();
+  final TextEditingController securityDepositController =
+      TextEditingController();
   final TextEditingController maintenanceController = TextEditingController();
   final TextEditingController noticePeriodController = TextEditingController();
   final TextEditingController lockInController = TextEditingController();
@@ -113,10 +114,29 @@ class AddRoomProvider extends ChangeNotifier {
   List<String> selectedAmenities = [];
 
   final List<String> amenitiesList = [
-    'WiFi', 'Study Table', 'Chair', 'Bed', 'Mattress', 'Pillow', 'Blanket',
-    'Washing Machine', 'Geyser', 'TV', 'Sofa', 'Dining Table', 'Microwave',
-    'Refrigerator', 'Water Purifier', 'Power Backup', 'CCTV', 'Security Guard',
-    'Parking', 'Gym', 'Common Area', 'Garden', 'Lift'
+    'WiFi',
+    'Study Table',
+    'Chair',
+    'Bed',
+    'Mattress',
+    'Pillow',
+    'Blanket',
+    'Washing Machine',
+    'Geyser',
+    'TV',
+    'Sofa',
+    'Dining Table',
+    'Microwave',
+    'Refrigerator',
+    'Water Purifier',
+    'Power Backup',
+    'CCTV',
+    'Security Guard',
+    'Parking',
+    'Gym',
+    'Common Area',
+    'Garden',
+    'Lift',
   ];
 
   // Bulk Rooms list (Keeping as is per request)
@@ -132,13 +152,23 @@ class AddRoomProvider extends ChangeNotifier {
       "furnishing": "Unfurnished",
       "gender": "Any",
       "area": "",
-      "features": {"Bathroom": false, "Balcony": false, "AC": false, "Wardrobe": false, "Fridge": false}
-    }
+      "features": {
+        "Bathroom": false,
+        "Balcony": false,
+        "AC": false,
+        "Wardrobe": false,
+        "Fridge": false,
+      },
+    },
   ];
 
   // --- API LOGIC ---
 
-  Future<void> createSingleRoom(BuildContext context, String propertyId, String token) async {
+  Future<void> createSingleRoom(
+    BuildContext context,
+    String propertyId,
+    String token,
+  ) async {
     if (isLoading) return;
 
     setLoading(true);
@@ -151,17 +181,17 @@ class AddRoomProvider extends ChangeNotifier {
       "roomType": selectedRoomType,
       "floor": int.tryParse(floorController.text) ?? 0,
       "capacity": jsonEncode({
-        "totalBeds": int.tryParse(totalBedsController.text) ?? 1
+        "totalBeds": int.tryParse(totalBedsController.text) ?? 1,
       }),
       "pricing": jsonEncode({
         "rentPerBed": double.tryParse(rentPerBedController.text) ?? 0,
         "securityDeposit": double.tryParse(securityDepositController.text) ?? 0,
         "maintenanceCharges": {
           "amount": double.tryParse(maintenanceController.text) ?? 0,
-          "includedInRent": maintenanceIncluded
+          "includedInRent": maintenanceIncluded,
         },
         "electricityCharges": selectedElectricity,
-        "waterCharges": selectedWater
+        "waterCharges": selectedWater,
       }),
       "rules": jsonEncode({
         "genderPreference": selectedGender,
@@ -170,7 +200,7 @@ class AddRoomProvider extends ChangeNotifier {
         "petsAllowed": false,
         "guestsAllowed": true,
         "noticePeriod": int.tryParse(noticePeriodController.text) ?? 30,
-        "lockInPeriod": int.tryParse(lockInController.text) ?? 0
+        "lockInPeriod": int.tryParse(lockInController.text) ?? 0,
       }),
       "features": jsonEncode({
         "furnishing": selectedFurnishing,
@@ -179,12 +209,12 @@ class AddRoomProvider extends ChangeNotifier {
         "hasAC": roomFeatures["Air Conditioning"],
         "hasWardrobe": roomFeatures["Wardrobe"],
         "hasFridge": roomFeatures["Refrigerator"],
-        "amenities": selectedAmenities
+        "amenities": selectedAmenities,
       }),
       "area": jsonEncode({
         "carpet": double.tryParse(carpetAreaController.text) ?? 0,
-        "unit": selectedAreaUnit == 'Square Feet (sqft)' ? "sqft" : "sqm"
-      })
+        "unit": selectedAreaUnit == 'Square Feet (sqft)' ? "sqft" : "sqm",
+      }),
     };
 
     try {
@@ -192,7 +222,10 @@ class AddRoomProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Room Created Successfully!"), backgroundColor: Colors.green),
+          const SnackBar(
+            content: Text("Room Created Successfully!"),
+            backgroundColor: Colors.green,
+          ),
         );
       } else {
         final errorData = jsonDecode(response.body);
@@ -201,7 +234,10 @@ class AddRoomProvider extends ChangeNotifier {
     } catch (e) {
       print('Error::  $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}"), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text("Error: ${e.toString()}"),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setLoading(false);
@@ -209,7 +245,11 @@ class AddRoomProvider extends ChangeNotifier {
   }
 
   // Helper for API calls with Exponential Backoff
-  Future<http.Response> _performPostRequest(Uri url, Map<String, dynamic> body, String token) async {
+  Future<http.Response> _performPostRequest(
+    Uri url,
+    Map<String, dynamic> body,
+    String token,
+  ) async {
     int retryCount = 0;
     while (retryCount < 3) {
       try {
@@ -250,7 +290,13 @@ class AddRoomProvider extends ChangeNotifier {
       "furnishing": "Unfurnished",
       "gender": "Any",
       "area": "",
-      "features": {"Bathroom": false, "Balcony": false, "AC": false, "Wardrobe": false, "Fridge": false}
+      "features": {
+        "Bathroom": false,
+        "Balcony": false,
+        "AC": false,
+        "Wardrobe": false,
+        "Fridge": false,
+      },
     });
     notifyListeners();
   }
@@ -267,4 +313,3 @@ class AddRoomProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

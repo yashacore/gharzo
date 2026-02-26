@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gharzo_project/data/room_api_service/room_api_service.dart';
 import 'package:gharzo_project/model/room/search_room_model/search_room_model.dart';
 
-
 class RoomsSearchProvider extends ChangeNotifier {
   final RoomApiService _apiService = RoomApiService();
 
@@ -56,10 +55,7 @@ class RoomsSearchProvider extends ChangeNotifier {
   }
 }
 
-
-
 //-----------------Filter gender and furnishing
-
 
 // class RoomsSearchProvider extends ChangeNotifier {
 //   final RoomsApiService _apiService = RoomsApiService();
@@ -119,8 +115,6 @@ class RoomsSearchProvider extends ChangeNotifier {
 //     fetchRooms();
 //   }
 // }
-
-
 
 //---------------combined filter
 // class RoomsSearchProvider extends ChangeNotifier {

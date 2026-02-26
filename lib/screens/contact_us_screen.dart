@@ -27,12 +27,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xffF5F6FA),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _header(),
-            _formCard(provider),
-          ],
-        ),
+        child: Column(children: [_header(), _formCard(provider)]),
       ),
     );
   }
@@ -44,10 +39,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            colors.backgroundLeft,
-            colors.backgroundRight,
-          ],
+          colors: [colors.backgroundLeft, colors.backgroundRight],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(28),
@@ -57,9 +49,13 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconButton( color: colors.textWhite,  onPressed: () {
-            Navigator.pop(context);
-          }, icon: Icon(Icons.arrow_back,size: 34,),),
+          IconButton(
+            color: colors.textWhite,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back, size: 34),
+          ),
           const SizedBox(height: 12),
           Text(
             "Contact Us",
@@ -105,17 +101,20 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           child: Column(
             children: [
               _field("Full Name", _nameCtrl, Icons.person),
-              _field("Email", _emailCtrl, Icons.email,
-                  type: TextInputType.emailAddress),
-              _field("Phone", _phoneCtrl, Icons.phone,
-                  type: TextInputType.phone),
-              _field("Subject", _subjectCtrl, Icons.subject),
               _field(
-                "Message",
-                _messageCtrl,
-                Icons.message,
-                maxLines: 4,
+                "Email",
+                _emailCtrl,
+                Icons.email,
+                type: TextInputType.emailAddress,
               ),
+              _field(
+                "Phone",
+                _phoneCtrl,
+                Icons.phone,
+                type: TextInputType.phone,
+              ),
+              _field("Subject", _subjectCtrl, Icons.subject),
+              _field("Message", _messageCtrl, Icons.message, maxLines: 4),
 
               const SizedBox(height: 24),
 
@@ -134,13 +133,13 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   child: provider.isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
-                    "Submit Inquiry",
-                    style: TextStyle(
-                      color: colors.buttonTextColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                          "Submit Inquiry",
+                          style: TextStyle(
+                            color: colors.buttonTextColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -152,12 +151,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   // ================= INPUT FIELD =================
   Widget _field(
-      String label,
-      TextEditingController controller,
-      IconData icon, {
-        int maxLines = 1,
-        TextInputType type = TextInputType.text,
-      }) {
+    String label,
+    TextEditingController controller,
+    IconData icon, {
+    int maxLines = 1,
+    TextInputType type = TextInputType.text,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -206,10 +205,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       _formKey.currentState!.reset();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: colors.error,
-          content: Text(e.toString()),
-        ),
+        SnackBar(backgroundColor: colors.error, content: Text(e.toString())),
       );
     }
   }

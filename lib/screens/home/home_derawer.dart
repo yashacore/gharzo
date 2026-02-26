@@ -29,8 +29,10 @@ class HomeDrawer extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                padding:
-                const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 20,
+                ),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xff1A5BAA), Color(0xff0A4B86)],
@@ -105,8 +107,7 @@ class HomeDrawer extends StatelessWidget {
                     _drawerCard(
                       icon: Icons.calendar_month_rounded,
                       title: "Plans & Subscriptions",
-                      subtitle:
-                      "Tenant / kirayedar, Owner / Landlord...",
+                      subtitle: "Tenant / kirayedar, Owner / Landlord...",
                       onTap: () {},
                     ),
                   ],
@@ -115,13 +116,12 @@ class HomeDrawer extends StatelessWidget {
 
               const Divider(indent: 20, endIndent: 20, height: 40),
 
+              _drawerTile(icon: Icons.info_outline, title: "Customer Support"),
               _drawerTile(
-                  icon: Icons.info_outline, title: "Customer Support"),
-              _drawerTile(
-                  icon: Icons.face_retouching_natural_outlined,
-                  title: "About Us"),
-              _drawerTile(
-                  icon: Icons.shield_outlined, title: "Privacy Policy"),
+                icon: Icons.face_retouching_natural_outlined,
+                title: "About Us",
+              ),
+              _drawerTile(icon: Icons.shield_outlined, title: "Privacy Policy"),
 
               const SizedBox(height: 20),
 
@@ -134,7 +134,9 @@ class HomeDrawer extends StatelessWidget {
                   isLogout: true,
                   onTap: () async {
                     await PrefService.clearAuthData();
-                    navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => LoginView()));
+                    navigatorKey.currentState?.pushReplacement(
+                      MaterialPageRoute(builder: (context) => LoginView()),
+                    );
                   },
                 ),
               ),
@@ -168,13 +170,11 @@ class HomeDrawer extends StatelessWidget {
           ),
           child: Icon(icon, color: Colors.white),
         ),
-        title:
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: subtitle.isEmpty
             ? null
             : Text(subtitle, style: const TextStyle(fontSize: 11)),
-        trailing:
-        const Icon(Icons.chevron_right, color: Color(0xff3B7CFF)),
+        trailing: const Icon(Icons.chevron_right, color: Color(0xff3B7CFF)),
       ),
     );
   }
@@ -182,10 +182,8 @@ class HomeDrawer extends StatelessWidget {
   Widget _drawerTile({required IconData icon, required String title}) {
     return ListTile(
       leading: Icon(icon, color: const Color(0xff3B7CFF)),
-      title:
-      Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-      trailing:
-      const Icon(Icons.chevron_right, color: Color(0xff3B7CFF)),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+      trailing: const Icon(Icons.chevron_right, color: Color(0xff3B7CFF)),
       onTap: () {},
     );
   }

@@ -2,25 +2,24 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-
 class MortgageEnquiryService {
-  static const String _url =
-      "https://api.gharzoreality.com/api/mortgage";
+  static const String _url = "https://api.gharzoreality.com/api/mortgage";
 
   static Future<bool> submitMortgageEnquiry(
-      Map<String, dynamic> payload) async {
+    Map<String, dynamic> payload,
+  ) async {
     try {
       debugPrint("🔹 [Mortgage API] Request URL: $_url");
       debugPrint("🔹 [Mortgage API] Request Headers:");
-      debugPrint(const JsonEncoder.withIndent('  ').convert({
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      }));
+      debugPrint(
+        const JsonEncoder.withIndent('  ').convert({
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        }),
+      );
 
       debugPrint("🔹 [Mortgage API] Request Body:");
-      debugPrint(
-        const JsonEncoder.withIndent('  ').convert(payload),
-      );
+      debugPrint(const JsonEncoder.withIndent('  ').convert(payload));
 
       final response = await http.post(
         Uri.parse(_url),
